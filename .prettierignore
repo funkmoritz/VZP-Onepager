@@ -2,3 +2,10 @@ dist/
 .astro/
 node_modules/
 package-lock.json
+
+# Generiert aus vzp-tokens.json - Formatierung kommt aus dem Generator.
+src/styles/tokens.css
+
+# Externes Artefakt aus dem Design System - unveraendert lassen,
+# damit Re-Exporte keine Formatierungs-Diffs erzeugen.
+vzp-tokens.json
