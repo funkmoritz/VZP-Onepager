@@ -1,33 +1,28 @@
 @import 'tailwindcss';
+@import './tokens.css';
 
 /*
- * Design-Tokens. Alles, was hier unter `@theme` steht, ist in Tailwind direkt
- * als Utility nutzbar – `--color-brand` wird z. B. zu `bg-brand`, `text-brand`.
- * Die Werte sind Platzhalter und gehören durch das echte CI ersetzt.
- */
-@theme {
-  --color-brand: oklch(0.55 0.18 250);
-  --color-brand-contrast: oklch(0.98 0 0);
-
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-
-  /* Maximale Inhaltsbreite, z. B. für einen zentralen Container. */
-  --spacing-content: 72rem;
-}
-
-/*
- * Basis-Styles. Bewusst minimal gehalten – alles Weitere gehört in die
- * jeweiligen Abschnitte bzw. Komponenten.
+ * Basis-Styles. Alle Werte kommen aus dem Design System (siehe tokens.css,
+ * generiert aus vzp-tokens.json). Hier stehen bewusst nur Element-Defaults -
+ * alles Weitere gehoert in die jeweiligen Abschnitte bzw. Komponenten.
  */
 @layer base {
   html {
     /* Onepager: sanftes Scrollen zu den Anker-Links in der Navigation. */
     scroll-behavior: smooth;
-    /* Platz für eine später ggf. fixierte Navigation. */
-    scroll-padding-top: 5rem;
+    /* Freiraum fuer die fixierte Kopfzeile, damit Anker nicht darunter landen. */
+    scroll-padding-top: var(--vzp-header-height-mobile);
   }
 
-  /* Nutzer:innen mit reduzierter Bewegungspräferenz respektieren. */
+  @media (min-width: 48em) {
+    html {
+      scroll-padding-top: var(--vzp-header-height);
+    }
+  }
+
+  /* Das Design System schaltet Motion-Tokens bei reduzierter Bewegung auf
+     0.01ms (siehe tokens.css). Das Scrollverhalten hat keinen Token, deshalb
+     hier explizit. */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -35,7 +30,26 @@
   }
 
   body {
-    font-family: var(--font-sans);
+    background-color: var(--vzp-color-background-default);
+    color: var(--vzp-color-text-primary);
+    font-family: var(--vzp-typography-ui-family);
+    font-size: var(--vzp-typography-body-md-size);
+    line-height: var(--vzp-typography-body-md-line);
     -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--vzp-typography-heading-family);
+  }
+
+  /* WCAG 2.2 AA / BFSG: sichtbarer Fokus aus den Focus-Ring-Tokens. */
+  :focus-visible {
+    outline: var(--vzp-focus-ring-width) solid var(--vzp-focus-ring-color);
+    outline-offset: var(--vzp-focus-ring-offset);
   }
 }
