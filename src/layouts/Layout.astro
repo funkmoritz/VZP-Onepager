@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import { SITE_LANG, SITE_LOCALE, SITE_NAME, SITE_OG_IMAGE } from '../consts';
+
+interface Props {
+  /** Inhalt des <title>-Tags. */
+  title: string;
+  /** Meta-Description, ca. 150–160 Zeichen. */
+  description: string;
+  /** Pfad oder absolute URL zum Social-Preview-Bild. */
+  image?: string;
+  /** Setzt die Seite auf noindex, z. B. für Vorschau-Deployments. */
+  noindex?: boolean;
+}
+
+const { title, description, image = SITE_OG_IMAGE, noindex = false } = Astro.props;
+
+// `Astro.site` stammt aus astro.config.mjs. Der Fallback greift nur, falls
+// dort keine `site` gesetzt ist – dann bleiben die URLs relativ zur Anfrage.
+const base = Astro.site ?? Astro.url;
+const canonicalURL = new URL(Astro.url.pathname, base);
+const socialImageURL = new URL(image, base);
+---
+
+<!doctype html>
+<html lang={SITE_LANG}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content={SITE_LOCALE} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={socialImageURL} />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
+
+    <!-- Für seitenspezifische Tags: Fonts, JSON-LD, Analytics-Snippets ... -->
+    <slot name="head" />
+  </head>
+
+  <body>
+    <slot />
+  </body>
+</html>

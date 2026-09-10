@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+
+/*
+ * Design-Tokens. Alles, was hier unter `@theme` steht, ist in Tailwind direkt
+ * als Utility nutzbar – `--color-brand` wird z. B. zu `bg-brand`, `text-brand`.
+ * Die Werte sind Platzhalter und gehören durch das echte CI ersetzt.
+ */
+@theme {
+  --color-brand: oklch(0.55 0.18 250);
+  --color-brand-contrast: oklch(0.98 0 0);
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Maximale Inhaltsbreite, z. B. für einen zentralen Container. */
+  --spacing-content: 72rem;
+}
+
+/*
+ * Basis-Styles. Bewusst minimal gehalten – alles Weitere gehört in die
+ * jeweiligen Abschnitte bzw. Komponenten.
+ */
+@layer base {
+  html {
+    /* Onepager: sanftes Scrollen zu den Anker-Links in der Navigation. */
+    scroll-behavior: smooth;
+    /* Platz für eine später ggf. fixierte Navigation. */
+    scroll-padding-top: 5rem;
+  }
+
+  /* Nutzer:innen mit reduzierter Bewegungspräferenz respektieren. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
