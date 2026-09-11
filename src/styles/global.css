@@ -10,7 +10,10 @@
   html {
     /* Onepager: sanftes Scrollen zu den Anker-Links in der Navigation. */
     scroll-behavior: smooth;
-    /* Freiraum fuer die fixierte Kopfzeile, damit Anker nicht darunter landen. */
+    /* Freiraum fuer die fixierte Kopfzeile, damit Anker nicht darunter landen.
+       Nicht entfernen: Browser beruecksichtigen scroll-padding auch beim
+       fokusgetriebenen Scrollen. Diese Zeile ist damit die Erfuellung von
+       WCAG 2.2 SC 2.4.11 (Focus Not Obscured) fuer die sticky Kopfzeile. */
     scroll-padding-top: var(--vzp-header-height-mobile);
   }
 
@@ -51,5 +54,30 @@
   :focus-visible {
     outline: var(--vzp-focus-ring-width) solid var(--vzp-focus-ring-color);
     outline-offset: var(--vzp-focus-ring-offset);
+  }
+}
+
+/*
+ * Stapelreihenfolge. Bewusst KEIN Design-Token: vzp-tokens.json ist ein
+ * Re-Export aus Figma (siehe .prettierignore) - handgepflegte Eintraege waeren
+ * beim naechsten Export verloren. Deshalb auch ohne --vzp-Praefix, damit
+ * sichtbar bleibt, dass das kein Wert aus dem Design System ist.
+ */
+:root {
+  --z-header: 100;
+  --z-skip-link: 200;
+}
+
+/* Ungelayert, damit die Sperre waehrend des offenen Menues zuverlaessig greift. */
+.vzp-scroll-lock {
+  overflow: hidden;
+}
+
+@layer base {
+  /* Ziel des Skip-Links. Das Element ist per tabindex="-1" programmatisch
+     fokussierbar, braucht aber keinen Fokusring - der Sprung ist ueber die
+     Scrollposition bereits sichtbar. */
+  main:focus {
+    outline: none;
   }
 }

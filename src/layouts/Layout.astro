@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-import { SITE_LANG, SITE_LOCALE, SITE_NAME, SITE_OG_IMAGE } from '../consts';
+import Header from '../components/Header.astro';
+import { CONTENT_ID, SITE_LANG, SITE_LOCALE, SITE_NAME, SITE_OG_IMAGE } from '../consts';
 
 interface Props {
   /** Inhalt des <title>-Tags. */
@@ -51,11 +52,67 @@ const socialImageURL = new URL(image, base);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImageURL} />
 
+    <script is:inline>
+      // Markiert "JS ist aktiv", noch vor dem ersten Paint. Ohne dieses Flag
+      // liefert das CSS die aufgeklappte Navigation aus statt ein Panel, das
+      // sich ohne JS nie oeffnen liesse (Progressive Enhancement).
+      document.documentElement.dataset.js = '';
+    </script>
     <!-- Für seitenspezifische Tags: Fonts, JSON-LD, Analytics-Snippets ... -->
     <slot name="head" />
   </head>
 
   <body>
-    <slot />
+    {/* Muss das erste fokussierbare Element der Seite sein (WCAG 2.4.1 / BFSG).
+         Bei einer sticky Kopfzeile ist der Skip-Link Pflicht, nicht Kür. */}
+    <a class="skip-link" href={`#${CONTENT_ID}`}>
+      Zum Inhalt springen
+    </a>
+
+    <Header />
+
+    {/* tabindex="-1": ohne das verschieben einige Browser nach dem Sprung nur
+         die Scrollposition, der Fokus bliebe in der Kopfzeile haengen. */}
+    <main id={CONTENT_ID} tabindex="-1">
+      <slot />
+    </main>
+
+    {/* Damit ein spaeterer Footer nicht innerhalb der main-Landmark landet. */}
+    <slot name="footer" />
   </body>
 </html>
+
+<style>
+  /*
+   * Nicht display:none und nicht visibility:hidden - beides nimmt den Link aus
+   * der Tab-Reihenfolge und macht ihn damit nutzlos. Stattdessen aus dem
+   * Sichtfeld schieben.
+   */
+  .skip-link {
+    position: fixed;
+    inset-block-start: var(--vzp-spacing-component-sm);
+    inset-inline-start: var(--vzp-spacing-component-sm);
+    z-index: var(--z-skip-link);
+    translate: 0 calc(-100% - var(--vzp-spacing-component-sm) * 2);
+
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--vzp-button-height-md);
+    padding-inline: var(--vzp-button-padding-x-md);
+
+    border-radius: var(--vzp-button-radius);
+    background-color: var(--vzp-button-primary-background-default);
+    color: var(--vzp-button-primary-foreground);
+    font-size: var(--vzp-button-label-size);
+    font-weight: var(--vzp-button-label-weight);
+    text-decoration: none;
+
+    transition: translate var(--vzp-motion-state-change) var(--vzp-easing-entrance);
+  }
+
+  /* :focus statt :focus-visible - ausserhalb des Sichtfelds ist der Link nicht
+     anklickbar, er kann den Fokus also ohnehin nur per Tastatur bekommen. */
+  .skip-link:focus {
+    translate: none;
+  }
+</style>

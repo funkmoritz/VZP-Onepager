@@ -1,8 +1,70 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { NAV_ITEMS, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+/*
+ * TODO: Platzhalter. Hier kommen die echten Abschnitte des Onepagers rein.
+ * Sie existieren vorerst nur, damit Sprungmarken, Scroll-Offset und Scroll-Spy
+ * der Kopfzeile ueberhaupt pruefbar sind.
+ *
+ * Die Liste leitet sich aus NAV_ITEMS ab, damit Anker und Abschnitte nicht
+ * auseinanderlaufen koennen. '#kontakt' kommt dazu: darauf zeigt der CTA.
+ */
+const SECTIONS = [...NAV_ITEMS, { id: 'kontakt', label: 'Kontakt' }];
 ---
 
 <Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <!-- Hier kommen die Abschnitte des Onepagers rein. -->
+  {/* TODO: echter Hero. Die Seite braucht genau eine <h1>, und die
+       Ueberschriftenhierarchie muss ab h1 lueckenlos sein. */}
+  <section class="vzp-stub px-page-margin py-section-y">
+    <p class="vzp-stub__overline">Risikopartner der Papierwirtschaft</p>
+    <h1>Versicherungsstelle Zellstoff und Papier</h1>
+  </section>
+
+  {
+    /* aria-labelledby macht aus <section> erst eine benannte region-Landmark -
+       dadurch wird die Navigation mit Screenreader ueberhaupt pruefbar. */
+    SECTIONS.map((section) => (
+      <section
+        id={section.id}
+        aria-labelledby={`${section.id}-titel`}
+        class="vzp-stub px-page-margin py-section-y"
+      >
+        <h2 id={`${section.id}-titel`}>{section.label}</h2>
+        <p>Platzhalter.</p>
+      </section>
+    ))
+  }
 </Layout>
+
+<style>
+  .vzp-stub {
+    /* TODO: entfaellt mit echtem Inhalt. Nur damit die Seite lang genug zum
+       Scrollen ist und die Sprungmarken sichtbar greifen. */
+    min-block-size: 60svh;
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-subtle);
+  }
+
+  .vzp-stub:first-of-type {
+    border-block-start: 0;
+  }
+
+  .vzp-stub__overline {
+    color: var(--vzp-color-action-accent);
+    font-size: var(--vzp-font-size-100);
+    font-weight: var(--vzp-font-weight-semibold);
+    letter-spacing: var(--vzp-letter-spacing-overline);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: var(--vzp-font-size-900);
+    line-height: var(--vzp-line-height-200);
+    color: var(--vzp-color-text-brand);
+  }
+
+  h2 {
+    font-size: var(--vzp-font-size-700);
+    line-height: var(--vzp-line-height-300);
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * Button bzw. Link im Button-Gewand.
+ *
+ * Alle Werte stammen aus den --vzp-button-*-Tokens; die haben bewusst keine
+ * Tailwind-Utilities (Komponenten-Ebene), deshalb steht die Optik hier im
+ * Scoped Style und nicht im Markup.
+ */
+type Variant = 'primary' | 'secondary' | 'tertiary';
+type Size = 'sm' | 'md' | 'lg';
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'type'> {
+  /**
+   * Ist `href` gesetzt, wird ein <a> gerendert, sonst ein <button>.
+   * Was navigiert, ist ein Link - Optik aendert daran nichts.
+   */
+  href?: string;
+  variant?: Variant;
+  size?: Size;
+  /** Nur ohne `href` relevant. */
+  type?: 'button' | 'submit' | 'reset';
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  class:list={['vzp-button', `vzp-button--${variant}`, `vzp-button--${size}`, className]}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .vzp-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vzp-button-gap);
+
+    /* min-block-size statt block-size: bei 200 % Textzoom darf der Button
+       wachsen, statt die Beschriftung zu beschneiden (WCAG 1.4.4). */
+    min-block-size: var(--vzp-button-height-md);
+    padding-inline: var(--vzp-button-padding-x-md);
+
+    border: var(--vzp-border-width-100) solid transparent;
+    border-radius: var(--vzp-button-radius);
+
+    font-family: var(--vzp-typography-ui-family);
+    font-size: var(--vzp-button-label-size);
+    font-weight: var(--vzp-button-label-weight);
+    line-height: var(--vzp-line-height-300);
+    text-align: center;
+    text-decoration: none;
+
+    cursor: pointer;
+    transition:
+      background-color var(--vzp-button-transition-duration) var(--vzp-easing-standard),
+      border-color var(--vzp-button-transition-duration) var(--vzp-easing-standard),
+      color var(--vzp-button-transition-duration) var(--vzp-easing-standard);
+  }
+
+  .vzp-button--sm {
+    min-block-size: var(--vzp-button-height-sm);
+    padding-inline: var(--vzp-button-padding-x-sm);
+  }
+
+  .vzp-button--lg {
+    min-block-size: var(--vzp-button-height-lg);
+    padding-inline: var(--vzp-button-padding-x-lg);
+  }
+
+  .vzp-button--primary {
+    background-color: var(--vzp-button-primary-background-default);
+    color: var(--vzp-button-primary-foreground);
+  }
+
+  .vzp-button--primary:hover {
+    background-color: var(--vzp-button-primary-background-hover);
+  }
+
+  .vzp-button--primary:active {
+    background-color: var(--vzp-button-primary-background-active);
+  }
+
+  .vzp-button--secondary {
+    border-color: var(--vzp-button-secondary-border);
+    color: var(--vzp-button-secondary-foreground);
+  }
+
+  .vzp-button--secondary:hover {
+    background-color: var(--vzp-button-secondary-background-hover);
+  }
+
+  .vzp-button--tertiary {
+    border-color: var(--vzp-button-tertiary-border);
+    color: var(--vzp-button-tertiary-foreground);
+  }
+
+  .vzp-button--tertiary:hover {
+    background-color: var(--vzp-color-surface-subtle);
+  }
+
+  .vzp-button:disabled {
+    background-color: var(--vzp-button-disabled-background);
+    border-color: transparent;
+    color: var(--vzp-button-disabled-foreground);
+    cursor: not-allowed;
+  }
+</style>
