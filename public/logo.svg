@@ -1,32 +1,12 @@
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="160"
-  height="60"
-  viewBox="0 0 160 60"
-  role="img"
-  aria-label="VZP"
->
-  <!--
-    PLATZHALTER. Bitte durch das offizielle VZP-Logo ersetzen: einfach diese
-    Datei ueberschreiben, im Code ist nichts anzupassen, solange das
-    Seitenverhaeltnis grob 8:3 bleibt.
-
-    Wichtig fuer den Ersatz: width und height an der Wurzel stehen lassen.
-    Ein SVG nur mit viewBox hat in einem img-Element keine intrinsische
-    Groesse und faellt auf 0 zusammen.
-
-    Achtung: in XML-Kommentaren sind zwei Bindestriche hintereinander nicht
-    erlaubt. Deshalb steht die Farbe hier ohne den Variablen-Praefix:
-    #007FB3 ist vzp-color-blue-500, die Markenfarbe aus dem Design System.
-  -->
-  <text
-    x="0"
-    y="46"
-    font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
-    font-size="52"
-    font-weight="700"
-    font-style="italic"
-    letter-spacing="-2"
-    fill="#007FB3"
-  >VZP</text>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 189 67.7" style="enable-background:new 0 0 189 67.7;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#007FB3;}
+</style>
+<path class="st0" d="M66.4,29.6l-13.2,19H37.7l-27-38.9h20.7l14.2,23.9L60,9.7h20.3l-6.6,9.4c0,0,71.1,0,86.6,0
+	c8.6,0,12,2.2,14.3,5.4c1.8,2.6,2.5,5.8,2.5,9.1c0,3.3-0.7,6.6-2.5,9.3c-2.3,3.3-5.6,5.6-14.3,5.6c-15.6,0-20.5,0-20.5,0v11.1h-17.6
+	V48.5h-59l27.6-19L66.4,29.6z M139.8,38.3l9.1,0c0,0,1.5,0,6.1,0c2.6,0,3.6-0.7,4.3-1.7c0.5-0.8,0.8-1.8,0.8-2.8c0-1-0.2-2-0.8-2.7
+	c-0.7-1-1.7-1.6-4.3-1.6c-4.7,0-15.3,0-15.3,0L139.8,38.3z M122.3,20L99.7,38.2h22.5L122.3,20z"/>
 </svg>
