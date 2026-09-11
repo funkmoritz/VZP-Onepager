@@ -3,7 +3,8 @@
 Grundgerüst eines Onepagers auf Basis von [Astro](https://astro.build) mit
 TypeScript (strict), Tailwind CSS v4, SEO-/Open-Graph-Meta und Sitemap.
 
-Bewusst ohne Komponenten – nur das Skelett.
+Umgesetzt sind bislang das Skelett und die Kopfzeile; die Abschnitte darunter
+sind Platzhalter.
 
 ## Voraussetzungen
 
@@ -31,13 +32,18 @@ Node.js 20+ (entwickelt mit v22).
 │   ├── build-tokens.mjs    # erzeugt tokens.css aus der JSON
 │   └── verify-tokens.mjs   # prüft das gebaute CSS gegen die JSON
 ├── public/
-│   └── favicon.svg         # Platzhalter
+│   ├── favicon.svg         # Platzhalter
+│   └── logo.svg            # Platzhalter — durch das echte Logo ersetzen
 └── src/
-    ├── consts.ts           # Seitenname, Default-Title/Description, Locale
+    ├── consts.ts           # Seitenname, Meta-Defaults, Navigation, CTA
+    ├── components/
+    │   ├── Header.astro    # Kopfzeile: Navigation, CTA, mobiles Menü, Scroll-Spy
+    │   ├── Logo.astro      # Wortmarke
+    │   └── Button.astro    # Button bzw. Link im Button-Gewand
     ├── layouts/
-    │   └── Layout.astro    # html/head, SEO- und Open-Graph-Meta, Slots
+    │   └── Layout.astro    # html/head, Meta, Skip-Link, Header, <main>
     ├── pages/
-    │   ├── index.astro     # leere Startseite
+    │   ├── index.astro     # Startseite mit Platzhalter-Abschnitten
     │   └── robots.txt.ts   # robots.txt inkl. Sitemap-Verweis (zur Build-Zeit)
     └── styles/
         ├── tokens.css      # GENERIERT — nicht von Hand bearbeiten
@@ -59,6 +65,41 @@ seitenspezifische Tags ergänzen (Fonts, JSON-LD, Analytics).
   …
 </Layout>
 ```
+
+## Komponenten
+
+Konvention, der alle Komponenten folgen:
+
+1. **Tailwind-Utility im Markup**, wenn es den Token als Utility gibt
+   (`max-w-content`, `px-page-margin`, `gap-component-md`, `bg-surface-default`).
+2. **Scoped `<style>`** für alles, was Komponenten-Tokens braucht — die haben
+   bewusst keine Utility (`--vzp-header-height`, `--vzp-button-*`,
+   `--vzp-nav-item-*`) — sowie für zustandsabhängige Regeln und Pseudoelemente.
+3. **`global.css`** bleibt frei von Komponenten-CSS und enthält nur
+   dokumentweit Gültiges.
+
+Beim Debuggen wichtig: Tailwind legt seine Utilities in `@layer utilities`,
+Astros Scoped Styles sind ungelayert und schlagen damit jede Utility —
+unabhängig von der Spezifität.
+
+### Kopfzeile
+
+`Header.astro` ist `position: sticky` und exakt so hoch wie
+`--vzp-header-height` (88px, mobil 64px) — passend zum `scroll-padding-top` in
+`global.css`, damit Sprungmarken nicht unter der Leiste landen.
+
+Zwei Umschaltpunkte, bewusst verschieden: die **Höhe** wechselt bei `48em`
+(dort wechselt auch `scroll-padding-top`), die **Navigation** erst bei `64em` —
+Logo, Claim, fünf Einträge und CTA brauchen rund 950px Breite.
+
+Zustand des mobilen Menüs liegt ausschließlich in `aria-expanded`; CSS leitet
+die Sichtbarkeit daraus ab. Ohne JavaScript bleibt die Navigation dauerhaft
+sichtbar (das `data-js`-Flag setzt ein Inline-Skript im `<head>` vor dem ersten
+Paint). Bei offenem Menü wird der Hintergrund `inert` gesetzt — das ersetzt
+einen Fokus-Trap.
+
+Die Navigationseinträge stehen in `NAV_ITEMS` (`src/consts.ts`); Navigation,
+Scroll-Spy und die Abschnitte in `index.astro` lesen aus derselben Liste.
 
 ## Design-Tokens
 
@@ -114,6 +155,8 @@ Aliase und fehlende Media-Query-Overrides.
 
 - [ ] `site` in `astro.config.mjs` auf die echte Produktions-URL setzen
 - [ ] `SITE_NAME`, `SITE_TITLE`, `SITE_DESCRIPTION` in `src/consts.ts` befüllen
+- [ ] `public/logo.svg` durch das offizielle Logo ersetzen (nur die Datei
+      überschreiben, im Code ist nichts anzupassen)
 - [ ] `public/favicon.svg` und `public/og-image.png` (1200×630) ergänzen
 - [ ] Noto Serif / Noto Sans einbinden – wegen DSGVO selbst hosten, nicht über
       Google Fonts. Ohne die Schriften greifen die Fallbacks aus den Tokens.

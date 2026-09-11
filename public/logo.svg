@@ -1,0 +1,32 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="160"
+  height="60"
+  viewBox="0 0 160 60"
+  role="img"
+  aria-label="VZP"
+>
+  <!--
+    PLATZHALTER. Bitte durch das offizielle VZP-Logo ersetzen: einfach diese
+    Datei ueberschreiben, im Code ist nichts anzupassen, solange das
+    Seitenverhaeltnis grob 8:3 bleibt.
+
+    Wichtig fuer den Ersatz: width und height an der Wurzel stehen lassen.
+    Ein SVG nur mit viewBox hat in einem img-Element keine intrinsische
+    Groesse und faellt auf 0 zusammen.
+
+    Achtung: in XML-Kommentaren sind zwei Bindestriche hintereinander nicht
+    erlaubt. Deshalb steht die Farbe hier ohne den Variablen-Praefix:
+    #007FB3 ist vzp-color-blue-500, die Markenfarbe aus dem Design System.
+  -->
+  <text
+    x="0"
+    y="46"
+    font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+    font-size="52"
+    font-weight="700"
+    font-style="italic"
+    letter-spacing="-2"
+    fill="#007FB3"
+  >VZP</text>
+</svg>

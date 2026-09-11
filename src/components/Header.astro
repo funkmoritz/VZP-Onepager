@@ -1,0 +1,489 @@
+---
+import { HEADER_CTA, NAV_ITEMS, SITE_CLAIM, SITE_NAME } from '../consts';
+import Button from './Button.astro';
+import Logo from './Logo.astro';
+
+/*
+ * Kopfzeile des Onepagers.
+ *
+ * Konvention fuer diese und alle folgenden Komponenten:
+ *   1. Tailwind-Utility im Markup, wenn es den Token als Utility gibt
+ *      (max-w-content, px-page-margin, gap-component-md ...).
+ *   2. Scoped <style> fuer alles, was Komponenten-Tokens braucht - die haben
+ *      bewusst keine Utility (--vzp-header-*, --vzp-nav-item-*) - sowie fuer
+ *      zustandsabhaengige Regeln und Pseudoelemente.
+ *   3. global.css bleibt frei von Komponenten-CSS.
+ *
+ * Achtung beim Debuggen: Tailwind legt seine Utilities in @layer utilities,
+ * Astros Scoped Styles sind ungelayert und schlagen damit jede Utility -
+ * unabhaengig von der Spezifitaet.
+ */
+
+const NAV_ID = 'hauptnavigation';
+---
+
+<header class="vzp-header" data-vzp-header>
+  <div class="vzp-header__bar mx-auto flex max-w-content items-center gap-component-md px-page-margin">
+    {/* '#top' ist der in HTML definierte Sonderanker fuer den Dokumentanfang:
+         kein Reload und kein leeres Fragment im Verlauf. Der Name steht am Link,
+         das Logo traegt deshalb keinen Alternativtext (sonst doppelt). */}
+    <a class="vzp-header__brand" href="#top" aria-label={`${SITE_NAME} – zum Seitenanfang`}>
+      <Logo />
+    </a>
+
+    {/* Claim als echter Text statt im SVG: markierbar, uebersetzbar, skaliert
+         mit dem Text-Zoom. Der Trenner ist ein CSS-Rand - ein '|'-Zeichen wird
+         von manchen Screenreadern vorgelesen. */}
+    <p class="vzp-header__claim">
+      {SITE_CLAIM.map((line) => (
+        <span>{line}</span>
+      ))}
+    </p>
+
+    {/* Der zugaengliche Name bleibt konstant 'Menue'; den Zustand traegt
+         aria-expanded. Ein wechselnder Name ('oeffnen'/'schliessen') ist ein
+         verbreitetes Anti-Pattern. */}
+    <button
+      type="button"
+      class="vzp-header__burger"
+      aria-expanded="false"
+      aria-controls={NAV_ID}
+      data-menu-button
+    >
+      <svg class="vzp-header__burger-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path class="vzp-header__icon-open" d="M3 6h18M3 12h18M3 18h18"></path>
+        <path class="vzp-header__icon-close" d="M5 5l14 14M19 5L5 19"></path>
+      </svg>
+      <span class="sr-only">Menü</span>
+    </button>
+
+    {/* Eine einzige nav-Landmark fuer beide Breakpoints. Zwei gerenderte
+         Varianten wuerden die Links im Accessibility-Baum verdoppeln. */}
+    <nav id={NAV_ID} class="vzp-header__nav" aria-label="Hauptnavigation" data-menu-panel>
+      {/* role="list" ist das einzige gerechtfertigt redundante ARIA hier:
+           WebKit entfernt die Listensemantik bei list-style: none. */}
+      <ul class="vzp-header__list" role="list">
+        {NAV_ITEMS.map((item) => (
+          <li>
+            <a class="vzp-header__link" href={`#${item.id}`}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    {/* Bleibt ein <a>: er navigiert. Kein role="button". */}
+    <Button href={HEADER_CTA.href} class="vzp-header__cta">
+      <span>
+        {HEADER_CTA.label}
+        <span class="vzp-header__cta-rest">{HEADER_CTA.labelSuffix}</span>
+      </span>
+    </Button>
+  </div>
+
+  {/* Schliessflaeche. Nur mit JS und nur im geoeffneten Zustand sichtbar. */}
+  <div class="vzp-header__backdrop" data-menu-backdrop></div>
+</header>
+
+<style>
+  .vzp-header {
+    /* Eine lokale Variable fuer die Hoehe, damit Leiste, Panel und Backdrop
+       nicht je eine eigene Media Query mitschleppen. Der Umschaltpunkt 48em
+       muss dem in global.css entsprechen: scroll-padding-top muss immer der
+       echten Hoehe folgen, sonst landen Anker unter der Leiste. */
+    --header-h: var(--vzp-header-height-mobile);
+
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-header);
+
+    /* min-, nicht block-size: bei 200 % Textzoom darf die Leiste wachsen statt
+       Text zu beschneiden (WCAG 1.4.4). box-sizing ist border-box (Tailwind
+       Preflight), der untere Rand steckt also mit drin - die Gesamthoehe
+       entspricht damit exakt --vzp-header-height und passt zu
+       scroll-padding-top in global.css. */
+    min-block-size: var(--header-h);
+
+    background-color: var(--vzp-color-surface-default);
+    border-block-end: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-header__bar {
+    /* Bezugspunkt fuer das absolut positionierte Panel und eigener
+       Stapelkontext ueber dem Backdrop. */
+    position: relative;
+    z-index: 1;
+
+    /* Eigener Hintergrund, nicht nur der des Headers: bei offenem Menue liegt
+       die Schliessflaeche zwischen beiden und wuerde die Leiste sonst
+       mit abdunkeln. */
+    background-color: var(--vzp-color-surface-default);
+
+    /* Die Hoehe abzueglich des unteren Randes: box-sizing ist border-box
+       (Tailwind Preflight), der Rand des Headers zaehlt also in dessen
+       Gesamthoehe mit. Ohne den Abzug waere der Header 89px hoch, waehrend
+       scroll-padding-top mit 88px rechnet - Anker landeten einen Pixel zu hoch.
+       Bewusst hier und nicht als Flex-Streckung: ein auto-Rand quer zur
+       Flex-Achse (mx-auto) haette das Strecken abgeschaltet und die Leiste auf
+       Inhaltsbreite schrumpfen lassen statt auf die 1200px des Design Systems. */
+    min-block-size: calc(var(--header-h) - var(--vzp-border-width-100));
+  }
+
+  .vzp-header__brand {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* Auf Mobil eine dekorative Dopplung der Wortmarke - darf auch fuer
+     Screenreader entfallen, deshalb display:none und nicht sr-only. */
+  .vzp-header__claim {
+    display: none;
+  }
+
+  .vzp-header__burger {
+    /* Im DOM steht der Burger vor dem CTA, damit er unmittelbar vor dem Panel
+       steht, das er steuert (ARIA-APG-Disclosure: Tab laeuft direkt hinein).
+       Optisch gehoert er laut Entwurf rechts daneben - genau ein Tausch zweier
+       benachbarter Elemente derselben Zeile. */
+    order: 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    inline-size: var(--vzp-size-touch-min);
+    min-block-size: var(--vzp-size-touch-min);
+
+    /* Nicht --vzp-color-border-strong (neutral-300): dessen Kontrast zu Weiss
+       betraegt nur 1,89:1. WCAG 1.4.11 verlangt 3:1 fuer die Begrenzung eines
+       Bedienelements - text-secondary erreicht 5,72:1 und bleibt trotzdem grau.
+       Gleiches gilt fuer --vzp-button-tertiary-border im Design System. */
+    border: var(--vzp-border-width-100) solid var(--vzp-color-text-secondary);
+    border-radius: var(--vzp-radius-interactive);
+    background-color: transparent;
+    color: var(--vzp-color-text-primary);
+    cursor: pointer;
+  }
+
+  .vzp-header__burger-icon {
+    inline-size: var(--vzp-size-icon-300);
+    block-size: var(--vzp-size-icon-300);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  /* Icon-Wechsel haengt direkt am ARIA-Zustand - so koennen Optik und Semantik
+     nicht auseinanderlaufen. */
+  .vzp-header__burger[aria-expanded='false'] .vzp-header__icon-close,
+  .vzp-header__burger[aria-expanded='true'] .vzp-header__icon-open {
+    display: none;
+  }
+
+  .vzp-header__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-spacing-component-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vzp-header__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* 44px Mindesthoehe: WCAG 2.5.8 fordert 24px, das Design System gibt 44. */
+    min-block-size: var(--vzp-size-touch-min);
+    color: var(--vzp-color-text-primary);
+    font-size: var(--vzp-font-size-300);
+    text-decoration: none;
+    transition: color var(--vzp-motion-state-change) var(--vzp-easing-standard);
+  }
+
+  .vzp-header__link:hover {
+    color: var(--vzp-color-action-primary);
+  }
+
+  /* Aktiver Eintrag wird am ARIA-Attribut gestylt, nicht an einer zweiten
+     Klasse - ein Zustand, eine Quelle. */
+  .vzp-header__link[aria-current]::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--vzp-nav-item-underline-width);
+    background-color: var(--vzp-nav-item-underline-color);
+  }
+
+  /* Astro reicht den Scope der Eltern an die Wurzel einer Kind-Komponente
+     durch - der CTA laesst sich deshalb ganz normal scoped stylen. */
+  .vzp-header__cta {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+
+  .vzp-header__cta-rest {
+    display: none;
+  }
+
+  .vzp-header__backdrop {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------------------
+     Ohne JS: die Navigation bleibt sichtbar, der Umschalter verschwindet.
+     Das Flag [data-js] setzt ein is:inline-Skript im <head> vor dem ersten
+     Paint - deshalb kein Aufblitzen und kein <noscript><style> im <body>
+     (dort waere <style> formal ungueltig).
+     ------------------------------------------------------------------------ */
+  :global(html:not([data-js])) .vzp-header__burger {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------------------
+     Unterhalb von 64em (= --vzp-breakpoint-sm-desktop). Media Queries koennen
+     keine var() lesen, der Literalwert ist unvermeidbar. Umgeschaltet wird
+     ausschliesslich per CSS - JS fragt nie die Fensterbreite ab.
+     ------------------------------------------------------------------------ */
+  @media (max-width: 63.999em) {
+    /* Ohne JS bricht die Navigation in eine zweite Zeile um, statt die Leiste
+       zu sprengen. */
+    :global(html:not([data-js])) .vzp-header__bar {
+      flex-wrap: wrap;
+      padding-block: var(--vzp-spacing-component-sm);
+    }
+
+    :global(html:not([data-js])) .vzp-header__nav {
+      /* Volle Zeilenbreite und hinter den CTA sortiert, damit die erste Zeile
+         wie mit JS aussieht (Marke + CTA) und die Navigation darunter liegt -
+         statt den CTA auf eine dritte Zeile zu draengen. */
+      order: 1;
+      flex-basis: 100%;
+      padding-block-start: var(--vzp-spacing-component-sm);
+    }
+
+    :global(html:not([data-js])) .vzp-header__list {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--vzp-spacing-component-md);
+    }
+
+    /* Mit JS wird aus der Navigation das Panel unter der Leiste. */
+    :global(html[data-js]) .vzp-header__nav {
+      position: absolute;
+      inset-block-start: 100%;
+      inset-inline: 0;
+      max-block-size: calc(100dvh - var(--header-h));
+      overflow-y: auto;
+      padding: var(--vzp-spacing-component-md) var(--vzp-spacing-page-margin);
+      background-color: var(--vzp-color-surface-default);
+      border-block-end: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+      box-shadow: var(--vzp-shadow-sticky);
+
+      /* visibility statt display: transitionierbar UND nimmt das Panel aus
+         Tab-Reihenfolge und Accessibility-Baum. Die Distanz laeuft ueber
+         --vzp-motion-distance-sm, das bei prefers-reduced-motion auf 0 steht
+         (siehe tokens.css) - eine eigene Media Query braucht es deshalb nicht. */
+      visibility: hidden;
+      opacity: 0;
+      translate: 0 calc(-1 * var(--vzp-motion-distance-sm));
+      transition:
+        opacity var(--vzp-motion-disclosure) var(--vzp-easing-exit),
+        translate var(--vzp-motion-disclosure) var(--vzp-easing-exit),
+        visibility var(--vzp-motion-disclosure);
+    }
+
+    :global(html[data-js]) .vzp-header[data-open] .vzp-header__nav {
+      visibility: visible;
+      opacity: 1;
+      translate: none;
+      transition-timing-function: var(--vzp-easing-entrance);
+    }
+
+    .vzp-header[data-open] .vzp-header__backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-color: var(--vzp-color-overlay-backdrop);
+    }
+  }
+
+  /* Ab tablet: hoehere Leiste und Claim neben der Wortmarke. Der Umschaltpunkt
+     entspricht dem von scroll-padding-top in global.css. */
+  @media (min-width: 48em) {
+    .vzp-header {
+      --header-h: var(--vzp-header-height);
+    }
+
+    .vzp-header__claim {
+      display: block;
+      flex-shrink: 0;
+      border-inline-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+      padding-inline-start: var(--vzp-spacing-component-md);
+      color: var(--vzp-color-text-secondary);
+      font-size: var(--vzp-font-size-200);
+      line-height: var(--vzp-line-height-300);
+    }
+
+    .vzp-header__claim span {
+      display: block;
+    }
+  }
+
+  /* Ab sm-desktop: Navigation als Zeile. Logo + Claim + 5 Eintraege + CTA
+     brauchen rund 950px - bei 48em waere das nicht darstellbar. */
+  @media (min-width: 64em) {
+    .vzp-header__burger {
+      display: none;
+    }
+
+    .vzp-header__nav {
+      margin-inline-start: auto;
+    }
+
+    .vzp-header__list {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--vzp-spacing-component-lg);
+    }
+
+    .vzp-header__cta {
+      margin-inline-start: 0;
+    }
+
+    .vzp-header__cta-rest {
+      display: inline;
+    }
+  }
+</style>
+
+<script>
+  // Mobiles Menue als Disclosure (Button + aria-expanded + Panel).
+  // Kein Modal, kein eigener Fokus-Trap: der Hintergrund wird stattdessen inert.
+  const header = document.querySelector<HTMLElement>('[data-vzp-header]');
+  const button = header?.querySelector<HTMLButtonElement>('[data-menu-button]');
+  const panel = header?.querySelector<HTMLElement>('[data-menu-panel]');
+  const backdrop = header?.querySelector<HTMLElement>('[data-menu-backdrop]');
+
+  if (header && button && panel && backdrop) {
+    const isOpen = () => button.getAttribute('aria-expanded') === 'true';
+
+    const setOpen = (open: boolean, restoreFocus = true) => {
+      if (open === isOpen()) return;
+
+      button.setAttribute('aria-expanded', String(open));
+      header.toggleAttribute('data-open', open);
+
+      // inert nimmt den Hintergrund aus Tab-Reihenfolge UND Accessibility-Baum
+      // und blockiert Klicks. Ersetzt aria-hidden/tabindex-Gebastel samt
+      // Fokus-Trap - aria-hidden ueber dem fokussierten Element waere ein Fehler.
+      document.querySelectorAll('main, footer').forEach((el) => el.toggleAttribute('inert', open));
+      document.documentElement.classList.toggle('vzp-scroll-lock', open);
+
+      if (!open && restoreFocus) button.focus();
+    };
+
+    button.addEventListener('click', () => setOpen(!isOpen()));
+    backdrop.addEventListener('click', () => setOpen(false));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen()) setOpen(false);
+    });
+
+    // Nach Klick auf einen Anker schliessen - ohne Fokus-Rueckgabe, damit die
+    // Tab-Reihenfolge im Zielabschnitt weiterlaeuft statt in der Kopfzeile.
+    panel.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false, false);
+    });
+
+    // Wird bei offenem Menue auf Desktop vergroessert, faellt das Panel per CSS
+    // weg - der JS-Zustand (inert, Scroll-Sperre) muss mitziehen. Ereignis-
+    // gesteuert, keine Breitenabfrage im Resize-Handler.
+    const breakpoint =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--vzp-breakpoint-sm-desktop')
+        .trim() || '64em';
+    window.matchMedia(`(min-width: ${breakpoint})`).addEventListener('change', (event) => {
+      if (event.matches) setOpen(false, false);
+    });
+
+    // --- Scroll-Spy ----------------------------------------------------------
+    // Markiert den gerade gelesenen Abschnitt. Bewusst kein Startwert: solange
+    // der Hero oben steht, ist objektiv kein Abschnitt der aktuelle - ein vorab
+    // gesetztes aria-current waere eine Falschaussage an Screenreader.
+    const links = new Map<string, HTMLAnchorElement>();
+    panel.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+      const id = decodeURIComponent(link.hash.slice(1));
+      if (id) links.set(id, link);
+    });
+
+    const sections = [...links.keys()]
+      .map((id) => document.getElementById(id))
+      .filter((element): element is HTMLElement => element !== null);
+
+    if (sections.length > 0) {
+      let currentId: string | undefined;
+      let queued = false;
+
+      const update = () => {
+        queued = false;
+
+        // Bezugspunkt ist eine gedachte Lesezeile im oberen Viertel des
+        // sichtbaren Bereichs - nicht die Unterkante der Kopfzeile selbst:
+        // direkt an der Abschnittsgrenze wuerden schon Bruchteile eines Pixels
+        // aus dem weichen Scrollen das Ergebnis kippen lassen.
+        // Die Kopfzeilenhoehe wird bei jedem Durchlauf frisch gelesen, damit der
+        // Wechsel 64px/88px und ein Wachsen bei Textzoom automatisch mitgehen.
+        const headerBottom = header.getBoundingClientRect().bottom;
+        const line = headerBottom + (window.innerHeight - headerBottom) * 0.25;
+
+        // Die Abschnitte liegen luecken- und ueberlappungsfrei untereinander:
+        // genau einer enthaelt die Lesezeile, oder keiner (Hero bzw. hinter dem
+        // letzten Abschnitt). Kein Abwaegen zwischen mehreren Kandidaten noetig.
+        let next: string | undefined;
+        for (const section of sections) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= line && rect.bottom > line) {
+            next = section.id;
+            break;
+          }
+        }
+
+        // Am Seitenende erreicht ein kurzer letzter Abschnitt die Lesezeile
+        // nicht mehr - dann gewinnt der letzte, der ueberhaupt begonnen hat.
+        if (!next && window.scrollY + window.innerHeight >= document.body.scrollHeight - 2) {
+          next = sections
+            .filter((section) => section.getBoundingClientRect().top <= line)
+            .at(-1)?.id;
+        }
+
+        if (next === currentId) return;
+        currentId = next;
+
+        // aria-current steht immer auf genau einem Link - oder auf keinem.
+        // Das loest keine Screenreader-Ansage aus (keine Live-Region), es ist
+        // beim Anspringen des Links aber korrekt vorhanden.
+        for (const [id, link] of links) {
+          if (id === next) link.setAttribute('aria-current', 'true');
+          else link.removeAttribute('aria-current');
+        }
+      };
+
+      // Auf einen Frame gedrosselt: pro Bild hoechstens eine Messung.
+      const queue = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(update);
+      };
+
+      window.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', queue, { passive: true });
+      update();
+    }
+  }
+</script>

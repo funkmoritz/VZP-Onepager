@@ -1,0 +1,55 @@
+---
+/**
+ * VZP-Wortmarke.
+ *
+ * TODO: `public/logo.svg` ist ein Platzhalter. Zum Austauschen genuegt es, die
+ * Datei zu ueberschreiben - hier ist nichts anzupassen, solange das
+ * Seitenverhaeltnis grob 8:3 bleibt. Weicht es ab, `width`/`height` unten
+ * mitziehen: sie legen das Seitenverhaeltnis fest und verhindern Layout-Shift
+ * (CLS), sind also nicht optional.
+ */
+interface Props {
+  /**
+   * Alternativtext. Standard ist ein leerer String: das Logo steht in der
+   * Kopfzeile in einem Link, der seinen Namen bereits per aria-label traegt -
+   * ein zusaetzlicher Alternativtext wuerde ihn doppelt vorlesen lassen.
+   * Ausserhalb eines benannten Links einen echten Text uebergeben.
+   */
+  alt?: string;
+  class?: string;
+}
+
+const { alt = '', class: className } = Astro.props;
+---
+
+<img
+  class:list={['vzp-logo', className]}
+  src="/logo.svg"
+  alt={alt}
+  width="160"
+  height="60"
+  decoding="async"
+/>
+
+<style>
+  .vzp-logo {
+    /* Hoehe fuehrt, Breite folgt aus dem Seitenverhaeltnis - so bleibt die
+       Marke ueber alle Header-Hoehen hinweg optisch gleich gross.
+       Feste block-size statt max-block-size mit Bedacht: ein SVG, das nur eine
+       viewBox mitbringt, hat in <img> keine intrinsische Groesse und wuerde
+       sonst auf 0 zusammenfallen. So zieht der Browser das Verhaeltnis aus den
+       width/height-Attributen oben und das Logo ist unabhaengig davon sichtbar,
+       was in public/logo.svg liegt. */
+    block-size: var(--vzp-size-icon-400);
+    inline-size: auto;
+  }
+
+  /* Ab tablet steht mehr Hoehe zur Verfuegung (88px statt 64px Kopfzeile).
+     48em = --vzp-breakpoint-tablet; Media Queries koennen keine var() lesen,
+     der Literalwert ist hier unvermeidbar. */
+  @media (min-width: 48em) {
+    .vzp-logo {
+      block-size: var(--vzp-size-icon-500);
+    }
+  }
+</style>
