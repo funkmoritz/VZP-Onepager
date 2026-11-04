@@ -135,6 +135,11 @@ Scroll-Spy und die Abschnitte in `index.astro` lesen aus derselben Liste.
 - **Wo das PDF nichts festlegt**, gilt das Figma Design System (Typo-Skala,
   Overline, Input/Checkbox, Footer-Padding, Seitenmodule).
 
+## Betrieb & Datenschutz
+
+Empfohlener EU-datenschutzkonformer Stack (Hosting, CMS, Newsletter, Webinare,
+Statistik): siehe [`docs/STACK.md`](docs/STACK.md).
+
 ## Design-Tokens
 
 `vzp-tokens.json` (DTCG-Format) ist die Quelle der Wahrheit. Daraus generiert
