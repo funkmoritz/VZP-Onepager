@@ -1,0 +1,464 @@
+---
+import { EVENTS } from '../../data/content';
+import Button from '../Button.astro';
+import Overline from '../ui/Overline.astro';
+import PlusIcon from '../ui/PlusIcon.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+/*
+ * Events & Webinare: ein Featured-Termin (ehemals Overlay 4) auf dem
+ * Rosé-Band als Zaesur. Kerninfos (Format, Titel, Termin) bleiben immer
+ * sichtbar; mobil sind die Detailtexte einklappbar, der Webinar-Eintrag ist
+ * standardmaessig geoeffnet. Ab 48em ist alles offen und ohne Umschalter.
+ */
+const event = EVENTS.featured;
+const panelId = `${event.id}-details`;
+---
+
+<Section id="events" labelledby="events-titel" tone="accent">
+  <SectionHeader id="events-titel" overline={EVENTS.overline} title={EVENTS.title} size="sm">
+    <p class="vzp-desktop-only">{EVENTS.lead}</p>
+  </SectionHeader>
+
+  <div class="vzp-events__list">
+    <article class="vzp-event" aria-labelledby={`${event.id}-titel`}>
+      <div class="vzp-event__head">
+        <div class="vzp-event__heading">
+          <p class="vzp-event__meta">
+            <span class="vzp-badge">{event.badge}</span>
+            <span class="vzp-overline vzp-overline--muted vzp-event__meta-text">
+              <ResponsiveText text={event.meta} />
+            </span>
+          </p>
+          <h3 id={`${event.id}-titel`} class="vzp-card-title-serif vzp-event__title">
+            <ResponsiveText text={event.title} />
+          </h3>
+        </div>
+        <button
+          type="button"
+          class="vzp-toggle-square"
+          aria-expanded="true"
+          aria-controls={panelId}
+          data-disclosure-trigger
+          data-disclosure-mobile
+        >
+          <span class="sr-only">Details zum Webinar</span>
+          <PlusIcon />
+        </button>
+      </div>
+
+      <div
+        id={panelId}
+        class="vzp-event__panel"
+        data-disclosure-panel
+        data-disclosure-mobile
+        data-open
+      >
+        <div class="vzp-event__body">
+          {event.body.map((paragraph) => (
+            <p class:list={{ 'vzp-desktop-only': paragraph.mobile === '' }}>
+              <ResponsiveText text={paragraph} />
+            </p>
+          ))}
+
+          <h4 class="vzp-overline vzp-overline--muted vzp-event__benefits-title">
+            {event.benefitsLabel}
+          </h4>
+          <ul class="vzp-event__benefits" role="list">
+            {event.benefits.map((benefit) => (
+              <li class:list={{ 'vzp-desktop-only': benefit.mobile === '' }}>
+                <ResponsiveText text={benefit} />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <aside class="vzp-event__aside" aria-label="Termine und Anmeldung">
+          <Overline as="h4" class="vzp-desktop-only">
+            {event.datesLabel}
+          </Overline>
+          <ul class="vzp-event__dates" role="list">
+            {event.dates.map((slot) => (
+              <li class="vzp-event__date">
+                <time datetime={slot.iso}>{slot.date}</time>
+                <span>{slot.time}</span>
+              </li>
+            ))}
+          </ul>
+          <Button href={event.cta.href} size="lg" class="vzp-event__cta">
+            {event.cta.label}
+          </Button>
+          <p class="vzp-event__note vzp-desktop-only">{event.note}</p>
+        </aside>
+      </div>
+    </article>
+
+    <section class="vzp-events__more" aria-labelledby="weitere-termine-titel">
+      {/* Mobil nur fuer Screenreader sichtbar - die Ueberschriftenhierarchie bleibt erhalten. */}
+      <h3 id="weitere-termine-titel" class="vzp-overline vzp-overline--muted max-tablet:sr-only">
+        {EVENTS.moreLabel}
+      </h3>
+      <ul class="vzp-events__more-list" role="list">
+        {EVENTS.more.map((item) => (
+          <li class="vzp-more-event">
+            <div class="vzp-more-event__head">
+              <div>
+                <p class="vzp-overline vzp-more-event__overline">{item.overline}</p>
+                <h4 class="vzp-more-event__title">
+                  {item.title}
+                  <span class="vzp-desktop-only">{item.titleSuffix}</span>
+                </h4>
+              </div>
+              <button
+                type="button"
+                class="vzp-toggle-square"
+                aria-expanded="false"
+                aria-controls={item.id}
+                data-disclosure-trigger
+                data-disclosure-mobile
+              >
+                <span class="sr-only">Details: {item.title}</span>
+                <PlusIcon />
+              </button>
+            </div>
+            <div
+              id={item.id}
+              class="vzp-more-event__panel"
+              data-disclosure-panel
+              data-disclosure-mobile
+            >
+              <p>{item.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Section>
+
+<style>
+  .vzp-events__list {
+    margin-block-start: var(--vzp-space-6);
+  }
+
+  /* --- Featured-Event --------------------------------------------------- */
+  .vzp-event {
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-on-accent);
+    background-color: var(--vzp-color-surface-default);
+  }
+
+  .vzp-event__head {
+    display: flex;
+    gap: var(--vzp-space-4);
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--vzp-space-4);
+    border-inline-start: var(--vzp-border-width-300) solid var(--vzp-color-action-accent);
+    background-color: var(--vzp-color-background-default);
+  }
+
+  .vzp-event__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--vzp-space-2) var(--vzp-space-3);
+    align-items: center;
+  }
+
+  .vzp-event__meta-text {
+    font-weight: var(--vzp-font-weight-semibold);
+  }
+
+  /* Badge (Kategorie): einzige Orange-Flaeche - weisse 11-px-Versalien auf
+     Orange 500 erreichen 4,9:1. */
+  .vzp-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--vzp-space-1) var(--vzp-space-2);
+    background-color: var(--vzp-color-action-accent);
+    color: var(--vzp-color-text-on-action);
+    font-size: 0.6875rem;
+    font-weight: var(--vzp-font-weight-bold);
+    line-height: var(--vzp-line-height-300);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vzp-event__title {
+    margin-block-start: var(--vzp-space-3);
+    font-size: var(--vzp-font-size-500);
+  }
+
+  /* Quadratischer Umschalter 44 x 44 (Touch-Mindestgroesse). */
+  .vzp-toggle-square {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: var(--vzp-size-touch-min);
+    block-size: var(--vzp-size-touch-min);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-text-secondary);
+    border-radius: var(--vzp-radius-interactive);
+    background-color: var(--vzp-color-surface-default);
+    color: var(--vzp-color-action-primary);
+    cursor: pointer;
+    transition: background-color var(--vzp-motion-state-change) var(--vzp-easing-standard);
+  }
+
+  .vzp-toggle-square:hover {
+    background-color: var(--vzp-button-secondary-background-hover);
+  }
+
+  .vzp-event__panel {
+    display: grid;
+    gap: var(--vzp-space-6);
+    padding: var(--vzp-space-5) var(--vzp-space-4);
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-event__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-space-3);
+    font-size: var(--vzp-font-size-450);
+    line-height: var(--vzp-line-height-600);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-event__benefits-title {
+    margin-block-start: var(--vzp-space-2);
+  }
+
+  .vzp-event__benefits {
+    display: grid;
+    gap: var(--vzp-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--vzp-font-size-400);
+    line-height: var(--vzp-line-height-400);
+  }
+
+  .vzp-event__benefits > li {
+    position: relative;
+    padding-inline-start: var(--vzp-space-4);
+  }
+
+  /* Mobil runde Marke, ab 48em blaues Quadrat (Entwurf 1a/1b). */
+  .vzp-event__benefits > li::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.55em;
+    inset-inline-start: 0;
+    inline-size: 0.3125rem;
+    block-size: 0.3125rem;
+    border-radius: var(--vzp-radius-full);
+    background-color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-event__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-space-4);
+  }
+
+  .vzp-event__dates {
+    display: grid;
+    gap: var(--vzp-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vzp-event__date {
+    display: flex;
+    flex-direction: column;
+    padding-inline-start: var(--vzp-space-3);
+    border-inline-start: var(--vzp-border-width-200) solid var(--vzp-color-border-brand);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-event__date time {
+    font-weight: var(--vzp-font-weight-semibold);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-event__cta {
+    inline-size: 100%;
+  }
+
+  .vzp-event__note {
+    font-size: var(--vzp-font-size-200);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  /* --- Weitere Termine ------------------------------------------------- */
+  .vzp-events__more-list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vzp-more-event {
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-on-accent);
+    border-block-start: 0;
+    border-inline-start: var(--vzp-border-width-300) solid var(--vzp-color-action-accent);
+    background-color: var(--vzp-color-background-default);
+  }
+
+  .vzp-more-event__head {
+    display: flex;
+    gap: var(--vzp-space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--vzp-space-4);
+  }
+
+  .vzp-more-event__overline {
+    font-size: 0.6875rem;
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-more-event__title {
+    margin-block-start: var(--vzp-space-1);
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-500);
+    font-weight: var(--vzp-font-weight-regular);
+    line-height: var(--vzp-line-height-300);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-more-event__panel {
+    padding: 0 var(--vzp-space-4) var(--vzp-space-4);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-500);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-events__list {
+      margin-block-start: var(--vzp-space-12);
+    }
+
+    /* Zweispaltig: links Inhalt (Papierweiss, Orange-Kante), rechts Termine. */
+    .vzp-event {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      grid-template-areas:
+        'head aside'
+        'body aside';
+      grid-template-rows: auto 1fr;
+    }
+
+    .vzp-event__head {
+      grid-area: head;
+      padding: var(--vzp-space-10) var(--vzp-space-10) 0;
+    }
+
+    .vzp-event__panel {
+      display: contents;
+    }
+
+    .vzp-event__body {
+      grid-area: body;
+      gap: var(--vzp-space-4);
+      padding: var(--vzp-space-6) var(--vzp-space-10) var(--vzp-space-10);
+      border-inline-start: var(--vzp-border-width-300) solid var(--vzp-color-action-accent);
+      background-color: var(--vzp-color-background-default);
+      font-size: var(--vzp-font-size-400);
+    }
+
+    .vzp-event__title {
+      margin-block-start: var(--vzp-space-5);
+      font-size: var(--vzp-font-size-800);
+    }
+
+    .vzp-event__benefits-title {
+      margin-block-start: var(--vzp-space-4);
+    }
+
+    .vzp-event__benefits {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-4) var(--vzp-space-12);
+      font-size: var(--vzp-font-size-300);
+      line-height: var(--vzp-line-height-500);
+    }
+
+    .vzp-event__benefits > li::before {
+      inline-size: 0.375rem;
+      block-size: 0.375rem;
+      border-radius: 0;
+      background-color: var(--vzp-color-border-brand);
+    }
+
+    .vzp-event__aside {
+      grid-area: aside;
+      justify-content: center;
+      gap: var(--vzp-space-6);
+      padding: var(--vzp-space-10);
+      border-inline-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    }
+
+    .vzp-event__dates {
+      gap: 0;
+      margin-block-start: calc(-1 * var(--vzp-space-2));
+      border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    }
+
+    .vzp-event__date {
+      padding: var(--vzp-space-5);
+      border: 0;
+    }
+
+    .vzp-event__date + .vzp-event__date {
+      border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    }
+
+    .vzp-event__date time {
+      font-size: var(--vzp-font-size-450);
+    }
+
+    .vzp-event__note {
+      margin-block-start: calc(-1 * var(--vzp-space-2));
+    }
+
+    /* Weitere Termine als zweispaltige Platzhalter-Karten. */
+    .vzp-events__more {
+      margin-block-start: var(--vzp-space-8);
+    }
+
+    .vzp-events__more-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-block-start: var(--vzp-space-4);
+      border: var(--vzp-border-width-100) solid var(--vzp-color-border-on-accent);
+    }
+
+    .vzp-more-event {
+      padding: var(--vzp-space-8);
+      border: 0;
+      border-inline-start: var(--vzp-border-width-300) solid var(--vzp-color-action-accent);
+    }
+
+    .vzp-more-event__head {
+      padding: 0;
+    }
+
+    .vzp-more-event__overline {
+      font-size: var(--vzp-font-size-100);
+      color: var(--vzp-color-orange-600);
+    }
+
+    .vzp-more-event__title {
+      margin-block-start: var(--vzp-space-3);
+      font-size: var(--vzp-font-size-700);
+    }
+
+    .vzp-more-event__panel {
+      margin-block-start: var(--vzp-space-3);
+      padding: 0;
+    }
+  }
+</style>

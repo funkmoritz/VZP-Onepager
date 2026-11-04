@@ -1,0 +1,196 @@
+---
+import { NEWSLETTER } from '../../data/content';
+import Button from '../Button.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+
+/*
+ * Newsletter-Anmeldung (ehemals Layer/Footer-Link): Inline-Formular mit
+ * sichtbarem Label, Helper und Datenschutz-Checkbox.
+ * Platzhalter ersetzen keine Labels; Pflichtfelder sind im Label genannt.
+ */
+const emailId = 'newsletter-email';
+const helperId = 'newsletter-email-hilfe';
+const consentId = 'newsletter-einwilligung';
+---
+
+<section id={NEWSLETTER.id} class="vzp-newsletter" aria-labelledby="newsletter-titel">
+  <div class="vzp-newsletter__intro">
+    <h3 id="newsletter-titel" class="vzp-card-title-serif">
+      {NEWSLETTER.title}
+    </h3>
+    <p class="vzp-newsletter__text">
+      <ResponsiveText text={NEWSLETTER.text} />
+    </p>
+  </div>
+
+  <form class="vzp-newsletter__form" action={NEWSLETTER.action} method="post" enctype="text/plain">
+    <div class="vzp-field">
+      <label class="vzp-field__label" for={emailId}>
+        {NEWSLETTER.emailLabel} <span class="vzp-field__required">(erforderlich)</span>
+      </label>
+      <input
+        class="vzp-field__input"
+        id={emailId}
+        name="email"
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        spellcheck="false"
+        placeholder={NEWSLETTER.emailPlaceholder}
+        aria-describedby={helperId}
+        required
+      />
+      <p id={helperId} class="vzp-field__helper vzp-desktop-only">
+        {NEWSLETTER.helper}
+      </p>
+    </div>
+
+    <div class="vzp-checkbox">
+      <input
+        class="vzp-checkbox__input"
+        id={consentId}
+        name="einwilligung"
+        type="checkbox"
+        required
+      />
+      <label class="vzp-checkbox__label" for={consentId}>
+        Ich habe die{' '}
+        <a class="vzp-link" href="/datenschutz">
+          Datenschutzhinweise
+        </a>{' '}
+        gelesen und stimme der Verarbeitung meiner Daten zu.
+      </label>
+    </div>
+
+    <Button type="submit" size="lg" class="vzp-newsletter__submit">
+      {NEWSLETTER.submit}
+    </Button>
+  </form>
+</section>
+
+<style>
+  .vzp-newsletter {
+    display: grid;
+    gap: var(--vzp-space-5);
+    margin-block-start: var(--vzp-space-8);
+    padding: var(--vzp-space-5) var(--vzp-space-4);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-on-accent);
+    background-color: var(--vzp-color-background-accent);
+  }
+
+  .vzp-newsletter__text {
+    margin-block-start: var(--vzp-space-3);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-500);
+  }
+
+  .vzp-newsletter__form {
+    display: grid;
+    gap: var(--vzp-space-4);
+    justify-items: start;
+  }
+
+  .vzp-field {
+    display: grid;
+    gap: var(--vzp-space-2);
+    inline-size: 100%;
+  }
+
+  .vzp-field__label {
+    font-size: var(--vzp-input-label-size);
+    font-weight: var(--vzp-font-weight-semibold);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-field__required {
+    font-weight: var(--vzp-font-weight-regular);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-field__input {
+    inline-size: 100%;
+    min-block-size: var(--vzp-input-height);
+    padding-inline: var(--vzp-input-padding-x);
+    border: var(--vzp-border-width-100) solid var(--vzp-input-border-default);
+    border-radius: var(--vzp-input-radius);
+    background-color: var(--vzp-input-background);
+    color: var(--vzp-color-text-primary);
+    font: inherit;
+    font-size: var(--vzp-font-size-400);
+    transition: border-color var(--vzp-motion-state-change) var(--vzp-easing-standard);
+  }
+
+  .vzp-field__input::placeholder {
+    color: var(--vzp-color-text-secondary);
+    opacity: 1;
+  }
+
+  .vzp-field__input:hover {
+    border-color: var(--vzp-input-border-hover);
+  }
+
+  .vzp-field__input:focus-visible {
+    border-color: var(--vzp-input-border-focus);
+  }
+
+  /* Fehlerzustand erst nach Interaktion, nicht beim Laden - nie nur farbig:
+     der Browser liefert zusaetzlich seine Validierungsmeldung. */
+  .vzp-field__input:user-invalid {
+    border-color: var(--vzp-input-border-error);
+    border-width: var(--vzp-border-width-200);
+  }
+
+  .vzp-field__helper {
+    font-size: var(--vzp-font-size-150);
+    line-height: var(--vzp-line-height-500);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-checkbox {
+    display: flex;
+    gap: var(--vzp-space-3);
+    align-items: flex-start;
+  }
+
+  .vzp-checkbox__input {
+    flex-shrink: 0;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    margin-block-start: 0.1em;
+    accent-color: var(--vzp-color-action-primary);
+    cursor: pointer;
+  }
+
+  .vzp-checkbox__label {
+    font-size: var(--vzp-font-size-200);
+    line-height: var(--vzp-line-height-500);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-newsletter__submit {
+    inline-size: 100%;
+  }
+
+  @media (min-width: 48em) {
+    .vzp-newsletter {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-16);
+      margin-block-start: var(--vzp-space-12);
+      padding: var(--vzp-space-10);
+    }
+
+    .vzp-newsletter__text {
+      max-inline-size: 28rem;
+      font-size: var(--vzp-font-size-400);
+      line-height: var(--vzp-line-height-700);
+    }
+
+    .vzp-checkbox__label {
+      font-size: var(--vzp-font-size-300);
+    }
+
+    .vzp-newsletter__submit {
+      inline-size: auto;
+    }
+  }
+</style>

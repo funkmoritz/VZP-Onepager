@@ -19,15 +19,25 @@ import Logo from './Logo.astro';
  * unabhaengig von der Spezifitaet.
  */
 
+interface Props {
+  /** '' auf der Startseite, '/' auf Unterseiten - davor stehen die Sprungmarken. */
+  anchorBase?: string;
+}
+
+const { anchorBase = '' } = Astro.props;
 const NAV_ID = 'hauptnavigation';
 ---
 
 <header class="vzp-header" data-vzp-header>
-  <div class="vzp-header__bar mx-auto flex max-w-content items-center gap-component-md px-page-margin">
+  <div class="vzp-header__bar vzp-container flex items-center gap-component-md">
     {/* '#top' ist der in HTML definierte Sonderanker fuer den Dokumentanfang:
          kein Reload und kein leeres Fragment im Verlauf. Der Name steht am Link,
          das Logo traegt deshalb keinen Alternativtext (sonst doppelt). */}
-    <a class="vzp-header__brand" href="#top" aria-label={`${SITE_NAME} – zum Seitenanfang`}>
+    <a
+      class="vzp-header__brand"
+      href={`${anchorBase}#top`}
+      aria-label={`${SITE_NAME} – zum Seitenanfang`}
+    >
       <Logo />
     </a>
 
@@ -65,7 +75,7 @@ const NAV_ID = 'hauptnavigation';
       <ul class="vzp-header__list" role="list">
         {NAV_ITEMS.map((item) => (
           <li>
-            <a class="vzp-header__link" href={`#${item.id}`}>
+            <a class="vzp-header__link" href={`${anchorBase}#${item.id}`}>
               {item.label}
             </a>
           </li>
@@ -74,7 +84,7 @@ const NAV_ID = 'hauptnavigation';
     </nav>
 
     {/* Bleibt ein <a>: er navigiert. Kein role="button". */}
-    <Button href={HEADER_CTA.href} class="vzp-header__cta">
+    <Button href={`${anchorBase}${HEADER_CTA.href}`} class="vzp-header__cta">
       <span>
         {HEADER_CTA.label}
         <span class="vzp-header__cta-rest">{HEADER_CTA.labelSuffix}</span>
@@ -340,6 +350,18 @@ const NAV_ID = 'hauptnavigation';
   @media (min-width: 64em) {
     .vzp-header__burger {
       display: none;
+    }
+
+    /* Nav/Primary: 16 px Medium, aktiv SemiBold. Die Unterstreichung sitzt an
+       der Unterkante der Kopfzeile. */
+    .vzp-header__link {
+      min-block-size: calc(var(--header-h) - var(--vzp-border-width-100));
+      font-size: var(--vzp-font-size-400);
+      font-weight: var(--vzp-font-weight-medium);
+    }
+
+    .vzp-header__link[aria-current] {
+      font-weight: var(--vzp-font-weight-semibold);
     }
 
     .vzp-header__nav {

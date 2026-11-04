@@ -1,0 +1,24 @@
+---
+import type { Responsive } from '../../data/content';
+
+/**
+ * Gibt einen Text mit optional gekuerzter Mobilfassung aus (Entwurf 1b).
+ * Ohne abweichende Mobilfassung entsteht kein zusaetzliches Markup.
+ * Eine leere Mobilfassung ('') blendet den Text mobil aus.
+ */
+interface Props {
+  text: Responsive;
+}
+
+const { text } = Astro.props;
+const hasMobile = text.mobile !== undefined && text.mobile !== text.desktop;
+---
+
+{hasMobile ? (
+  <>
+    <span class="vzp-desktop-only">{text.desktop}</span>
+    {text.mobile && <span class="vzp-mobile-only">{text.mobile}</span>}
+  </>
+) : (
+  text.desktop
+)}

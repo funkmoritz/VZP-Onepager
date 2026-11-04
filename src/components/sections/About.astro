@@ -1,0 +1,595 @@
+---
+import { getImage, Picture } from 'astro:assets';
+import imageMobile from '../../assets/images/ueber-uns-papiermaschine.jpg';
+import imageDesktop from '../../assets/images/ueber-uns-papierhuelsen.jpg';
+import portraitSchwanke from '../../assets/images/portraet-bernhard-schwanke.jpg';
+import portraitUllrich from '../../assets/images/portraet-horst-ullrich.jpg';
+import { ABOUT, MANAGEMENT } from '../../data/content';
+import Button from '../Button.astro';
+import EditorialNote from '../ui/EditorialNote.astro';
+import PlusIcon from '../ui/PlusIcon.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+/*
+ * Ueber uns: Philosophie, Beiraete, Geschaeftsfuehrung mit Inline-Kurzvita
+ * (ehemals Overlays 2/3). Mobil steht die Geschaeftsfuehrung vor den
+ * Beiraeten (Entwurf 1b).
+ */
+
+const portraits: Record<string, ImageMetadata> = {
+  'horst-ullrich': portraitUllrich,
+  'bernhard-schwanke': portraitSchwanke,
+};
+
+// Art Direction: mobil ein anderes Motiv als auf Desktop (Entwurf 1a/1b).
+// Ein einziges <picture> mit media-Quellen - Astros <Picture> kennt keine
+// media-Attribute, deshalb hier per getImage() gebaut.
+const desktopSizes = '(min-width: 80em) 568px, (min-width: 48em) 45vw, 100vw';
+const desktopWidths = [568, 900, 1016];
+const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promise.all([
+  getImage({ src: imageMobile, format: 'avif', widths: [359] }),
+  getImage({ src: imageMobile, format: 'webp', widths: [359] }),
+  getImage({ src: imageDesktop, format: 'avif', widths: desktopWidths }),
+  getImage({ src: imageDesktop, format: 'webp', widths: desktopWidths }),
+  getImage({ src: imageDesktop, format: 'jpg', width: 900 }),
+]);
+---
+
+<Section id="ueber-uns" labelledby="ueber-uns-titel" tone="default">
+  <SectionHeader
+    id="ueber-uns-titel"
+    overline={ABOUT.overline}
+    title={ABOUT.title}
+    class="vzp-about__header"
+  />
+
+  <p class="vzp-about__philosophy vzp-desktop-only">{ABOUT.philosophy.desktop}</p>
+
+  <div class="vzp-about__intro">
+    {/* Atmosphaerisches Bild ohne zusaetzliche Information: leerer Alt-Text. */}
+    <div class="vzp-about__media">
+      <picture>
+        <source
+          media="(max-width: 47.999em)"
+          type="image/avif"
+          srcset={mobileAvif.srcSet.attribute}
+        />
+        <source
+          media="(max-width: 47.999em)"
+          type="image/webp"
+          srcset={mobileWebp.srcSet.attribute}
+        />
+        <source type="image/avif" srcset={desktopAvif.srcSet.attribute} sizes={desktopSizes} />
+        <source type="image/webp" srcset={desktopWebp.srcSet.attribute} sizes={desktopSizes} />
+        <img
+          src={fallback.src}
+          alt=""
+          width={imageDesktop.width}
+          height={imageDesktop.height}
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+    </div>
+
+    <div class="vzp-about__text">
+      <p class="vzp-mobile-only">{ABOUT.philosophy.mobile}</p>
+      {ABOUT.body.map((paragraph) => (
+        <p class:list={{ 'vzp-desktop-only': paragraph.mobile === '' }}>
+          <ResponsiveText text={paragraph} />
+        </p>
+      ))}
+
+      <ul class="vzp-stats vzp-desktop-only" role="list">
+        {ABOUT.stats.map((stat) => (
+          <li class="vzp-stats__item">
+            <span class="vzp-stats__value">{stat.value}</span>
+            <span class="vzp-stats__label">{stat.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="vzp-about__people">
+    {/* Beiraete */}
+    <section class="vzp-board" aria-labelledby="beiraete-titel">
+      <h3 id="beiraete-titel" class="vzp-h4">
+        {ABOUT.board.title}
+      </h3>
+      <p class="vzp-board__text vzp-desktop-only">{ABOUT.board.text}</p>
+      <ol class="vzp-board__list" role="list">
+        {ABOUT.board.members.map((member, index) => (
+          <li class="vzp-board__member">
+            <span class="vzp-board__num vzp-overline" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <span class="vzp-board__name">{member.name}</span>
+            <span class="vzp-board__company">{member.company}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    {/* Geschaeftsfuehrung */}
+    <section class="vzp-management" aria-labelledby="geschaeftsfuehrung-titel">
+      <h3 id="geschaeftsfuehrung-titel" class="vzp-h3-serif vzp-management__title">
+        {ABOUT.managementTitle}
+      </h3>
+
+      <ul class="vzp-management__list" role="list">
+        {MANAGEMENT.map((manager) => {
+          const panelId = `kurzvita-${manager.id}`;
+          const portrait = portraits[manager.id];
+          return (
+            <li class="vzp-manager">
+              <div class="vzp-manager__row">
+                {portrait && (
+                  <Picture
+                    src={portrait}
+                    alt={`Porträt ${manager.name}`}
+                    formats={['avif', 'webp']}
+                    widths={[96, 192]}
+                    sizes="(min-width: 48em) 96px, 72px"
+                    class="vzp-manager__photo"
+                    loading="lazy"
+                  />
+                )}
+
+                <div class="vzp-manager__identity">
+                  <h4 class="vzp-manager__name">{manager.name}</h4>
+                  <p class="vzp-manager__role">
+                    {manager.role}
+                    <span class="vzp-desktop-only"> · {manager.since}</span>
+                  </p>
+                </div>
+
+                <div class="vzp-manager__actions">
+                  <a class="vzp-manager__phone vzp-desktop-only" href={manager.phoneHref}>
+                    {manager.phone}
+                  </a>
+                  <Button
+                    href={manager.phoneHref}
+                    variant="secondary"
+                    class="vzp-manager__phone-button vzp-mobile-only"
+                  >
+                    {manager.phone}
+                  </Button>
+                  <Button href={manager.emailHref} class="vzp-desktop-only">
+                    E-Mail schreiben
+                    <span class="sr-only"> an {manager.name}</span>
+                  </Button>
+                  <button
+                    type="button"
+                    class="vzp-manager__vita-toggle"
+                    aria-expanded="false"
+                    aria-controls={panelId}
+                    data-disclosure-trigger
+                  >
+                    <span>
+                      Kurzvita<span class="sr-only"> {manager.name}</span>
+                    </span>
+                    <PlusIcon />
+                  </button>
+                </div>
+              </div>
+
+              <div
+                id={panelId}
+                class:list={['vzp-manager__vita', { 'has-quote': manager.vitaQuote }]}
+                data-disclosure-panel
+              >
+                <div class="vzp-manager__vita-text">
+                  {manager.vita.map((paragraph) => (
+                    <p>{paragraph}</p>
+                  ))}
+                  <EditorialNote>
+                    Platzhalter — Volltext der Kurzvita aus dem Bestand einsetzen.
+                  </EditorialNote>
+                </div>
+                {manager.vitaQuote && (
+                  <blockquote class="vzp-manager__vita-quote">
+                    <p>„{manager.vitaQuote}“</p>
+                  </blockquote>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  </div>
+</Section>
+
+<style>
+  .vzp-about__philosophy {
+    margin-block-start: var(--vzp-space-12);
+    padding-inline-start: var(--vzp-space-6);
+    border-inline-start: var(--vzp-border-width-300) solid var(--vzp-color-action-accent);
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-600);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-about__intro {
+    display: grid;
+    gap: var(--vzp-space-5);
+    margin-block-start: var(--vzp-space-5);
+  }
+
+  .vzp-about__media {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background-color: var(--vzp-color-surface-subtle);
+  }
+
+  .vzp-about__media :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .vzp-about__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-spacing-stack-paragraph);
+    font-size: var(--vzp-font-size-450);
+    line-height: var(--vzp-line-height-700);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: var(--vzp-space-4) 0 0;
+    padding: 0;
+    list-style: none;
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-stats__item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--vzp-space-5) var(--vzp-space-6);
+  }
+
+  .vzp-stats__item + .vzp-stats__item {
+    border-inline-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-stats__value {
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-900);
+    line-height: var(--vzp-line-height-200);
+    color: var(--vzp-color-text-brand);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vzp-stats__label {
+    font-size: var(--vzp-font-size-300);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  /* --- Personen: Mobil Geschaeftsfuehrung vor Beiraeten ----------------- */
+  .vzp-about__people {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-space-5);
+    margin-block-start: var(--vzp-space-6);
+  }
+
+  .vzp-management {
+    order: -1;
+  }
+
+  /* --- Beiraete --------------------------------------------------------- */
+  .vzp-board {
+    padding: var(--vzp-space-5);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    background-color: var(--vzp-color-surface-default);
+  }
+
+  .vzp-board .vzp-h4 {
+    font-size: var(--vzp-font-size-500);
+  }
+
+  .vzp-board__text {
+    margin-block-start: var(--vzp-space-2);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-board__list {
+    display: grid;
+    gap: var(--vzp-space-4);
+    margin: var(--vzp-space-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vzp-board__member {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-inline-start: var(--vzp-space-4);
+  }
+
+  /* Mobil: blaue Quadrat-Marke statt Nummer (Entwurf 1b). */
+  .vzp-board__member::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.55em;
+    inset-inline-start: 0;
+    inline-size: 0.375rem;
+    block-size: 0.375rem;
+    background-color: var(--vzp-color-border-brand);
+  }
+
+  .vzp-board__num {
+    display: none;
+  }
+
+  .vzp-board__name {
+    font-size: var(--vzp-font-size-400);
+    font-weight: var(--vzp-font-weight-semibold);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-board__company {
+    font-size: var(--vzp-font-size-400);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  /* --- Geschaeftsfuehrung ---------------------------------------------- */
+  .vzp-management__title {
+    display: none;
+  }
+
+  .vzp-management__list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    background-color: var(--vzp-color-surface-default);
+  }
+
+  .vzp-manager + .vzp-manager {
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-manager__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--vzp-space-4);
+    align-items: center;
+    padding: var(--vzp-space-4) var(--vzp-space-4) 0;
+  }
+
+  .vzp-manager__photo {
+    display: block;
+    inline-size: 4.5rem;
+    block-size: 4.5rem;
+    object-fit: cover;
+    object-position: top;
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-subtle);
+  }
+
+  .vzp-manager__name {
+    font-family: var(--vzp-typography-ui-family);
+    font-size: var(--vzp-font-size-500);
+    font-weight: var(--vzp-font-weight-semibold);
+    line-height: var(--vzp-line-height-300);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-manager__role {
+    margin-block-start: var(--vzp-space-1);
+    font-size: var(--vzp-font-size-300);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-manager__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-space-3);
+  }
+
+  .vzp-manager__phone {
+    font-size: var(--vzp-font-size-300);
+    font-weight: var(--vzp-font-weight-semibold);
+    color: var(--vzp-color-link-default);
+    text-decoration: none;
+  }
+
+  .vzp-manager__phone:hover {
+    color: var(--vzp-color-link-hover);
+    text-decoration: underline;
+  }
+
+  .vzp-manager__phone-button {
+    inline-size: 100%;
+  }
+
+  /* Kurzvita-Umschalter: mobil volle Zeile mit Plus rechts. */
+  .vzp-manager__vita-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--vzp-space-3);
+    min-block-size: var(--vzp-size-touch-min);
+    margin-block-end: var(--vzp-space-1);
+    padding-inline: var(--vzp-space-1);
+    border: 0;
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    background: transparent;
+    color: var(--vzp-color-action-primary);
+    font-size: var(--vzp-font-size-300);
+    font-weight: var(--vzp-font-weight-semibold);
+    cursor: pointer;
+    transition: background-color var(--vzp-motion-state-change) var(--vzp-easing-standard);
+  }
+
+  .vzp-manager__vita-toggle:hover {
+    background-color: var(--vzp-button-secondary-background-hover);
+  }
+
+  .vzp-manager__vita {
+    display: grid;
+    gap: var(--vzp-space-6);
+    padding: var(--vzp-space-5) var(--vzp-space-4);
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    background-color: var(--vzp-color-background-default);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-600);
+  }
+
+  .vzp-manager__vita-text {
+    display: grid;
+    gap: var(--vzp-spacing-stack-paragraph);
+    max-inline-size: 66ch;
+  }
+
+  .vzp-manager__vita-quote {
+    margin: 0;
+    padding-inline-start: var(--vzp-space-5);
+    border-inline-start: var(--vzp-border-width-300) solid var(--vzp-color-action-accent);
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-500);
+    line-height: var(--vzp-line-height-400);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-about__intro {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-16);
+      margin-block-start: var(--vzp-space-12);
+    }
+
+    .vzp-about__people {
+      gap: var(--vzp-space-24);
+      margin-block-start: var(--vzp-space-12);
+    }
+
+    .vzp-management {
+      order: 0;
+    }
+
+    /* Beiraete: Raster 3 x 2 mit Haarlinien und Nummern. */
+    .vzp-board {
+      padding: var(--vzp-space-8) 0 0;
+      border: 0;
+      border-block-start: var(--vzp-border-width-300) solid var(--vzp-color-border-brand);
+      background-color: transparent;
+    }
+
+    .vzp-board .vzp-h4 {
+      font-size: var(--vzp-font-size-600);
+    }
+
+    .vzp-board__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-border-width-100);
+      margin-block-start: var(--vzp-space-6);
+      border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+      background-color: var(--vzp-color-border-default);
+    }
+
+    .vzp-board__member {
+      padding: var(--vzp-space-6);
+      background-color: var(--vzp-color-surface-default);
+    }
+
+    .vzp-board__member::before {
+      display: none;
+    }
+
+    .vzp-board__num {
+      display: block;
+      margin-block-end: var(--vzp-space-1);
+      font-size: 0.6875rem;
+    }
+
+    .vzp-board__name {
+      font-size: var(--vzp-font-size-450);
+    }
+
+    .vzp-board__company {
+      margin-block-start: var(--vzp-space-2);
+      font-size: var(--vzp-font-size-300);
+    }
+
+    /* Geschaeftsfuehrung: eine Tabelle aus Zeilen, Vita klappt darunter auf. */
+    .vzp-management__title {
+      display: block;
+      margin-block-end: var(--vzp-space-10);
+    }
+
+    .vzp-manager__row {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: var(--vzp-space-6);
+      padding: var(--vzp-space-5) var(--vzp-space-6);
+    }
+
+    .vzp-manager__photo {
+      inline-size: 6rem;
+      block-size: 6rem;
+    }
+
+    .vzp-manager__name {
+      font-size: var(--vzp-font-size-700);
+    }
+
+    .vzp-manager__role {
+      font-size: var(--vzp-font-size-450);
+    }
+
+    .vzp-manager__actions {
+      grid-column: auto;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--vzp-space-3);
+    }
+
+    .vzp-manager__phone {
+      margin-inline-end: var(--vzp-space-5);
+    }
+
+    /* Desktop: Kurzvita als Outline-Button (Secondary, md). */
+    .vzp-manager__vita-toggle {
+      justify-content: center;
+      margin: 0;
+      min-block-size: var(--vzp-button-height-md);
+      padding-inline: var(--vzp-space-4);
+      border: var(--vzp-border-width-100) solid var(--vzp-button-secondary-border);
+      border-radius: var(--vzp-button-radius);
+      font-size: var(--vzp-button-label-size);
+    }
+
+    .vzp-manager__vita {
+      padding: var(--vzp-space-8) var(--vzp-space-6);
+    }
+
+    .vzp-manager__vita.has-quote {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: var(--vzp-space-12);
+      align-items: start;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .vzp-about__header {
+      max-inline-size: 50%;
+    }
+
+    .vzp-board__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

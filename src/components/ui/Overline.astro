@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes, HTMLTag } from 'astro/types';
+
+/** Kicker / Overline: 12 px, Bold, Versalien, Orange 600 (bzw. neutral). */
+interface Props extends HTMLAttributes<'p'> {
+  as?: HTMLTag;
+  muted?: boolean;
+  class?: string;
+  id?: string;
+}
+
+const { as: Tag = 'p', muted = false, class: className, id, ...rest } = Astro.props;
+---
+
+<Tag id={id} class:list={['vzp-overline', { 'vzp-overline--muted': muted }, className]} {...rest}>
+  <slot />
+</Tag>

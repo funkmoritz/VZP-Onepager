@@ -1,0 +1,244 @@
+---
+import { CONTACT, FOOTER, LEGAL_PAGES, NEWSLETTER } from '../data/content';
+import ResponsiveText from './ui/ResponsiveText.astro';
+
+/*
+ * Footer: Dunkelgrau (#333333) ist ihm vorbehalten. 4 Spalten -> gestapelt.
+ * Kontakt · Service & Partner · Recht.
+ */
+---
+
+<footer class="vzp-footer">
+  <div class="vzp-container">
+    <div class="vzp-footer__grid">
+      <div class="vzp-footer__brand">
+        <a class="vzp-footer__logo" href="#top" aria-label="VZP – zum Seitenanfang">
+          <img src="/logo.svg" alt="" width="94" height="34" loading="lazy" decoding="async" />
+        </a>
+        <address class="vzp-footer__address">
+          <span class="vzp-footer__name">
+            <span class="vzp-desktop-only">
+              {CONTACT.nameLines[0]}
+              <br />
+              {CONTACT.nameLines[1]}
+            </span>
+            <span class="vzp-mobile-only">{CONTACT.name}</span>
+          </span>
+          <span class="vzp-footer__street">
+            {CONTACT.street}
+            <span class="vzp-desktop-only">
+              <br />
+            </span>
+            <span class="vzp-mobile-only">, </span>
+            {CONTACT.zip} {CONTACT.city}
+          </span>
+        </address>
+      </div>
+
+      <nav class="vzp-footer__col" aria-labelledby="footer-kontakt">
+        <h2 id="footer-kontakt" class="vzp-footer__heading">
+          Kontakt
+        </h2>
+        <ul role="list">
+          <li>
+            <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+          </li>
+          <li>
+            <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
+          </li>
+        </ul>
+      </nav>
+
+      <nav class="vzp-footer__col" aria-labelledby="footer-service">
+        <h2 id="footer-service" class="vzp-footer__heading">
+          Service &amp; Partner
+        </h2>
+        <ul role="list">
+          <li>
+            <a href={`/#${NEWSLETTER.id}`}>Newsletter</a>
+          </li>
+          <li>
+            <a href={CONTACT.partner.href} rel="noopener" target="_blank">
+              {CONTACT.partner.label}
+              <span class="sr-only"> (neues Fenster)</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <nav class="vzp-footer__col" aria-labelledby="footer-recht">
+        <h2 id="footer-recht" class="vzp-footer__heading">
+          Recht
+        </h2>
+        <ul role="list">
+          {LEGAL_PAGES.map((page) => (
+            <li>
+              <a href={`/${page.slug}`}>{page.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <p class="vzp-footer__copyright">
+      <ResponsiveText text={FOOTER.copyright} />
+    </p>
+  </div>
+</footer>
+
+<style>
+  .vzp-footer {
+    padding-block: var(--vzp-space-8);
+    background-color: var(--vzp-color-background-inverse);
+    color: var(--vzp-color-text-on-inverse);
+  }
+
+  .vzp-footer__grid {
+    display: grid;
+  }
+
+  .vzp-footer__brand {
+    padding-block-end: var(--vzp-space-5);
+  }
+
+  /* Die blaue Wortmarke steht auf einer Papierflaeche - direkt auf
+     Dunkelgrau reicht ihr Kontrast nicht. */
+  .vzp-footer__logo {
+    display: inline-flex;
+    padding: var(--vzp-space-3) var(--vzp-space-4);
+    background-color: var(--vzp-color-background-default);
+  }
+
+  .vzp-footer__logo img {
+    display: block;
+    block-size: 1.75rem;
+    inline-size: auto;
+  }
+
+  .vzp-footer__address {
+    display: grid;
+    gap: 0;
+    margin-block-start: var(--vzp-space-6);
+    font-size: var(--vzp-font-size-300);
+    font-style: normal;
+    line-height: var(--vzp-line-height-500);
+  }
+
+  .vzp-footer__street {
+    color: var(--vzp-color-paper-300);
+  }
+
+  .vzp-footer__col {
+    padding-block: var(--vzp-space-5);
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-neutral-600);
+  }
+
+  .vzp-footer__heading {
+    font-family: var(--vzp-typography-ui-family);
+    font-size: 0.6875rem;
+    font-weight: var(--vzp-font-weight-bold);
+    letter-spacing: var(--vzp-letter-spacing-overline);
+    line-height: var(--vzp-line-height-300);
+    text-transform: uppercase;
+    color: var(--vzp-color-link-inverse);
+  }
+
+  .vzp-footer__col ul {
+    display: grid;
+    gap: var(--vzp-space-2);
+    margin: var(--vzp-space-3) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Links: 15/16 px Nav/Secondary, Unterstreichung als Zustandsmerkmal. */
+  .vzp-footer__col a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 1.75rem;
+    color: var(--vzp-color-text-on-inverse);
+    font-size: var(--vzp-font-size-400);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color var(--vzp-motion-state-change) var(--vzp-easing-standard);
+  }
+
+  .vzp-footer__col a:hover {
+    color: var(--vzp-color-link-inverse);
+    text-decoration-thickness: 2px;
+  }
+
+  .vzp-footer a:focus-visible {
+    outline-color: var(--vzp-color-focus-ring-inverse);
+  }
+
+  .vzp-footer__copyright {
+    padding-block-start: var(--vzp-space-5);
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-neutral-600);
+    color: var(--vzp-color-paper-300);
+    font-size: var(--vzp-font-size-200);
+    line-height: var(--vzp-line-height-500);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-footer {
+      padding-block: var(--vzp-space-16) var(--vzp-space-12);
+    }
+
+    .vzp-footer__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-10) var(--vzp-spacing-grid-gutter);
+      padding-block-end: var(--vzp-space-12);
+    }
+
+    .vzp-footer__brand {
+      grid-column: 1 / -1;
+      padding: 0;
+    }
+
+    .vzp-footer__logo {
+      padding: var(--vzp-space-4) var(--vzp-space-6);
+    }
+
+    .vzp-footer__address {
+      gap: var(--vzp-space-3);
+      font-size: var(--vzp-font-size-300);
+    }
+
+    .vzp-footer__col {
+      padding: 0;
+      border: 0;
+    }
+
+    .vzp-footer__heading {
+      font-size: var(--vzp-font-size-100);
+    }
+
+    .vzp-footer__col ul {
+      gap: var(--vzp-space-2);
+      margin-block-start: var(--vzp-space-5);
+    }
+
+    .vzp-footer__col a {
+      font-size: var(--vzp-font-size-450);
+    }
+
+    .vzp-footer__copyright {
+      padding-block-start: var(--vzp-space-8);
+      font-size: var(--vzp-font-size-200);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .vzp-footer__grid {
+      /* Spaltenkanten laut Entwurf: 438 / 268 / 268 px, Recht nimmt den Rest. */
+      grid-template-columns: minmax(0, 438fr) minmax(0, 268fr) minmax(0, 268fr) auto;
+      column-gap: var(--vzp-space-8);
+    }
+
+    .vzp-footer__brand {
+      grid-column: auto;
+    }
+  }
+</style>

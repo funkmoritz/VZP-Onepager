@@ -5,9 +5,11 @@
  */
 export const SITE_NAME = 'VZP';
 
-export const SITE_TITLE = 'VZP';
+export const SITE_TITLE =
+  'VZP – Versicherungsstelle Zellstoff und Papier | Risikopartner der Papierwirtschaft';
 
-export const SITE_DESCRIPTION = 'TODO: Beschreibung der Seite (ca. 150–160 Zeichen).';
+export const SITE_DESCRIPTION =
+  'Die VZP versichert und berät Unternehmen der Papierwirtschaft – mit Branchenkenntnis aus erster Hand und der Marktstärke unseres Partners Funk.';
 
 /** Sprache des Dokuments, z. B. für <html lang> und og:locale. */
 export const SITE_LANG = 'de';

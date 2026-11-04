@@ -1,0 +1,198 @@
+/*
+ * Textstile des VZP Design Systems (Figma-Seite "Typografie") als Klassen.
+ *
+ * Die semantische Typo-Skala fehlt in vzp-tokens.json (siehe README,
+ * "Bekannte Luecke"). Sie steht deshalb hier - gebaut ausschliesslich aus
+ * Primitives der JSON, die Groessen je Breakpoint wie in Figma notiert
+ * (Mobile / ab 48em / ab 64em).
+ *
+ * In @layer components: Tailwind-Utilities im Markup duerfen einzelne Werte
+ * weiterhin uebersteuern.
+ *
+ * Breakpoints (Media Queries koennen keine var() lesen):
+ *   48em = --vzp-breakpoint-tablet, 64em = --vzp-breakpoint-sm-desktop
+ */
+
+@layer components {
+  /* 01 Display - nur Hero. 40 / 48 / 64 px, LH 1.05, LS -0.02em */
+  .vzp-display {
+    font-family: var(--vzp-typography-heading-family);
+    font-size: 2.5rem;
+    font-weight: var(--vzp-font-weight-regular);
+    line-height: var(--vzp-line-height-100);
+    letter-spacing: var(--vzp-letter-spacing-tight);
+    color: var(--vzp-color-text-brand);
+    text-wrap: balance;
+  }
+
+  /* Sektionstitel (h2). Im Screendesign auf Heading/H1-Groesse gesetzt:
+     32 / 40 / 48 px, LH 1.12, LS -0.015em. */
+  .vzp-section-title {
+    font-family: var(--vzp-typography-heading-family);
+    font-size: 2rem;
+    font-weight: var(--vzp-font-weight-regular);
+    line-height: var(--vzp-line-height-200);
+    letter-spacing: var(--vzp-letter-spacing-snug);
+    color: var(--vzp-color-text-brand);
+  }
+
+  /* 03 Heading/H2 als Serif-Untertitel: 24 / 28 / 36 px, LH 1.18 */
+  .vzp-h3-serif {
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-700);
+    font-weight: var(--vzp-font-weight-regular);
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    color: var(--vzp-color-text-brand);
+    text-wrap: balance;
+  }
+
+  /* 04 Heading/H3 Serif: 22 / 24 / 28 px, LH 1.25 (Kartentitel Serif) */
+  .vzp-card-title-serif {
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-600);
+    font-weight: var(--vzp-font-weight-regular);
+    line-height: var(--vzp-line-height-300);
+    color: var(--vzp-color-text-brand);
+  }
+
+  /* 05 Heading/H4: 20 / 22 px, Noto Sans SemiBold, LH 1.30 */
+  .vzp-h4 {
+    font-family: var(--vzp-typography-ui-family);
+    font-size: 1.25rem;
+    font-weight: var(--vzp-font-weight-semibold);
+    line-height: 1.3;
+    color: var(--vzp-color-text-primary);
+  }
+
+  /* 06 Heading/H5: 17 / 18 px, SemiBold, LH 1.40 */
+  .vzp-h5 {
+    font-family: var(--vzp-typography-ui-family);
+    font-size: var(--vzp-font-size-450);
+    font-weight: var(--vzp-font-weight-semibold);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-primary);
+  }
+
+  /* 08 Lead: 18 / 20 px, Regular, LH 1.55 */
+  .vzp-lead {
+    font-size: var(--vzp-font-size-500);
+    line-height: var(--vzp-line-height-500);
+    color: var(--vzp-color-text-primary);
+  }
+
+  /* 09 Body/Large: 17 / 18 px, LH 1.65 */
+  .vzp-body-lg {
+    font-size: var(--vzp-font-size-450);
+    line-height: var(--vzp-line-height-700);
+  }
+
+  /* 11 Body/Small: 14 px, LH 1.55 */
+  .vzp-body-sm {
+    font-size: var(--vzp-font-size-200);
+    line-height: var(--vzp-line-height-500);
+  }
+
+  /* 18 Overline (Kicker): 12 px, Bold, LS 0.12em, Versalien.
+     Kicker-Text auf Papier in Orange 600 (#A62800, 5,6:1) - Orange 500 waere
+     als Textfarbe auf Papierweiss zu schwach. */
+  .vzp-overline {
+    font-family: var(--vzp-typography-ui-family);
+    font-size: var(--vzp-font-size-100);
+    font-weight: var(--vzp-font-weight-bold);
+    line-height: var(--vzp-line-height-300);
+    letter-spacing: var(--vzp-letter-spacing-overline);
+    text-transform: uppercase;
+    color: var(--vzp-color-orange-600);
+  }
+
+  /* Neutrale Variante (Metadaten-Kicker wie "Ihre Mehrwerte"). */
+  .vzp-overline--muted {
+    color: var(--vzp-color-text-secondary);
+  }
+
+  /* Textlink im Fliesstext: Zustand nie nur ueber Farbe (Unterstreichung). */
+  .vzp-link {
+    color: var(--vzp-color-link-default);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color var(--vzp-motion-state-change) var(--vzp-easing-standard);
+  }
+
+  .vzp-link:hover {
+    color: var(--vzp-color-link-hover);
+    text-decoration-thickness: 2px;
+  }
+
+  @media (min-width: 48em) {
+    .vzp-display {
+      font-size: var(--vzp-font-size-1000);
+    }
+
+    .vzp-section-title {
+      font-size: 2.5rem;
+    }
+
+    .vzp-h3-serif {
+      font-size: var(--vzp-font-size-800);
+    }
+
+    .vzp-card-title-serif {
+      font-size: var(--vzp-font-size-700);
+    }
+
+    .vzp-h4 {
+      font-size: var(--vzp-font-size-600);
+    }
+
+    .vzp-h5 {
+      font-size: var(--vzp-font-size-500);
+    }
+
+    .vzp-lead {
+      font-size: 1.25rem;
+    }
+
+    .vzp-body-lg {
+      font-size: var(--vzp-font-size-500);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .vzp-display {
+      font-size: var(--vzp-font-size-1100);
+    }
+
+    .vzp-section-title {
+      font-size: var(--vzp-font-size-1000);
+    }
+
+    .vzp-h3-serif {
+      font-size: var(--vzp-font-size-900);
+    }
+
+    .vzp-card-title-serif {
+      font-size: var(--vzp-font-size-800);
+    }
+  }
+}
+
+/*
+ * Mobil neu komponiert (Screendesign 1b): einige Texte sind mobil gekuerzt.
+ * display:none nimmt die jeweils andere Fassung auch aus dem
+ * Accessibility-Baum - Screenreader lesen nie beide.
+ */
+@layer utilities {
+  @media (max-width: 47.999em) {
+    .vzp-desktop-only {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 48em) {
+    .vzp-mobile-only {
+      display: none !important;
+    }
+  }
+}

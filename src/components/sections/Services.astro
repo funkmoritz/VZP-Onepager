@@ -1,0 +1,248 @@
+---
+import { SERVICES } from '../../data/content';
+import Overline from '../ui/Overline.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+/*
+ * Leistungen: Text -> 3-Schritt-Prozess -> vollstaendiges Portfolio in zwei
+ * benannten Gruppen (ehemals Overlay 1, jetzt inline).
+ * Portfolio als Liste, nicht als Kachelraster; Nummern geben Orientierung.
+ */
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<Section id="leistungen" labelledby="leistungen-titel" tone="default">
+  <SectionHeader id="leistungen-titel" overline={SERVICES.overline} title={SERVICES.title} />
+
+  <div class="vzp-services__intro">
+    {SERVICES.intro.map((paragraph) => (
+      <p>
+        <ResponsiveText text={paragraph} />
+      </p>
+    ))}
+  </div>
+
+  <ol class="vzp-steps" role="list" aria-label="Unser Vorgehen in drei Schritten">
+    {SERVICES.steps.map((step) => (
+      <li class="vzp-step">
+        <Overline>{step.label}</Overline>
+        <h3 class="vzp-h5 vzp-step__title">{step.title}</h3>
+        <p class="vzp-step__text">
+          <ResponsiveText text={step.text} />
+        </p>
+      </li>
+    ))}
+  </ol>
+
+  <p class="vzp-body-lg vzp-services__portfolio-intro vzp-desktop-only">
+    {SERVICES.portfolioIntro}
+  </p>
+
+  <div class="vzp-portfolio">
+    {SERVICES.groups.map((group) => (
+      <section
+        class:list={['vzp-portfolio__group', `vzp-portfolio__group--${group.edge}`]}
+        aria-labelledby={`portfolio-${group.id}`}
+      >
+        <h3 id={`portfolio-${group.id}`} class="vzp-h4">
+          {group.title}
+        </h3>
+        <p class="vzp-portfolio__text vzp-desktop-only">{group.text}</p>
+        <ol
+          class:list={[
+            'vzp-portfolio__list',
+            { 'vzp-portfolio__list--two-col': group.columns === 2 },
+          ]}
+          role="list"
+        >
+          {group.items.map((item, index) => (
+            <li class="vzp-portfolio__item">
+              <span class="vzp-portfolio__num" aria-hidden="true">
+                {pad(index + 1)}
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+  </div>
+</Section>
+
+<style>
+  .vzp-services__intro {
+    display: grid;
+    gap: var(--vzp-spacing-stack-paragraph);
+    margin-block-start: var(--vzp-spacing-stack-heading-body-lg);
+    font-size: var(--vzp-font-size-450);
+    line-height: var(--vzp-line-height-700);
+    color: var(--vzp-color-text-primary);
+  }
+
+  /* Prozessband: drei Zellen, 1-px-Rasterfugen statt schwebender Karten. */
+  .vzp-steps {
+    display: grid;
+    margin: var(--vzp-space-6) 0 0;
+    padding: 0;
+    list-style: none;
+    background-color: var(--vzp-color-surface-default);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-step {
+    padding: var(--vzp-space-5);
+  }
+
+  .vzp-step + .vzp-step {
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-step__title {
+    margin-block-start: var(--vzp-space-2);
+  }
+
+  .vzp-step__text {
+    margin-block-start: var(--vzp-space-1);
+    font-size: var(--vzp-font-size-400);
+    line-height: var(--vzp-line-height-500);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-services__portfolio-intro {
+    margin-block-start: var(--vzp-space-20);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-portfolio {
+    display: grid;
+    gap: var(--vzp-space-8);
+    margin-block-start: var(--vzp-space-8);
+  }
+
+  /* 3-px-Kante kennzeichnet die Inhaltsgruppe (Blau bzw. Orange). */
+  .vzp-portfolio__group {
+    display: flex;
+    flex-direction: column;
+    padding-block-start: var(--vzp-space-6);
+    border-block-start: var(--vzp-border-width-300) solid var(--vzp-color-border-brand);
+  }
+
+  .vzp-portfolio__group--accent {
+    border-block-start-color: var(--vzp-color-action-accent);
+  }
+
+  .vzp-portfolio__text {
+    margin-block-start: var(--vzp-space-2);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-500);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-portfolio__list {
+    display: grid;
+    margin: var(--vzp-space-4) 0 0;
+    padding: 0;
+    list-style: none;
+    background-color: var(--vzp-color-surface-default);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    /* Fugen per gap auf Rahmenfarbe: jede Zelle bekommt exakt 1 px Linie,
+       auch bei ungleich hohen Zeilen. */
+    gap: var(--vzp-border-width-100);
+    background-image: linear-gradient(
+      var(--vzp-color-border-default),
+      var(--vzp-color-border-default)
+    );
+  }
+
+  .vzp-portfolio__item {
+    display: flex;
+    gap: var(--vzp-space-4);
+    align-items: baseline;
+    padding: var(--vzp-space-4);
+    background-color: var(--vzp-color-surface-default);
+    font-size: var(--vzp-font-size-450);
+    font-weight: var(--vzp-font-weight-medium);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-portfolio__num {
+    flex-shrink: 0;
+    min-inline-size: 1.25rem;
+    font-size: var(--vzp-font-size-100);
+    font-weight: var(--vzp-font-weight-medium);
+    font-variant-numeric: tabular-nums;
+    color: var(--vzp-color-neutral-400);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-services__intro {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-16);
+      font-size: var(--vzp-font-size-400);
+      line-height: var(--vzp-line-height-700);
+    }
+
+    .vzp-steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-block-start: var(--vzp-space-16);
+    }
+
+    .vzp-step {
+      padding: var(--vzp-space-8);
+    }
+
+    .vzp-step__text {
+      font-size: var(--vzp-font-size-400);
+      line-height: var(--vzp-line-height-700);
+    }
+
+    .vzp-step + .vzp-step {
+      border-block-start: 0;
+      border-inline-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    }
+
+    .vzp-portfolio {
+      margin-block-start: var(--vzp-space-10);
+    }
+
+    .vzp-portfolio__item {
+      min-block-size: 4.25rem;
+      align-items: center;
+      padding: var(--vzp-space-4) var(--vzp-space-6);
+      font-size: var(--vzp-font-size-450);
+    }
+
+    .vzp-portfolio__list {
+      margin-block-start: var(--vzp-space-8);
+    }
+
+    .vzp-portfolio__list--two-col {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .vzp-portfolio__item {
+      align-items: flex-start;
+    }
+
+    .vzp-portfolio__num {
+      padding-block-start: 0.2em;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .vzp-portfolio {
+      grid-template-columns: minmax(0, 510fr) minmax(0, 689fr);
+      gap: var(--vzp-space-12);
+      align-items: start;
+    }
+
+    /* Beide Gruppentexte gleich hoch, damit die Listen auf einer Linie
+       beginnen - wie im Entwurf. */
+    .vzp-portfolio__text {
+      min-block-size: calc(2 * var(--vzp-line-height-500) * 1em);
+    }
+  }
+</style>

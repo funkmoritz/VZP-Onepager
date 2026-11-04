@@ -1,7 +1,11 @@
 ---
 import '../styles/global.css';
+import notoSansLatin from '../assets/fonts/noto-sans-latin-wght-normal.woff2?url';
+import notoSerifLatin from '../assets/fonts/noto-serif-latin-wght-normal.woff2?url';
+import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { CONTENT_ID, SITE_LANG, SITE_LOCALE, SITE_NAME, SITE_OG_IMAGE } from '../consts';
+import { CONTACT } from '../data/content';
 
 interface Props {
   /** Inhalt des <title>-Tags. */
@@ -15,6 +19,11 @@ interface Props {
 }
 
 const { title, description, image = SITE_OG_IMAGE, noindex = false } = Astro.props;
+
+// Auf Unterseiten (Impressum etc.) muessen die Sprungmarken der Navigation
+// auf die Startseite zeigen.
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+const anchorBase = isHome ? '' : '/';
 
 // `Astro.site` stammt aus astro.config.mjs. Der Fallback greift nur, falls
 // dort keine `site` gesetzt ist – dann bleiben die URLs relativ zur Anfrage.
@@ -37,6 +46,11 @@ const socialImageURL = new URL(image, base);
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    {/* Selbst gehostete Schriften (fonts.css). Nur die latin-Teilmengen
+         vorladen: sie decken den deutschen Text vollstaendig ab. */}
+    <link rel="preload" href={notoSansLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={notoSerifLatin} as="font" type="font/woff2" crossorigin />
+
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
@@ -58,18 +72,41 @@ const socialImageURL = new URL(image, base);
       // sich ohne JS nie oeffnen liesse (Progressive Enhancement).
       document.documentElement.dataset.js = '';
     </script>
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'InsuranceAgency',
+        name: CONTACT.name,
+        alternateName: SITE_NAME,
+        url: new URL('/', base).href,
+        email: CONTACT.email,
+        telephone: CONTACT.phone,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: CONTACT.street,
+          postalCode: CONTACT.zip,
+          addressLocality: CONTACT.city,
+          addressCountry: 'DE',
+        },
+      })}
+    ></script>
     <!-- Für seitenspezifische Tags: Fonts, JSON-LD, Analytics-Snippets ... -->
     <slot name="head" />
   </head>
 
   <body>
+    <script>
+      import '../scripts/disclosure';
+    </script>
     {/* Muss das erste fokussierbare Element der Seite sein (WCAG 2.4.1 / BFSG).
          Bei einer sticky Kopfzeile ist der Skip-Link Pflicht, nicht Kür. */}
     <a class="skip-link" href={`#${CONTENT_ID}`}>
       Zum Inhalt springen
     </a>
 
-    <Header />
+    <Header anchorBase={anchorBase} />
 
     {/* tabindex="-1": ohne das verschieben einige Browser nach dem Sprung nur
          die Scrollposition, der Fokus bliebe in der Kopfzeile haengen. */}
@@ -77,8 +114,8 @@ const socialImageURL = new URL(image, base);
       <slot />
     </main>
 
-    {/* Damit ein spaeterer Footer nicht innerhalb der main-Landmark landet. */}
-    <slot name="footer" />
+    {/* Ausserhalb von <main>: eigene contentinfo-Landmark. */}
+    <Footer />
   </body>
 </html>
 

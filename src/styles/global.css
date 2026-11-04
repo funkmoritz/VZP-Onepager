@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @import './tokens.css';
+@import './fonts.css';
+@import './typography.css';
 
 /*
  * Basis-Styles. Alle Werte kommen aus dem Design System (siehe tokens.css,
@@ -39,6 +41,17 @@
     font-size: var(--vzp-typography-body-md-size);
     line-height: var(--vzp-typography-body-md-line);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Lange deutsche Komposita ("Risikomanagementloesungen") duerfen im
+       Notfall umbrechen statt horizontal zu ueberlaufen. Keine automatische
+       Silbentrennung - der Entwurf trennt nicht. */
+    overflow-wrap: break-word;
+  }
+
+  /* Bilder und Medien nie breiter als ihr Container. */
+  img,
+  picture {
+    max-inline-size: 100%;
   }
 
   h1,
@@ -58,6 +71,18 @@
 }
 
 /*
+ * Seitencontainer: 1200 px Inhaltsbreite (--vzp-container-content) plus
+ * Seitenrand. Der Rand liegt ausserhalb der 1200 px, damit Inhalt, Kopfzeile
+ * und Footer im Entwurf exakt auf einer Kante stehen.
+ */
+@utility vzp-container {
+  inline-size: 100%;
+  max-inline-size: calc(var(--vzp-container-content) + 2 * var(--vzp-spacing-page-margin));
+  margin-inline: auto;
+  padding-inline: var(--vzp-spacing-page-margin);
+}
+
+/*
  * Stapelreihenfolge. Bewusst KEIN Design-Token: vzp-tokens.json ist ein
  * Re-Export aus Figma (siehe .prettierignore) - handgepflegte Eintraege waeren
  * beim naechsten Export verloren. Deshalb auch ohne --vzp-Praefix, damit
@@ -66,6 +91,17 @@
 :root {
   --z-header: 100;
   --z-skip-link: 200;
+
+  /* Vertikaler Sektionsabstand. Desktop/Tablet aus dem Token
+     (layout/section-y 96/128 px); mobil laut Screendesign 40 px statt der
+     64 px des Tokens - der Wert stammt aus der Spacing-Skala (space-10). */
+  --section-y: var(--vzp-space-10);
+}
+
+@media (min-width: 48em) {
+  :root {
+    --section-y: var(--vzp-spacing-section-y);
+  }
 }
 
 /* Ungelayert, damit die Sperre waehrend des offenen Menues zuverlaessig greift. */
@@ -79,5 +115,33 @@
      Scrollposition bereits sichtbar. */
   main:focus {
     outline: none;
+  }
+}
+
+/*
+ * Disclosure (Inline-Accordion, siehe src/scripts/disclosure.ts).
+ * Ohne JavaScript bleiben alle Panels offen und die Umschalter verschwinden -
+ * kein Inhalt ist dann unerreichbar (Progressive Enhancement).
+ * Ungelayert, damit Scoped Styles der Komponenten das Ausblenden nicht
+ * versehentlich ueberschreiben.
+ */
+html:not([data-js]) [data-disclosure-trigger] {
+  display: none !important;
+}
+
+html[data-js] [data-disclosure-panel]:not([data-disclosure-mobile]):not([data-open]) {
+  display: none;
+}
+
+/* Variante "nur mobil einklappbar": ab 48em immer offen, ohne Umschalter. */
+@media (max-width: 47.999em) {
+  html[data-js] [data-disclosure-panel][data-disclosure-mobile]:not([data-open]) {
+    display: none;
+  }
+}
+
+@media (min-width: 48em) {
+  [data-disclosure-trigger][data-disclosure-mobile] {
+    display: none !important;
   }
 }
