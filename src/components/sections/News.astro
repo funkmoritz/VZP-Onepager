@@ -1,0 +1,227 @@
+---
+import { Picture } from 'astro:assets';
+import forumJuli from '../../assets/images/forum-juli-2026.jpg';
+import forumMarkt from '../../assets/images/forum-markt-spezial-2026.jpg';
+import forumOktober from '../../assets/images/forum-oktober-2025.jpg';
+import { NEWS } from '../../data/content';
+import Button from '../Button.astro';
+import Overline from '../ui/Overline.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Newsletter from './Newsletter.astro';
+
+/*
+ * Aktuelles: VZP Forum (News Cards, klickbar) + Newsletter-Anmeldung.
+ * Desktop 3 Ausgaben, mobil 2 + "Aeltere Ausgaben anzeigen".
+ */
+const images: Record<(typeof NEWS.issues)[number]['image'], ImageMetadata> = {
+  'forum-markt-spezial-2026': forumMarkt,
+  'forum-juli-2026': forumJuli,
+  'forum-oktober-2025': forumOktober,
+};
+
+const hiddenIds = NEWS.issues
+  .slice(NEWS.mobileVisible)
+  .map((_, index) => `forum-ausgabe-${NEWS.mobileVisible + index + 1}`);
+---
+
+<Section id="aktuelles" labelledby="aktuelles-titel" tone="default">
+  <div class="vzp-news__header">
+    <SectionHeader id="aktuelles-titel" overline={NEWS.overline} title={NEWS.title}>
+      <p>
+        <ResponsiveText text={NEWS.lead} />
+      </p>
+    </SectionHeader>
+    <a class="vzp-link vzp-news__archive vzp-desktop-only" href={NEWS.archive.href}>
+      {NEWS.archive.label}
+    </a>
+  </div>
+
+  <ul class="vzp-news__list" role="list">
+    {NEWS.issues.map((issue, index) => {
+      const extra = index >= NEWS.mobileVisible;
+      return (
+        <li
+          id={extra ? `forum-ausgabe-${index + 1}` : undefined}
+          class="vzp-news-card"
+          data-disclosure-panel={extra ? '' : undefined}
+          data-disclosure-mobile={extra ? '' : undefined}
+        >
+          <Picture
+            src={images[issue.image]}
+            alt=""
+            formats={['avif', 'webp']}
+            widths={[400, 600, 800]}
+            sizes="(min-width: 64em) 380px, (min-width: 48em) 33vw, 100vw"
+            loading="lazy"
+            class="vzp-news-card__image"
+          />
+          <div class="vzp-news-card__body">
+            <Overline class="vzp-desktop-only">{issue.category}</Overline>
+            <h3 class="vzp-news-card__title">{issue.title}</h3>
+            <div class="vzp-news-card__meta">
+              <time datetime={issue.iso}>{issue.date}</time>
+              {/* Ein Link pro Karte; die ganze Karte ist ueber ::after
+                    klickbar, ohne verschachtelte interaktive Elemente. */}
+              <a class="vzp-news-card__link" href={issue.href} target="_blank" rel="noopener">
+                PDF öffnen<span class="sr-only">: {issue.title} (PDF, neues Fenster)</span>
+                <span aria-hidden="true"> →</span>
+              </a>
+            </div>
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+
+  {hiddenIds.length > 0 && (
+    <Button
+      variant="secondary"
+      class="vzp-news__more vzp-mobile-only"
+      aria-expanded="false"
+      aria-controls={hiddenIds.join(' ')}
+      data-disclosure-trigger
+      data-disclosure-mobile
+      data-disclosure-once
+    >
+      {NEWS.moreLabel}
+    </Button>
+  )}
+
+  <Newsletter />
+</Section>
+
+<style>
+  .vzp-news__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--vzp-space-4) var(--vzp-space-8);
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .vzp-news__header :global(.vzp-section-header__lead) {
+    max-inline-size: 36rem;
+  }
+
+  .vzp-news__archive {
+    font-weight: var(--vzp-font-weight-semibold);
+  }
+
+  .vzp-news__list {
+    display: grid;
+    gap: var(--vzp-space-4);
+    margin: var(--vzp-space-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* News Card (klickbar). */
+  .vzp-news-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: var(--vzp-card-border-width) solid var(--vzp-card-border-color);
+    background-color: var(--vzp-card-background);
+    transition:
+      border-color var(--vzp-motion-state-change) var(--vzp-easing-standard),
+      box-shadow var(--vzp-motion-state-change) var(--vzp-easing-standard);
+  }
+
+  .vzp-news-card:hover {
+    border-color: var(--vzp-card-border-color-hover);
+    box-shadow: var(--vzp-card-shadow-hover);
+  }
+
+  .vzp-news-card__image {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .vzp-news-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: var(--vzp-space-4);
+  }
+
+  .vzp-news-card__title {
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-500);
+    font-weight: var(--vzp-font-weight-regular);
+    line-height: var(--vzp-line-height-300);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-news-card__meta {
+    display: flex;
+    gap: var(--vzp-space-4);
+    align-items: baseline;
+    justify-content: space-between;
+    margin-block-start: auto;
+    padding-block-start: var(--vzp-space-2);
+    font-size: var(--vzp-font-size-200);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-news-card__link {
+    font-weight: var(--vzp-font-weight-semibold);
+    color: var(--vzp-color-link-default);
+    text-decoration: none;
+  }
+
+  /* Gesamte Karte als Klickflaeche. */
+  .vzp-news-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .vzp-news-card:hover .vzp-news-card__link {
+    text-decoration: underline;
+  }
+
+  /* Fokusring um die ganze Karte statt um den kleinen Link. */
+  .vzp-news-card__link:focus-visible {
+    outline: none;
+  }
+
+  .vzp-news-card:has(.vzp-news-card__link:focus-visible) {
+    outline: var(--vzp-focus-ring-width) solid var(--vzp-focus-ring-color);
+    outline-offset: var(--vzp-focus-ring-offset);
+  }
+
+  .vzp-news__more {
+    inline-size: 100%;
+    margin-block-start: var(--vzp-space-4);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-news__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--vzp-space-8);
+      margin-block-start: var(--vzp-space-12);
+    }
+
+    .vzp-news-card__image {
+      aspect-ratio: 3 / 2;
+    }
+
+    .vzp-news-card__body {
+      gap: var(--vzp-space-3);
+      padding: var(--vzp-space-8) var(--vzp-space-8) var(--vzp-space-6);
+    }
+
+    .vzp-news-card__title {
+      font-size: var(--vzp-font-size-700);
+    }
+
+    .vzp-news-card__meta {
+      padding-block-start: var(--vzp-space-6);
+      font-size: var(--vzp-font-size-300);
+    }
+  }
+</style>

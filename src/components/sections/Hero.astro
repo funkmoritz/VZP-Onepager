@@ -1,0 +1,221 @@
+---
+import { Picture } from 'astro:assets';
+import heroImage from '../../assets/images/hero-papierlagen.jpg';
+import { HERO } from '../../data/content';
+import Button from '../Button.astro';
+import Overline from '../ui/Overline.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+
+/*
+ * Hero: Claim, Positionierung, 2 CTAs und die drei Belege (wer / Modell /
+ * Reichweite) direkt darunter.
+ * Kein Text auf Bild: ab 64em teilt der Hero die Flaeche 50/50, das Bild laeuft
+ * bis an den rechten Viewportrand. Mobil: Text vor Bild.
+ */
+---
+
+<section class="vzp-hero" aria-labelledby="hero-titel">
+  <div class="vzp-hero__stage">
+    <div class="vzp-hero__content">
+      <Overline>{HERO.overline}</Overline>
+      <h1 id="hero-titel" class="vzp-display vzp-hero__title">
+        {HERO.titleLines.map((line, index) => (
+          <>
+            {index > 0 && <br />}
+            {line}
+          </>
+        ))}
+      </h1>
+      <p class="vzp-lead vzp-hero__lead">
+        <ResponsiveText text={HERO.lead} />
+      </p>
+      <div class="vzp-hero__actions">
+        <Button href={HERO.primaryCta.href} size="lg">
+          {HERO.primaryCta.label}
+        </Button>
+        <Button href={HERO.secondaryCta.href} size="lg" variant="secondary">
+          {HERO.secondaryCta.label}
+        </Button>
+      </div>
+    </div>
+
+    {/* Dekoratives Stimmungsbild ohne Informationsgehalt: leerer Alternativtext. */}
+    <div class="vzp-hero__media">
+      <Picture
+        src={heroImage}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[480, 720, 1080, 1400]}
+        sizes="(min-width: 64em) 50vw, calc(100vw - 2rem)"
+        loading="eager"
+        fetchpriority="high"
+        class="vzp-hero__image"
+      />
+    </div>
+  </div>
+
+  <div class="vzp-hero__facts">
+    <div class="vzp-container">
+      <ul class="vzp-hero__fact-list" role="list">
+        {HERO.facts.map((fact) => (
+          <li class="vzp-hero__fact">
+            <p class="vzp-hero__fact-title">{fact.title}</p>
+            <p class="vzp-hero__fact-text">
+              <ResponsiveText text={fact.text} />
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vzp-hero {
+    background-color: var(--vzp-color-surface-default);
+    /* Bezug fuer cqi: die Textspalte richtet sich an der Containerkante aus,
+       obwohl das Bild bis an den Viewportrand laeuft. */
+    container-type: inline-size;
+  }
+
+  .vzp-hero__stage {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-space-8);
+    padding: var(--vzp-space-8) var(--vzp-spacing-page-margin) 0;
+  }
+
+  .vzp-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vzp-hero__title {
+    margin-block-start: var(--vzp-space-4);
+  }
+
+  .vzp-hero__lead {
+    margin-block-start: var(--vzp-space-6);
+    max-inline-size: 27em;
+  }
+
+  .vzp-hero__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-space-3);
+    align-self: stretch;
+    margin-block-start: var(--vzp-space-8);
+  }
+
+  .vzp-hero__media {
+    aspect-ratio: 5 / 4;
+    overflow: hidden;
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    background-color: var(--vzp-color-surface-subtle);
+  }
+
+  .vzp-hero__media :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .vzp-hero__facts {
+    padding-block: var(--vzp-space-8) var(--section-y);
+  }
+
+  .vzp-hero__fact-list {
+    display: grid;
+    gap: var(--vzp-space-5);
+    margin: 0;
+    padding: var(--vzp-space-8) 0 0;
+    list-style: none;
+    /* Mobil liegt die Trennlinie innerhalb des Containers (Entwurf 1b). */
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-hero__fact-title {
+    font-size: var(--vzp-font-size-450);
+    font-weight: var(--vzp-font-weight-semibold);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-hero__fact-text {
+    margin-block-start: var(--vzp-space-1);
+    font-size: var(--vzp-font-size-400);
+    line-height: var(--vzp-line-height-500);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-hero__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-self: auto;
+      gap: var(--vzp-space-4);
+    }
+
+    .vzp-hero__fact-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--vzp-spacing-grid-gutter);
+      padding-block-start: 0;
+      border-block-start: 0;
+    }
+
+    .vzp-hero__facts {
+      padding-block: var(--vzp-space-12);
+      border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-subtle);
+    }
+
+    .vzp-hero__fact-title {
+      font-size: var(--vzp-font-size-500);
+    }
+
+    .vzp-hero__fact-text {
+      font-size: var(--vzp-font-size-300);
+    }
+  }
+
+  /* Ab 64em: geteilte Flaeche, Bild randabfallend rechts. */
+  @media (min-width: 64em) {
+    .vzp-hero__stage {
+      --edge: max(
+        var(--vzp-spacing-page-margin),
+        calc((100cqi - var(--vzp-container-content)) / 2)
+      );
+
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      min-block-size: clamp(30rem, 44cqi, 40rem);
+      padding: 0;
+    }
+
+    .vzp-hero__content {
+      justify-content: center;
+      padding-block: var(--vzp-space-16);
+      padding-inline: var(--edge) var(--vzp-space-16);
+    }
+
+    .vzp-hero__media {
+      aspect-ratio: auto;
+      border-width: 0 0 0 var(--vzp-border-width-100);
+      border-color: var(--vzp-color-border-subtle);
+    }
+
+    .vzp-hero__lead {
+      margin-block-start: var(--vzp-space-8);
+    }
+
+    .vzp-hero__actions {
+      margin-block-start: var(--vzp-space-10);
+    }
+
+    .vzp-hero__fact-title {
+      font-size: var(--vzp-font-size-500);
+    }
+  }
+</style>

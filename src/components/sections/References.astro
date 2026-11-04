@@ -1,0 +1,162 @@
+---
+import { REFERENCES } from '../../data/content';
+import EditorialNote from '../ui/EditorialNote.astro';
+import LogoPlaceholder from '../ui/LogoPlaceholder.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+/* Referenzen: zwei Zitate von Gesellschaftern (Zitat/Callout mit blauer Kante). */
+---
+
+<Section id="referenzen" labelledby="referenzen-titel" tone="surface">
+  <SectionHeader id="referenzen-titel" overline={REFERENCES.overline} title={REFERENCES.title}>
+    <p class="vzp-references__lead vzp-desktop-only">{REFERENCES.lead}</p>
+  </SectionHeader>
+
+  <ul class="vzp-references" role="list">
+    {REFERENCES.items.map((item) => (
+      <li class="vzp-reference">
+        <figure class="vzp-reference__figure">
+          <blockquote class="vzp-reference__quote">
+            <p>
+              „<ResponsiveText text={item.quote} />“
+            </p>
+          </blockquote>
+          <EditorialNote class="vzp-reference__note vzp-desktop-only">
+            {REFERENCES.placeholderNote.desktop}
+          </EditorialNote>
+          <figcaption class="vzp-reference__source">
+            <LogoPlaceholder label={item.logoLabel} />
+            <span>
+              <span class="vzp-reference__company">{item.company}</span>
+              <span class="vzp-reference__role">
+                <ResponsiveText text={item.role} />
+              </span>
+            </span>
+          </figcaption>
+        </figure>
+      </li>
+    ))}
+  </ul>
+
+  <EditorialNote class="vzp-references__mobile-note vzp-mobile-only">
+    {REFERENCES.placeholderNote.mobile}
+  </EditorialNote>
+</Section>
+
+<style>
+  .vzp-references__lead {
+    font-size: var(--vzp-font-size-300);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-references {
+    display: grid;
+    gap: var(--vzp-space-4);
+    margin: var(--vzp-space-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vzp-reference {
+    display: flex;
+  }
+
+  .vzp-reference__figure {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    margin: 0;
+    padding: var(--vzp-space-6) var(--vzp-space-5) var(--vzp-space-5);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    border-block-start: var(--vzp-border-width-300) solid var(--vzp-color-border-brand);
+    background-color: var(--vzp-color-background-default);
+  }
+
+  .vzp-reference__quote {
+    margin: 0;
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-500);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-primary);
+    text-wrap: pretty;
+  }
+
+  .vzp-reference__note {
+    margin-block-start: var(--vzp-space-6);
+  }
+
+  .vzp-reference__source {
+    display: flex;
+    gap: var(--vzp-space-5);
+    align-items: center;
+    margin-block-start: auto;
+    padding-block-start: var(--vzp-space-5);
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  /* Abstand zwischen Zitat und Quelle, unabhaengig davon, ob der
+     redaktionelle Hinweis (nur Dev) dazwischen steht. */
+  .vzp-reference__quote,
+  .vzp-reference__note {
+    margin-block-end: var(--vzp-space-5);
+  }
+
+  .vzp-reference__company {
+    display: block;
+    font-size: var(--vzp-font-size-300);
+    font-weight: var(--vzp-font-weight-semibold);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-reference__role {
+    display: block;
+    font-size: var(--vzp-font-size-200);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-references__mobile-note {
+    margin-block-start: var(--vzp-space-4);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-references {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-8);
+      margin-block-start: var(--vzp-space-16);
+    }
+
+    .vzp-reference__figure {
+      padding: var(--vzp-space-10);
+    }
+
+    .vzp-reference__quote {
+      font-size: var(--vzp-font-size-600);
+      line-height: var(--vzp-line-height-500);
+    }
+
+    .vzp-reference__quote,
+    .vzp-reference__note {
+      margin-block-end: var(--vzp-space-8);
+    }
+
+    .vzp-reference__note {
+      margin-block-start: 0;
+    }
+
+    .vzp-reference__source {
+      padding-block-start: var(--vzp-space-6);
+    }
+
+    .vzp-reference__company {
+      font-size: var(--vzp-font-size-450);
+    }
+
+    .vzp-reference__role {
+      font-size: var(--vzp-font-size-300);
+    }
+  }
+</style>

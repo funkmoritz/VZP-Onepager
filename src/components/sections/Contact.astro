@@ -1,0 +1,246 @@
+---
+import { Picture } from 'astro:assets';
+import portrait from '../../assets/images/portraet-horst-ullrich.jpg';
+import { CONTACT, CONTACT_SECTION, MANAGEMENT } from '../../data/content';
+import Button from '../Button.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+/*
+ * Kontakt: Wege (E-Mail/Telefon), Anschrift und persoenlicher
+ * Ansprechpartner (ersetzt die Chat-/Kontakt-Bubble der Bestandsseite).
+ */
+const person = MANAGEMENT[0]!;
+---
+
+<Section id="kontakt" labelledby="kontakt-titel" tone="surface">
+  <div class="vzp-contact">
+    <div class="vzp-contact__main">
+      <SectionHeader
+        id="kontakt-titel"
+        overline={CONTACT_SECTION.overline}
+        title={CONTACT_SECTION.title}
+      >
+        <p class="vzp-lead">
+          <ResponsiveText text={CONTACT_SECTION.lead} />
+        </p>
+      </SectionHeader>
+
+      <div class="vzp-contact__actions">
+        <Button href={`mailto:${CONTACT.email}`} size="lg">
+          {CONTACT_SECTION.emailCta}
+        </Button>
+        <Button href={CONTACT.phoneHref} size="lg" variant="secondary">
+          <span>
+            {CONTACT.phone}
+            <span class="vzp-mobile-only"> anrufen</span>
+          </span>
+        </Button>
+      </div>
+
+      <dl class="vzp-contact__details">
+        <div class="vzp-contact__row">
+          <dt>Anschrift</dt>
+          <dd>
+            {CONTACT.name}
+            <br />
+            {CONTACT.street}, {CONTACT.zip} {CONTACT.city}
+          </dd>
+        </div>
+        <div class="vzp-contact__row">
+          <dt>E-Mail</dt>
+          <dd>
+            <a class="vzp-link" href={`mailto:${CONTACT.email}`}>
+              {CONTACT.email}
+            </a>
+          </dd>
+        </div>
+        <div class="vzp-contact__row vzp-desktop-only">
+          <dt>Partner</dt>
+          <dd>{CONTACT.partner.label}</dd>
+        </div>
+      </dl>
+    </div>
+
+    {/* Contact Card: persoenlicher Ansprechpartner. */}
+    <aside class="vzp-contact-card" aria-labelledby="ansprechpartner-name">
+      <Picture
+        src={portrait}
+        alt={`Porträt ${person.name}`}
+        formats={['avif', 'webp']}
+        widths={[160, 320]}
+        sizes="(min-width: 48em) 166px, 96px"
+        loading="lazy"
+        class="vzp-contact-card__photo"
+      />
+      <div class="vzp-contact-card__body">
+        <p class="vzp-overline vzp-overline--muted">
+          <ResponsiveText text={CONTACT_SECTION.person.overline} />
+        </p>
+        <h3 id="ansprechpartner-name" class="vzp-contact-card__name">
+          {person.name}
+        </h3>
+        <p class="vzp-contact-card__role">{person.role}</p>
+        <p class="vzp-contact-card__text vzp-desktop-only">{CONTACT_SECTION.person.text}</p>
+        <ul class="vzp-contact-card__links vzp-desktop-only" role="list">
+          <li>
+            <a class="vzp-link" href={person.phoneHref}>
+              {person.phone}
+            </a>
+          </li>
+          <li>
+            <a class="vzp-link" href={person.emailHref}>
+              E-Mail schreiben<span class="sr-only"> an {person.name}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</Section>
+
+<style>
+  .vzp-contact {
+    display: grid;
+    gap: var(--vzp-space-6);
+  }
+
+  .vzp-contact__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vzp-space-3);
+    margin-block-start: var(--vzp-space-6);
+  }
+
+  .vzp-contact__details {
+    display: grid;
+    gap: var(--vzp-space-4);
+    margin: var(--vzp-space-6) 0 0;
+    padding-block-start: var(--vzp-space-6);
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+  }
+
+  .vzp-contact__row {
+    display: grid;
+    gap: var(--vzp-space-1);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-500);
+  }
+
+  .vzp-contact__row dt {
+    font-weight: var(--vzp-font-weight-semibold);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-contact__row dd {
+    margin: 0;
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-contact-card {
+    display: flex;
+    gap: var(--vzp-space-5);
+    align-items: flex-start;
+    padding: var(--vzp-space-4);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    border-block-start: var(--vzp-border-width-300) solid var(--vzp-color-border-brand);
+    background-color: var(--vzp-color-background-default);
+  }
+
+  .vzp-contact-card__photo {
+    flex-shrink: 0;
+    display: block;
+    inline-size: 6rem;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .vzp-contact-card__name {
+    margin-block-start: var(--vzp-space-2);
+    font-family: var(--vzp-typography-ui-family);
+    font-size: var(--vzp-font-size-500);
+    font-weight: var(--vzp-font-weight-semibold);
+    line-height: var(--vzp-line-height-300);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-contact-card__role {
+    margin-block-start: var(--vzp-space-1);
+    font-size: var(--vzp-font-size-300);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-contact-card__text {
+    margin-block-start: var(--vzp-space-6);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-600);
+  }
+
+  .vzp-contact-card__links {
+    display: grid;
+    gap: var(--vzp-space-2);
+    margin: var(--vzp-space-4) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--vzp-font-size-450);
+    font-weight: var(--vzp-font-weight-medium);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-contact__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--vzp-space-4);
+      margin-block-start: var(--vzp-space-10);
+    }
+
+    .vzp-contact__details {
+      gap: var(--vzp-space-3);
+      margin-block-start: var(--vzp-space-10);
+      padding-block-start: var(--vzp-space-8);
+    }
+
+    .vzp-contact__row {
+      grid-template-columns: 6rem minmax(0, 1fr);
+      gap: var(--vzp-space-4);
+      font-size: var(--vzp-font-size-450);
+    }
+
+    .vzp-contact__row dt {
+      font-size: var(--vzp-font-size-300);
+      font-weight: var(--vzp-font-weight-semibold);
+      padding-block-start: 0.1em;
+    }
+
+    .vzp-contact-card {
+      gap: var(--vzp-space-8);
+      padding: var(--vzp-space-8);
+    }
+
+    .vzp-contact-card__photo {
+      inline-size: 10.375rem;
+    }
+
+    .vzp-contact-card__name {
+      font-size: var(--vzp-font-size-700);
+    }
+
+    .vzp-contact-card__role {
+      font-size: var(--vzp-font-size-500);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .vzp-contact {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-16);
+      align-items: start;
+    }
+
+    .vzp-contact-card {
+      margin-block-start: 0;
+    }
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+/**
+ * Plus/Minus-Symbol fuer Disclosure-Umschalter. Der senkrechte Strich dreht
+ * sich weg, sobald der umgebende Button aria-expanded="true" traegt - der
+ * Zustand haengt direkt an ARIA, nicht an einer zweiten Klasse.
+ * Muss direktes Kind des Buttons sein.
+ */
+---
+
+<span class="vzp-plus" aria-hidden="true"></span>
+
+<style>
+  .vzp-plus {
+    position: relative;
+    display: inline-block;
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .vzp-plus::before,
+  .vzp-plus::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    block-size: var(--vzp-border-width-150);
+    translate: 0 -50%;
+    background-color: currentColor;
+    transition: rotate var(--vzp-motion-disclosure) var(--vzp-easing-standard);
+  }
+
+  .vzp-plus::after {
+    rotate: 90deg;
+  }
+
+  :global([aria-expanded='true']) > .vzp-plus::after {
+    rotate: 0deg;
+  }
+</style>

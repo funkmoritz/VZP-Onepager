@@ -3,8 +3,9 @@
 Grundgerüst eines Onepagers auf Basis von [Astro](https://astro.build) mit
 TypeScript (strict), Tailwind CSS v4, SEO-/Open-Graph-Meta und Sitemap.
 
-Umgesetzt sind bislang das Skelett und die Kopfzeile; die Abschnitte darunter
-sind Platzhalter.
+Umgesetzt ist der komplette Onepager nach dem Hi-Fi-Screendesign
+(`vzp_full_website_design.pdf`: Desktop 1440 px, Mobile 390 px, Dokumentation
+1c) auf Basis des VZP Design Systems v1.0.
 
 ## Voraussetzungen
 
@@ -36,18 +37,33 @@ Node.js 20+ (entwickelt mit v22).
 │   └── logo.svg            # Platzhalter — durch das echte Logo ersetzen
 └── src/
     ├── consts.ts           # Seitenname, Meta-Defaults, Navigation, CTA
+    ├── assets/
+    │   ├── fonts/          # Noto Sans/Serif (woff2, latin + latin-ext, OFL)
+    │   └── images/         # Bildmaterial aus dem Entwurf (Astro optimiert → AVIF/WebP)
+    ├── data/
+    │   └── content.ts      # ALLE Texte, Kontaktdaten, Termine, Ausgaben (inkl. Mobilfassungen)
     ├── components/
     │   ├── Header.astro    # Kopfzeile: Navigation, CTA, mobiles Menü, Scroll-Spy
+    │   ├── Footer.astro    # Footer 4-spaltig / gestapelt
     │   ├── Logo.astro      # Wortmarke
-    │   └── Button.astro    # Button bzw. Link im Button-Gewand
+    │   ├── Button.astro    # Button bzw. Link im Button-Gewand
+    │   ├── sections/       # Hero, Positioning, Services, References, About,
+    │   │                   # Events, News (+ Newsletter), Contact
+    │   └── ui/             # Section, SectionHeader, Overline, PlusIcon,
+    │                       # ResponsiveText, LogoPlaceholder, EditorialNote
     ├── layouts/
-    │   └── Layout.astro    # html/head, Meta, Skip-Link, Header, <main>
+    │   └── Layout.astro    # html/head, Meta, JSON-LD, Font-Preload, Skip-Link, Header, <main>, Footer
     ├── pages/
-    │   ├── index.astro     # Startseite mit Platzhalter-Abschnitten
+    │   ├── index.astro     # Onepager (Sektionsfolge laut IA)
+    │   ├── [legal].astro   # Impressum, Datenschutz, Pflichtinformation, Barrierefreiheit (Stubs)
     │   └── robots.txt.ts   # robots.txt inkl. Sitemap-Verweis (zur Build-Zeit)
+    ├── scripts/
+    │   └── disclosure.ts   # Inline-Accordions (Kurzvita, Webinar, „Ältere Ausgaben“)
     └── styles/
         ├── tokens.css      # GENERIERT — nicht von Hand bearbeiten
-        └── global.css      # Tailwind-Import, Basis-Styles aus den Tokens
+        ├── fonts.css       # @font-face, selbst gehostet
+        ├── typography.css  # Textstile aus Figma (Display, H1–H5, Lead, Overline …)
+        └── global.css      # Tailwind-Import, Basis-Styles, Container, Disclosure
 ```
 
 ## Layout
@@ -100,6 +116,24 @@ einen Fokus-Trap.
 
 Die Navigationseinträge stehen in `NAV_ITEMS` (`src/consts.ts`); Navigation,
 Scroll-Spy und die Abschnitte in `index.astro` lesen aus derselben Liste.
+
+## Umsetzung des Screendesigns
+
+- **Inhalte** stehen ausschließlich in `src/data/content.ts`. Felder vom Typ
+  `Responsive` (`{ desktop, mobile }`) bilden die im Mobile-Entwurf gekürzten
+  Texte ab; `ResponsiveText` blendet per `display: none` jeweils eine Fassung
+  aus (damit auch für Screenreader, keine Doppelungen).
+- **Inline-Accordions** (`src/scripts/disclosure.ts`) nach ARIA-APG: Zustand in
+  `aria-expanded`/`data-open`, Sichtbarkeit per CSS. `data-disclosure-mobile`
+  macht ein Panel nur unter 48em einklappbar (Webinar, weitere Termine,
+  ältere Forum-Ausgaben). Ohne JavaScript ist alles offen.
+- **Redaktionelle Hinweise** aus dem Entwurf (orange gerahmte
+  „Platzhalter“-Texte) rendert `EditorialNote` nur im Dev-Server – im
+  Produktions-Build sind sie nicht enthalten.
+- **Bilder** laufen über `astro:assets` (AVIF/WebP, `srcset`, feste Maße gegen
+  CLS). Das Hero-Bild ist LCP und lädt `eager` mit `fetchpriority="high"`.
+- **Wo das PDF nichts festlegt**, gilt das Figma Design System (Typo-Skala,
+  Overline, Input/Checkbox, Footer-Padding, Seitenmodule).
 
 ## Design-Tokens
 
@@ -154,12 +188,30 @@ Aliase und fehlende Media-Query-Overrides.
 ## Offene TODOs
 
 - [ ] `site` in `astro.config.mjs` auf die echte Produktions-URL setzen
-- [ ] `SITE_NAME`, `SITE_TITLE`, `SITE_DESCRIPTION` in `src/consts.ts` befüllen
+- [ ] `SITE_TITLE`/`SITE_DESCRIPTION` in `src/consts.ts` redaktionell abnehmen
 - [ ] `public/logo.svg` durch das offizielle Logo ersetzen (nur die Datei
       überschreiben, im Code ist nichts anzupassen)
 - [ ] `public/favicon.svg` und `public/og-image.png` (1200×630) ergänzen
-- [ ] Noto Serif / Noto Sans einbinden – wegen DSGVO selbst hosten, nicht über
-      Google Fonts. Ohne die Schriften greifen die Fallbacks aus den Tokens.
+- [x] Noto Serif / Noto Sans selbst gehostet (`src/styles/fonts.css`)
+
+Offene Inhalte laut Entwurf (Abschnitt 9/10 „Markierte Platzhalter“), alle in
+`src/data/content.ts` mit `TODO` markiert:
+
+- [ ] Referenzzitate (Gissler & Pass, WEIG Karton) durch Originaltext ersetzen
+- [ ] Kundenlogos als SVG einsetzen (`LogoPlaceholder` ersetzen)
+- [ ] Kurzvitae der Geschäftsführung: Volltext aus dem Bestand übernehmen
+      (inkl. Zitat für die zweispaltige Vita von Horst Ullrich)
+- [ ] Telefondurchwahlen (-514 / -534, +49 40 359140) und persönliche
+      E-Mail-Adressen verifizieren (derzeit `mailto:` an verbund@ mit Betreff)
+- [ ] Newsletter: Endpunkt mit Double-Opt-in eintragen (`NEWSLETTER.action`),
+      Frequenz „etwa vier Mal im Jahr“ bestätigen
+- [ ] Webinar-Anmeldeseite eintragen (`EVENTS.featured.cta.href`), weitere
+      Termine statt der zwei Platzhalter pflegen
+- [ ] VZP-Forum-PDFs unter `public/downloads/` ablegen, Archiv-Link festlegen,
+      Aktualität „Oktober 2025“ prüfen
+- [ ] Texte für Impressum, Datenschutz, Pflichtinformation und
+      Barrierefreiheitserklärung (BFSG) einsetzen, danach `noindex` entfernen
+- [ ] Alt-Texte prüfen (Stimmungsbilder sind bewusst dekorativ, `alt=""`)
 - [ ] **9 Tokens fehlen in `vzp-tokens.json`**, obwohl die Figma-Datei sie nutzt:
       `typography-{display,lead,body-sm,overline}-{size,line-height}` und
       `color-text-on-inverse-muted`. Siehe Abschnitt unten.

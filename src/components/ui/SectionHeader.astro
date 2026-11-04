@@ -1,0 +1,50 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Overline from './Overline.astro';
+
+/** Overline + H2 + optionaler Lead (Content-Section-Muster des Design Systems). */
+interface Props extends Omit<HTMLAttributes<'header'>, 'id' | 'title'> {
+  id: string;
+  overline: string;
+  title: string;
+  /** 'sm': Desktop 40 statt 48 px (Events-Sektion im Entwurf). */
+  size?: 'md' | 'sm';
+  class?: string;
+}
+
+const { id, overline, title, size = 'md', class: className, ...rest } = Astro.props;
+---
+
+<header class:list={['vzp-section-header', className]} {...rest}>
+  <Overline>{overline}</Overline>
+  <h2 id={id} class:list={['vzp-section-title', { 'vzp-section-title--sm': size === 'sm' }]}>
+    {title}
+  </h2>
+  {Astro.slots.has('default') && (
+    <div class="vzp-section-header__lead">
+      <slot />
+    </div>
+  )}
+</header>
+
+<style>
+  .vzp-section-header {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vzp-section-title {
+    margin-block-start: var(--vzp-space-3);
+  }
+
+  @media (min-width: 64em) {
+    .vzp-section-title--sm {
+      font-size: 2.5rem;
+    }
+  }
+
+  .vzp-section-header__lead {
+    margin-block-start: var(--vzp-spacing-stack-heading-body-lg);
+    color: var(--vzp-color-text-primary);
+  }
+</style>

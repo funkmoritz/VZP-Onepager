@@ -1,0 +1,89 @@
+---
+import { POSITIONING } from '../../data/content';
+import Overline from '../ui/Overline.astro';
+import ResponsiveText from '../ui/ResponsiveText.astro';
+import Section from '../ui/Section.astro';
+
+/* Positionierungsband: Haltung + Branchen-Zielgruppen als Tags. */
+---
+
+<Section tone="accent" spacing="band" labelledby="zielgruppen-titel">
+  <div class="vzp-positioning">
+    <p class="vzp-positioning__statement">
+      <ResponsiveText text={POSITIONING.statement} />
+    </p>
+
+    <div>
+      <Overline as="h2" id="zielgruppen-titel">
+        {POSITIONING.audienceLabel}
+      </Overline>
+      <ul class="vzp-positioning__tags" role="list">
+        {POSITIONING.audiences.map((audience) => (
+          <li class="vzp-tag">
+            <ResponsiveText text={audience} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .vzp-positioning {
+    display: grid;
+    gap: var(--vzp-space-6);
+  }
+
+  .vzp-positioning__statement {
+    font-family: var(--vzp-typography-heading-family);
+    font-size: var(--vzp-font-size-600);
+    line-height: var(--vzp-line-height-400);
+    color: var(--vzp-color-text-primary);
+    text-wrap: pretty;
+  }
+
+  .vzp-positioning__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--vzp-space-2);
+    margin: var(--vzp-space-3) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Tag (statisch): Papierweiss auf Rosé, Kante border/on-accent. */
+  .vzp-tag {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.375rem;
+    padding: var(--vzp-space-1) var(--vzp-space-3);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-border-on-accent);
+    background-color: var(--vzp-color-background-default);
+    color: var(--vzp-color-text-primary);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-300);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-positioning__statement {
+      font-size: var(--vzp-font-size-700);
+    }
+
+    .vzp-tag {
+      padding-inline: var(--vzp-space-4);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .vzp-positioning {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-16);
+      align-items: start;
+    }
+
+    .vzp-positioning__statement {
+      font-size: var(--vzp-font-size-800);
+      line-height: var(--vzp-line-height-400);
+    }
+  }
+</style>

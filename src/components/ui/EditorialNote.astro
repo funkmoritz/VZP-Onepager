@@ -1,0 +1,30 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * Redaktioneller Hinweis aus dem Entwurf ("orange gerahmte Hinweistexte").
+ * Erscheint nur im Dev-Server - Besucher der Live-Seite sehen ihn nie,
+ * Redaktion und Entwicklung behalten den offenen Punkt aber im Blick.
+ */
+type Props = HTMLAttributes<'p'>;
+
+const { class: className, ...rest } = Astro.props;
+const visible = import.meta.env.DEV;
+---
+
+{visible && (
+  <p class:list={['vzp-editorial-note', className]} role="note" {...rest}>
+    <slot />
+  </p>
+)}
+
+<style>
+  .vzp-editorial-note {
+    padding: var(--vzp-space-2) var(--vzp-space-3);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-orange-200);
+    background-color: var(--vzp-color-feedback-error-surface);
+    color: var(--vzp-color-orange-600);
+    font-size: var(--vzp-font-size-150);
+    line-height: var(--vzp-line-height-500);
+  }
+</style>

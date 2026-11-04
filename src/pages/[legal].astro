@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Section from '../components/ui/Section.astro';
+import { SITE_NAME } from '../consts';
+import { LEGAL_PAGES } from '../data/content';
+import Layout from '../layouts/Layout.astro';
+
+/*
+ * Rechtliche Seiten aus dem Footer. Damit die Links nicht ins Leere laufen,
+ * existieren die Seiten bereits - die Inhalte liefert die VZP.
+ * TODO: Texte fuer Impressum, Datenschutz, Pflichtinformation und
+ * Barrierefreiheitserklaerung (BFSG) einsetzen und `noindex` entfernen.
+ */
+export const getStaticPaths = (() =>
+  LEGAL_PAGES.map((page) => ({
+    params: { legal: page.slug },
+    props: { label: page.label },
+  }))) satisfies GetStaticPaths;
+
+const { label } = Astro.props;
+---
+
+<Layout
+  title={`${label} – ${SITE_NAME}`}
+  description={`${label} der Versicherungsstelle Zellstoff und Papier.`}
+  noindex
+>
+  <Section labelledby="seitentitel" tone="default">
+    <h1 id="seitentitel" class="vzp-section-title">
+      {label}
+    </h1>
+    <p class="vzp-lead mt-6 max-w-prose">Dieser Inhalt wird in Kürze ergänzt.</p>
+  </Section>
+</Layout>

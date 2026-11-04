@@ -1,0 +1,66 @@
+---
+/**
+ * Rahmen jeder Inhaltssektion: Flaeche ("Lage"), vertikaler Rhythmus,
+ * Container 1200 px. Benannt ueber aria-labelledby, damit die Sektion eine
+ * region-Landmark wird.
+ *
+ * Flaechen laut Visuellem Konzept "Kante & Lage":
+ *   surface  #FFFFFF  (Inhaltsflaeche)
+ *   default  #FDF9F8  (Papierweiss)
+ *   accent   #F5E9E5  (Rosé-Band)
+ */
+interface Props {
+  id?: string;
+  labelledby?: string;
+  tone?: 'surface' | 'default' | 'accent';
+  /** Vertikaler Abstand: 'section' (Standard) oder 'band' (kompakter). */
+  spacing?: 'section' | 'band' | 'none';
+  class?: string;
+}
+
+const { id, labelledby, tone = 'default', spacing = 'section', class: className } = Astro.props;
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={['vzp-section', `vzp-section--${tone}`, `vzp-section--${spacing}`, className]}
+>
+  <div class="vzp-container">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .vzp-section {
+    /* Haarlinie als Materialkante zwischen den Lagen. */
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-subtle);
+  }
+
+  .vzp-section--surface {
+    background-color: var(--vzp-color-surface-default);
+  }
+
+  .vzp-section--default {
+    background-color: var(--vzp-color-background-default);
+  }
+
+  .vzp-section--accent {
+    background-color: var(--vzp-color-background-accent);
+    border-block-start-color: var(--vzp-color-border-on-accent);
+  }
+
+  .vzp-section--section {
+    padding-block: var(--section-y);
+  }
+
+  .vzp-section--band {
+    padding-block: var(--vzp-space-10);
+  }
+
+  @media (min-width: 48em) {
+    .vzp-section--band {
+      padding-block: var(--vzp-space-16);
+    }
+  }
+</style>
