@@ -44,6 +44,8 @@ const person = MANAGEMENT[0]!;
           <dt>Anschrift</dt>
           <dd>
             {CONTACT.name}
+            <br class="vzp-desktop-only" />
+            <span class="vzp-desktop-only">{CONTACT.legalForm}</span>
             <br />
             {CONTACT.street}, {CONTACT.zip} {CONTACT.city}
           </dd>
@@ -58,16 +60,22 @@ const person = MANAGEMENT[0]!;
         </div>
         <div class="vzp-contact__row vzp-desktop-only">
           <dt>Partner</dt>
-          <dd>{CONTACT.partner.label}</dd>
+          <dd>
+            <a class="vzp-link" href={CONTACT.partner.href} target="_blank" rel="noopener">
+              {CONTACT.partner.label}
+              <span class="sr-only"> (neues Fenster)</span>
+            </a>
+          </dd>
         </div>
       </dl>
     </div>
 
     {/* Contact Card: persoenlicher Ansprechpartner. */}
     <aside class="vzp-contact-card" aria-labelledby="ansprechpartner-name">
+      {/* Name und Rolle stehen daneben - dekoratives Portraet (WCAG 1.1.1). */}
       <Picture
         src={portrait}
-        alt={`Porträt ${person.name}`}
+        alt=""
         formats={['avif', 'webp']}
         widths={[160, 320]}
         sizes="(min-width: 48em) 166px, 96px"
@@ -82,7 +90,7 @@ const person = MANAGEMENT[0]!;
           {person.name}
         </h3>
         <p class="vzp-contact-card__role">{person.role}</p>
-        <p class="vzp-contact-card__text vzp-desktop-only">{CONTACT_SECTION.person.text}</p>
+        <p class="vzp-contact-card__text">{CONTACT_SECTION.person.text}</p>
         <ul class="vzp-contact-card__links vzp-desktop-only" role="list">
           <li>
             <a class="vzp-link" href={person.phoneHref}>

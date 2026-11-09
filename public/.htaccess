@@ -1,0 +1,28 @@
+# Nur fuer Apache-Hosting wirksam; auf nginx/IIS/CDNs hat die Datei keine
+# Wirkung und schadet auch nicht. Siehe README, Abschnitt "Deployment".
+#
+# Jede Direktive steht in <IfModule>: Eine Direktive aus einem nicht geladenen
+# Apache-Modul fuehrt sonst zu "500 Internal Server Error" fuer die GANZE
+# Seite - eine .htaccess darf nie davon ausgehen, dass ein Modul da ist.
+
+# Zeichensatz fuer Textdateien.
+# Grund: /llms.txt enthaelt deutsche Umlaute. Viele Server senden fuer .txt ein
+# "Content-Type: text/plain" OHNE charset, Clients raten dann teils
+# ISO-8859-1 und die Umlaute brechen. robots.txt ist reines ASCII und waere
+# unkritisch, wird hier aber der Einheitlichkeit halber mit abgedeckt.
+<IfModule mod_mime.c>
+  AddCharset UTF-8 .txt
+  AddCharset UTF-8 .html
+  AddCharset UTF-8 .css
+  AddCharset UTF-8 .js
+  AddCharset UTF-8 .xml
+  AddCharset UTF-8 .svg
+</IfModule>
+
+# PDFs im Browser anzeigen statt herunterladen - die Forum-Ausgaben sind zum
+# Lesen gedacht und werden so auch von Suchmaschinen leichter ausgewertet.
+<IfModule mod_headers.c>
+  <FilesMatch "\.pdf$">
+    Header set Content-Disposition inline
+  </FilesMatch>
+</IfModule>

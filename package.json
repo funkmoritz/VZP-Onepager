@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "tokens": "node scripts/build-tokens.mjs",
-    "tokens:verify": "node scripts/verify-tokens.mjs"
+    "tokens:verify": "node scripts/verify-tokens.mjs",
+    "og-image": "node scripts/build-og-image.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

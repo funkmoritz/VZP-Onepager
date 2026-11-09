@@ -6,9 +6,9 @@ import portraitSchwanke from '../../assets/images/portraet-bernhard-schwanke.jpg
 import portraitUllrich from '../../assets/images/portraet-horst-ullrich.jpg';
 import { ABOUT, MANAGEMENT } from '../../data/content';
 import Button from '../Button.astro';
-import EditorialNote from '../ui/EditorialNote.astro';
 import PlusIcon from '../ui/PlusIcon.astro';
 import ResponsiveText from '../ui/ResponsiveText.astro';
+import RichText from '../ui/RichText.astro';
 import Section from '../ui/Section.astro';
 import SectionHeader from '../ui/SectionHeader.astro';
 
@@ -77,7 +77,7 @@ const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promi
     <div class="vzp-about__text">
       <p class="vzp-mobile-only">{ABOUT.philosophy.mobile}</p>
       {ABOUT.body.map((paragraph) => (
-        <p class:list={{ 'vzp-desktop-only': paragraph.mobile === '' }}>
+        <p>
           <ResponsiveText text={paragraph} />
         </p>
       ))}
@@ -127,9 +127,12 @@ const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promi
             <li class="vzp-manager">
               <div class="vzp-manager__row">
                 {portrait && (
+                  /* Der Name steht unmittelbar daneben - ein Alternativtext
+                     "Portraet Horst Ullrich" waere eine Dopplung im
+                     Screenreader (WCAG 1.1.1, dekoratives Beiwerk). */
                   <Picture
                     src={portrait}
-                    alt={`Porträt ${manager.name}`}
+                    alt=""
                     formats={['avif', 'webp']}
                     widths={[96, 192]}
                     sizes="(min-width: 48em) 96px, 72px"
@@ -141,8 +144,7 @@ const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promi
                 <div class="vzp-manager__identity">
                   <h4 class="vzp-manager__name">{manager.name}</h4>
                   <p class="vzp-manager__role">
-                    {manager.role}
-                    <span class="vzp-desktop-only"> · {manager.since}</span>
+                    {manager.role} · {manager.since}
                   </p>
                 </div>
 
@@ -157,7 +159,7 @@ const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promi
                   >
                     {manager.phone}
                   </Button>
-                  <Button href={manager.emailHref} class="vzp-desktop-only">
+                  <Button href={manager.emailHref} class="vzp-manager__mail-button">
                     E-Mail schreiben
                     <span class="sr-only"> an {manager.name}</span>
                   </Button>
@@ -182,17 +184,33 @@ const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promi
                 data-disclosure-panel
               >
                 <div class="vzp-manager__vita-text">
+                  {manager.vitaListTitle && (
+                    <h5 class="vzp-manager__vita-heading">{manager.vitaListTitle}</h5>
+                  )}
+                  {manager.vitaList && (
+                    <ul class="vzp-manager__vita-list" role="list">
+                      {manager.vitaList.map((station) => (
+                        <li>{station}</li>
+                      ))}
+                    </ul>
+                  )}
                   {manager.vita.map((paragraph) => (
-                    <p>{paragraph}</p>
+                    <p>
+                      <RichText text={paragraph} />
+                    </p>
                   ))}
-                  <EditorialNote>
-                    Platzhalter — Volltext der Kurzvita aus dem Bestand einsetzen.
-                  </EditorialNote>
                 </div>
                 {manager.vitaQuote && (
-                  <blockquote class="vzp-manager__vita-quote">
-                    <p>„{manager.vitaQuote}“</p>
-                  </blockquote>
+                  <figure class="vzp-manager__vita-figure">
+                    {manager.vitaQuestion && (
+                      <figcaption class="vzp-manager__vita-question">
+                        {manager.vitaQuestion}
+                      </figcaption>
+                    )}
+                    <blockquote class="vzp-manager__vita-quote">
+                      <p>„{manager.vitaQuote}“</p>
+                    </blockquote>
+                  </figure>
                 )}
               </div>
             </li>
@@ -413,7 +431,8 @@ const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promi
     text-decoration: underline;
   }
 
-  .vzp-manager__phone-button {
+  .vzp-manager__phone-button,
+  .vzp-manager__mail-button {
     inline-size: 100%;
   }
 
@@ -456,13 +475,55 @@ const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promi
     max-inline-size: 66ch;
   }
 
+  .vzp-manager__vita-heading {
+    font-family: var(--vzp-typography-ui-family);
+    font-size: var(--vzp-font-size-300);
+    font-weight: var(--vzp-font-weight-semibold);
+    color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-manager__vita-list {
+    display: grid;
+    gap: var(--vzp-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vzp-manager__vita-list > li {
+    position: relative;
+    padding-inline-start: var(--vzp-space-4);
+  }
+
+  .vzp-manager__vita-list > li::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.6em;
+    inset-inline-start: 0;
+    inline-size: 0.375rem;
+    block-size: 0.375rem;
+    background-color: var(--vzp-color-border-brand);
+  }
+
+  .vzp-manager__vita-figure {
+    margin: 0;
+  }
+
+  .vzp-manager__vita-question {
+    margin-block-end: var(--vzp-space-3);
+    font-family: var(--vzp-typography-ui-family);
+    font-size: var(--vzp-font-size-300);
+    font-weight: var(--vzp-font-weight-semibold);
+    color: var(--vzp-color-text-secondary);
+  }
+
   .vzp-manager__vita-quote {
     margin: 0;
     padding-inline-start: var(--vzp-space-5);
     border-inline-start: var(--vzp-border-width-300) solid var(--vzp-color-action-accent);
     font-family: var(--vzp-typography-heading-family);
-    font-size: var(--vzp-font-size-500);
-    line-height: var(--vzp-line-height-400);
+    font-size: var(--vzp-font-size-400);
+    line-height: var(--vzp-line-height-600);
   }
 
   @media (min-width: 48em) {
@@ -559,6 +620,10 @@ const [mobileAvif, mobileWebp, desktopAvif, desktopWebp, fallback] = await Promi
 
     .vzp-manager__phone {
       margin-inline-end: var(--vzp-space-5);
+    }
+
+    .vzp-manager__mail-button {
+      inline-size: auto;
     }
 
     /* Desktop: Kurzvita als Outline-Button (Secondary, md). */

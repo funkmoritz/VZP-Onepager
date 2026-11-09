@@ -5,12 +5,16 @@ import ResponsiveText from '../ui/ResponsiveText.astro';
 
 /*
  * Newsletter-Anmeldung (ehemals Layer/Footer-Link): Inline-Formular mit
- * sichtbarem Label, Helper und Datenschutz-Checkbox.
+ * sichtbarem Label und Einwilligungs-Checkbox. Felder und Einwilligungstext
+ * entsprechen dem Formular auf vzp-online.de (E-Mail, Anrede, Nachname,
+ * Vorname) - nur E-Mail und Einwilligung sind dort Pflicht.
  * Platzhalter ersetzen keine Labels; Pflichtfelder sind im Label genannt.
  */
 const emailId = 'newsletter-email';
-const helperId = 'newsletter-email-hilfe';
+const lastNameId = 'newsletter-nachname';
+const firstNameId = 'newsletter-vorname';
 const consentId = 'newsletter-einwilligung';
+const interimId = 'newsletter-hinweis';
 ---
 
 <section id={NEWSLETTER.id} class="vzp-newsletter" aria-labelledby="newsletter-titel">
@@ -36,13 +40,55 @@ const consentId = 'newsletter-einwilligung';
         inputmode="email"
         autocomplete="email"
         spellcheck="false"
-        placeholder={NEWSLETTER.emailPlaceholder}
-        aria-describedby={helperId}
         required
       />
-      <p id={helperId} class="vzp-field__helper vzp-desktop-only">
-        {NEWSLETTER.helper}
-      </p>
+    </div>
+
+    <fieldset class="vzp-fieldset">
+      <legend class="vzp-field__label">{NEWSLETTER.salutationLabel}</legend>
+      <div class="vzp-radios">
+        {NEWSLETTER.salutations.map((option) => (
+          <div class="vzp-radio">
+            <input
+              class="vzp-radio__input"
+              id={`newsletter-anrede-${option.toLowerCase()}`}
+              name="anrede"
+              type="radio"
+              value={option}
+            />
+            <label class="vzp-radio__label" for={`newsletter-anrede-${option.toLowerCase()}`}>
+              {option}
+            </label>
+          </div>
+        ))}
+      </div>
+    </fieldset>
+
+    <div class="vzp-newsletter__names">
+      <div class="vzp-field">
+        <label class="vzp-field__label" for={firstNameId}>
+          {NEWSLETTER.firstNameLabel}
+        </label>
+        <input
+          class="vzp-field__input"
+          id={firstNameId}
+          name="vorname"
+          type="text"
+          autocomplete="given-name"
+        />
+      </div>
+      <div class="vzp-field">
+        <label class="vzp-field__label" for={lastNameId}>
+          {NEWSLETTER.lastNameLabel}
+        </label>
+        <input
+          class="vzp-field__input"
+          id={lastNameId}
+          name="nachname"
+          type="text"
+          autocomplete="family-name"
+        />
+      </div>
     </div>
 
     <div class="vzp-checkbox">
@@ -54,15 +100,30 @@ const consentId = 'newsletter-einwilligung';
         required
       />
       <label class="vzp-checkbox__label" for={consentId}>
-        Ich habe die{' '}
-        <a class="vzp-link" href="/datenschutz">
-          Datenschutzhinweise
-        </a>{' '}
-        gelesen und stimme der Verarbeitung meiner Daten zu.
+        {NEWSLETTER.consent}
       </label>
     </div>
 
-    <Button type="submit" size="lg" class="vzp-newsletter__submit">
+    <p class="vzp-field__helper">
+      {NEWSLETTER.note}{' '}
+      <a class="vzp-link" href="/datenschutz">
+        {NEWSLETTER.noteLinkLabel}
+      </a>
+    </p>
+
+    {/* Solange kein Double-Opt-in-Endpunkt angebunden ist, oeffnet das Absenden
+        das E-Mail-Programm. Das muss vorher dastehen - ein Formular, das
+        scheinbar nichts tut, ist fuer alle ein Problem und fuer Screenreader-
+        Nutzende keines, das sich erraten laesst. aria-describedby am <form>
+        bringt den Hinweis in jedes Feld. */}
+    <p id={interimId} class="vzp-field__helper vzp-newsletter__interim">
+      {NEWSLETTER.interimHint}
+    </p>
+
+    {/* Beschreibung am Absende-Button, nicht am <form>: ein Formular ohne
+        zugaenglichen Namen ist keine Landmark, sein aria-describedby wird von
+        Screenreadern nicht zuverlaessig vorgelesen. */}
+    <Button type="submit" size="lg" class="vzp-newsletter__submit" aria-describedby={interimId}>
       {NEWSLETTER.submit}
     </Button>
   </form>
@@ -107,11 +168,17 @@ const consentId = 'newsletter-einwilligung';
     color: var(--vzp-color-text-secondary);
   }
 
+  /* Rand bewusst nicht aus --vzp-input-border-default (neutral-300): dessen
+     Kontrast zum weissen Feld betraegt 1,89:1, WCAG 1.4.11 verlangt 3:1 fuer
+     die Begrenzung eines Bedienelements. Das Feld steht auf dem Rose-Band und
+     hebt sich mit seiner eigenen Flaeche nur 1,19:1 ab - die Begrenzung ist
+     also das einzige Erkennungsmerkmal. text-secondary erreicht 5,72:1.
+     Gleiche Abweichung wie beim Menue-Umschalter in Header.astro. */
   .vzp-field__input {
     inline-size: 100%;
     min-block-size: var(--vzp-input-height);
     padding-inline: var(--vzp-input-padding-x);
-    border: var(--vzp-border-width-100) solid var(--vzp-input-border-default);
+    border: var(--vzp-border-width-100) solid var(--vzp-color-text-secondary);
     border-radius: var(--vzp-input-radius);
     background-color: var(--vzp-input-background);
     color: var(--vzp-color-text-primary);
@@ -125,8 +192,10 @@ const consentId = 'newsletter-einwilligung';
     opacity: 1;
   }
 
+  /* neutral-400 (Token-Hover) liegt mit 3,06:1 nur knapp ueber der Grenze und
+     waere dunkler als der Ruhezustand nicht erkennbar - neutral-600: 7,67:1. */
   .vzp-field__input:hover {
-    border-color: var(--vzp-input-border-hover);
+    border-color: var(--vzp-color-neutral-600);
   }
 
   .vzp-field__input:focus-visible {
@@ -144,6 +213,56 @@ const consentId = 'newsletter-einwilligung';
     font-size: var(--vzp-font-size-150);
     line-height: var(--vzp-line-height-500);
     color: var(--vzp-color-text-secondary);
+  }
+
+  /* Anrede: Radiogruppe mit sichtbarer Legende. */
+  .vzp-fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .vzp-radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--vzp-space-4);
+    margin-block-start: var(--vzp-space-2);
+  }
+
+  /* Die anklickbare Flaeche umfasst Feld UND Beschriftung. 44 px Mindesthoehe
+     wie bei allen Bedienelementen des Design Systems - WCAG 2.5.8 fordert 24,
+     die 18 px des Feldes allein lagen darunter. */
+  .vzp-radio {
+    display: flex;
+    gap: var(--vzp-space-2);
+    align-items: center;
+    min-block-size: var(--vzp-size-touch-min);
+  }
+
+  .vzp-radio__input {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    accent-color: var(--vzp-color-action-primary);
+    cursor: pointer;
+  }
+
+  .vzp-radio__label {
+    font-size: var(--vzp-font-size-300);
+    color: var(--vzp-color-text-primary);
+    cursor: pointer;
+  }
+
+  .vzp-newsletter__names {
+    display: grid;
+    gap: var(--vzp-space-4);
+    inline-size: 100%;
+  }
+
+  /* Uebergangshinweis bis zum echten Endpunkt - abgesetzt, damit er nicht mit
+     dem Datenschutzhinweis darueber verschwimmt. */
+  .vzp-newsletter__interim {
+    padding-block-start: var(--vzp-space-3);
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-on-accent);
   }
 
   .vzp-checkbox {
@@ -187,6 +306,10 @@ const consentId = 'newsletter-einwilligung';
 
     .vzp-checkbox__label {
       font-size: var(--vzp-font-size-300);
+    }
+
+    .vzp-newsletter__names {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .vzp-newsletter__submit {

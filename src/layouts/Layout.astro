@@ -5,7 +5,7 @@ import notoSerifLatin from '../assets/fonts/noto-serif-latin-wght-normal.woff2?u
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { CONTENT_ID, SITE_LANG, SITE_LOCALE, SITE_NAME, SITE_OG_IMAGE } from '../consts';
-import { CONTACT } from '../data/content';
+import { organization, webPage, webSite } from '../data/schema';
 
 interface Props {
   /** Inhalt des <title>-Tags. */
@@ -16,9 +16,11 @@ interface Props {
   image?: string;
   /** Setzt die Seite auf noindex, z. B. für Vorschau-Deployments. */
   noindex?: boolean;
+  /** Zusätzliche JSON-LD-Knoten für diese Seite (siehe data/schema.ts). */
+  schemas?: Record<string, unknown>[];
 }
 
-const { title, description, image = SITE_OG_IMAGE, noindex = false } = Astro.props;
+const { title, description, image = SITE_OG_IMAGE, noindex = false, schemas = [] } = Astro.props;
 
 // Auf Unterseiten (Impressum etc.) muessen die Sprungmarken der Navigation
 // auf die Startseite zeigen.
@@ -30,6 +32,18 @@ const anchorBase = isHome ? '' : '/';
 const base = Astro.site ?? Astro.url;
 const canonicalURL = new URL(Astro.url.pathname, base);
 const socialImageURL = new URL(image, base);
+
+// Ein Graph pro Seite: Unternehmen, Website, diese Seite, dann die
+// seitenspezifischen Knoten (Events, Personen, FAQ ... aus data/schema.ts).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    organization(base),
+    webSite(base),
+    webPage(base, canonicalURL, title, description),
+    ...schemas,
+  ],
+};
 ---
 
 <!doctype html>
@@ -42,9 +56,13 @@ const socialImageURL = new URL(image, base);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {/* `follow` statt `nofollow`: die Seite soll nicht in den Index, ihre
+         Links (Impressum, Datenschutz, Startseite) sollen aber weiterhin
+         Signale weitergeben. */}
+    {noindex && <meta name="robots" content="noindex, follow" />}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#FDF9F8" />
 
     {/* Selbst gehostete Schriften (fonts.css). Nur die latin-Teilmengen
          vorladen: sie decken den deutschen Text vollstaendig ab. */}
@@ -72,26 +90,7 @@ const socialImageURL = new URL(image, base);
       // sich ohne JS nie oeffnen liesse (Progressive Enhancement).
       document.documentElement.dataset.js = '';
     </script>
-    <script
-      is:inline
-      type="application/ld+json"
-      set:html={JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'InsuranceAgency',
-        name: CONTACT.name,
-        alternateName: SITE_NAME,
-        url: new URL('/', base).href,
-        email: CONTACT.email,
-        telephone: CONTACT.phone,
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: CONTACT.street,
-          postalCode: CONTACT.zip,
-          addressLocality: CONTACT.city,
-          addressCountry: 'DE',
-        },
-      })}
-    ></script>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
     <!-- Für seitenspezifische Tags: Fonts, JSON-LD, Analytics-Snippets ... -->
     <slot name="head" />
   </head>

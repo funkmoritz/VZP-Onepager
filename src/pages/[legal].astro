@@ -1,34 +1,88 @@
 ---
 import type { GetStaticPaths } from 'astro';
+import LegalText from '../components/ui/LegalText.astro';
 import Section from '../components/ui/Section.astro';
-import { SITE_NAME } from '../consts';
 import { LEGAL_PAGES } from '../data/content';
+import { LEGAL_CONTENT } from '../data/legal';
+
 import Layout from '../layouts/Layout.astro';
 
 /*
- * Rechtliche Seiten aus dem Footer. Damit die Links nicht ins Leere laufen,
- * existieren die Seiten bereits - die Inhalte liefert die VZP.
- * TODO: Texte fuer Impressum, Datenschutz, Pflichtinformation und
- * Barrierefreiheitserklaerung (BFSG) einsetzen und `noindex` entfernen.
+ * Rechtliche Seiten aus dem Footer. Impressum und Datenschutz sind woertlich
+ * von vzp-online.de uebernommen (dort in einem gemeinsamen Overlay).
+ * Die Erklaerung zur Barrierefreiheit liegt noch nicht vor - diese eine Seite
+ * bleibt deshalb auf `noindex`.
  */
 export const getStaticPaths = (() =>
   LEGAL_PAGES.map((page) => ({
     params: { legal: page.slug },
-    props: { label: page.label },
+    props: { slug: page.slug },
   }))) satisfies GetStaticPaths;
 
-const { label } = Astro.props;
+const { slug } = Astro.props;
+const content = LEGAL_CONTENT[slug]!;
+const isDraft = slug === 'barrierefreiheit';
 ---
 
-<Layout
-  title={`${label} – ${SITE_NAME}`}
-  description={`${label} der Versicherungsstelle Zellstoff und Papier.`}
-  noindex
->
+<Layout title={content.title} description={content.description} noindex={isDraft}>
   <Section labelledby="seitentitel" tone="default">
     <h1 id="seitentitel" class="vzp-section-title">
-      {label}
+      {content.label}
     </h1>
-    <p class="vzp-lead mt-6 max-w-prose">Dieser Inhalt wird in Kürze ergänzt.</p>
+
+    {content.lead && <p class="vzp-lead vzp-legal__lead">{content.lead}</p>}
+    {content.updated && <p class="vzp-body-sm vzp-legal__updated">{content.updated}</p>}
+
+    <div class="vzp-legal">
+      {content.sections.map((section) => (
+        <section class="vzp-legal__section">
+          {section.title && <h2 class="vzp-h4 vzp-legal__heading">{section.title}</h2>}
+          {section.blocks.map((block) => (
+            <LegalText block={block} />
+          ))}
+        </section>
+      ))}
+    </div>
+
+    <p class="vzp-legal__back">
+      <a class="vzp-link" href="/">
+        Zurück zur Startseite
+      </a>
+    </p>
   </Section>
 </Layout>
+
+<style>
+  .vzp-legal__lead {
+    margin-block-start: var(--vzp-space-4);
+    max-inline-size: 60ch;
+  }
+
+  .vzp-legal__updated {
+    margin-block-start: var(--vzp-space-2);
+    color: var(--vzp-color-text-secondary);
+  }
+
+  .vzp-legal {
+    display: grid;
+    gap: var(--vzp-space-10);
+    margin-block-start: var(--vzp-space-10);
+  }
+
+  .vzp-legal__section {
+    display: grid;
+    gap: var(--vzp-spacing-stack-paragraph);
+  }
+
+  .vzp-legal__heading {
+    padding-block-start: var(--vzp-space-6);
+    border-block-start: var(--vzp-border-width-300) solid var(--vzp-color-border-brand);
+  }
+
+  .vzp-legal__back {
+    margin-block-start: var(--vzp-space-12);
+    padding-block-start: var(--vzp-space-6);
+    border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
+    font-size: var(--vzp-font-size-400);
+  }
+</style>

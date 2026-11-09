@@ -5,11 +5,29 @@
  */
 export const SITE_NAME = 'VZP';
 
-export const SITE_TITLE =
-  'VZP – Versicherungsstelle Zellstoff und Papier | Risikopartner der Papierwirtschaft';
+/**
+ * Seitentitel. Bewusst 50 statt 83 Zeichen: Suchmaschinen schneiden ab etwa
+ * 60 Zeichen bzw. 580 px ab, der Zusatz "Risikopartner der Papierwirtschaft"
+ * war in den Ergebnissen nie zu sehen. Der vollstaendige Firmenname steht
+ * weiterhin in `og:site_name`, im JSON-LD (`legalName`), in der Kopfzeile und
+ * im Footer - Markensuchen finden die Seite darueber.
+ */
+export const SITE_TITLE = 'VZP – Versicherungsmakler für die Papierwirtschaft';
 
 export const SITE_DESCRIPTION =
   'Die VZP versichert und berät Unternehmen der Papierwirtschaft – mit Branchenkenntnis aus erster Hand und der Marktstärke unseres Partners Funk.';
+
+/** Vollstaendige Firmierung fuer strukturierte Daten und Social-Tags. */
+export const SITE_LEGAL_NAME =
+  'Versicherungsstelle Zellstoff und Papier Gesellschaft mit beschränkter Haftung';
+
+/**
+ * Stand der Inhalte (ISO). Geht als `dateModified` in die strukturierten Daten
+ * und hilft Antwortmaschinen bei der Aktualitaetsbewertung.
+ * Bewusst von Hand gepflegt und nicht aus dem Build-Datum: ein neuer Build
+ * aendert die Inhalte nicht. Bei inhaltlichen Aenderungen hier mitziehen.
+ */
+export const CONTENT_UPDATED = '2026-11-09';
 
 /** Sprache des Dokuments, z. B. für <html lang> und og:locale. */
 export const SITE_LANG = 'de';

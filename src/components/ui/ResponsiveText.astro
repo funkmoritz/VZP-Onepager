@@ -1,10 +1,15 @@
 ---
 import type { Responsive } from '../../data/content';
+import RichText from './RichText.astro';
 
 /**
  * Gibt einen Text mit optional gekuerzter Mobilfassung aus (Entwurf 1b).
  * Ohne abweichende Mobilfassung entsteht kein zusaetzliches Markup.
- * Eine leere Mobilfassung ('') blendet den Text mobil aus.
+ *
+ * Eine leere Mobilfassung ('') blendet den Text mobil aus - das ist nur fuer
+ * echte Dubletten zulaessig. Traegt ein Absatz eine eigene Aussage, darf er
+ * kein `mobile`-Feld bekommen: bei 200 % Zoom greift die Mobilfassung, und
+ * weggeblendeter Inhalt waere dort ein Verstoss gegen WCAG 1.4.4.
  */
 interface Props {
   text: Responsive;
@@ -16,9 +21,15 @@ const hasMobile = text.mobile !== undefined && text.mobile !== text.desktop;
 
 {hasMobile ? (
   <>
-    <span class="vzp-desktop-only">{text.desktop}</span>
-    {text.mobile && <span class="vzp-mobile-only">{text.mobile}</span>}
+    <span class="vzp-desktop-only">
+      <RichText text={text.desktop} />
+    </span>
+    {text.mobile && (
+      <span class="vzp-mobile-only">
+        <RichText text={text.mobile} />
+      </span>
+    )}
   </>
 ) : (
-  text.desktop
+  <RichText text={text.desktop} />
 )}

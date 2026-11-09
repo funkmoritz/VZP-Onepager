@@ -7,8 +7,9 @@ import Overline from '../ui/Overline.astro';
 import ResponsiveText from '../ui/ResponsiveText.astro';
 
 /*
- * Hero: Claim, Positionierung, 2 CTAs und die drei Belege (wer / Modell /
- * Reichweite) direkt darunter.
+ * Hero: Claim, Positionierung, 2 CTAs und darunter die vier Claims der
+ * Bestandsseite (Mehrwert / Anliegen / Expertise / Fokus), die dort als
+ * Karussell laufen und hier nebeneinander stehen.
  * Kein Text auf Bild: ab 64em teilt der Hero die Flaeche 50/50, das Bild laeuft
  * bis an den rechten Viewportrand. Mobil: Text vor Bild.
  */
@@ -59,7 +60,10 @@ import ResponsiveText from '../ui/ResponsiveText.astro';
       <ul class="vzp-hero__fact-list" role="list">
         {HERO.facts.map((fact) => (
           <li class="vzp-hero__fact">
-            <p class="vzp-hero__fact-title">{fact.title}</p>
+            <p class="vzp-hero__fact-title">
+              <span class="vzp-hero__fact-label">{fact.label}</span>
+              {fact.title}
+            </p>
             <p class="vzp-hero__fact-text">
               <ResponsiveText text={fact.text} />
             </p>
@@ -143,6 +147,13 @@ import ResponsiveText from '../ui/ResponsiveText.astro';
     color: var(--vzp-color-text-primary);
   }
 
+  /* "Unser Mehrwert:" steht als Zeile ueber dem Schlagwort. */
+  .vzp-hero__fact-label {
+    display: block;
+    font-weight: var(--vzp-font-weight-regular);
+    color: var(--vzp-color-text-secondary);
+  }
+
   .vzp-hero__fact-text {
     margin-block-start: var(--vzp-space-1);
     font-size: var(--vzp-font-size-400);
@@ -159,8 +170,8 @@ import ResponsiveText from '../ui/ResponsiveText.astro';
     }
 
     .vzp-hero__fact-list {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--vzp-spacing-grid-gutter);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--vzp-space-8) var(--vzp-spacing-grid-gutter);
       padding-block-start: 0;
       border-block-start: 0;
     }
@@ -204,6 +215,12 @@ import ResponsiveText from '../ui/ResponsiveText.astro';
       aspect-ratio: auto;
       border-width: 0 0 0 var(--vzp-border-width-100);
       border-color: var(--vzp-color-border-subtle);
+    }
+
+    /* Ab 64em stehen alle vier Claims nebeneinander. */
+    .vzp-hero__fact-list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--vzp-spacing-grid-gutter);
     }
 
     .vzp-hero__lead {

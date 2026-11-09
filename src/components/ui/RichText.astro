@@ -1,0 +1,37 @@
+---
+/**
+ * Gibt einen Text aus und loest dabei Inline-Auszeichnungen auf.
+ *
+ * Bisher nur `[en]...[/en]` -> `<span lang="en">`: WCAG 3.1.2 verlangt die
+ * Sprache fremdsprachiger Passagen, sonst liest ein Screenreader englische
+ * Fachbegriffe mit deutschen Lauten vor ("Total Cost of Insurance").
+ * Eigennamen (Funk Alliance Risk Consultants) bleiben bewusst unausgezeichnet -
+ * die Ausnahme fuer Eigennamen steht im Erfolgskriterium selbst.
+ *
+ * Bewusst kein Markdown und kein HTML in den Daten: `set:html` waere hier eine
+ * offene Tuer, und mehr als diese eine Auszeichnung braucht der Text nicht.
+ */
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+
+const LANG = /\[en\]([\s\S]*?)\[\/en\]/g;
+
+const parse = (value: string) => {
+  const parts: ({ text: string } | { en: string })[] = [];
+  let last = 0;
+  for (const match of value.matchAll(LANG)) {
+    if (match.index > last) parts.push({ text: value.slice(last, match.index) });
+    parts.push({ en: match[1]! });
+    last = match.index + match[0].length;
+  }
+  if (last < value.length) parts.push({ text: value.slice(last) });
+  return parts;
+};
+
+const parts = parse(text);
+---
+
+{parts.map((part) => ('en' in part ? <span lang="en">{part.en}</span> : part.text))}

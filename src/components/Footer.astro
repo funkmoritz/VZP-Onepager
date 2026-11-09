@@ -1,5 +1,5 @@
 ---
-import { CONTACT, FOOTER, LEGAL_PAGES, NEWSLETTER } from '../data/content';
+import { CONTACT, FOOTER, LEGAL_LINKS, NEWSLETTER } from '../data/content';
 import ResponsiveText from './ui/ResponsiveText.astro';
 
 /*
@@ -13,7 +13,14 @@ import ResponsiveText from './ui/ResponsiveText.astro';
     <div class="vzp-footer__grid">
       <div class="vzp-footer__brand">
         <a class="vzp-footer__logo" href="#top" aria-label="VZP – zum Seitenanfang">
-          <img src="/logo.svg" alt="" width="94" height="34" loading="lazy" decoding="async" />
+          <img
+            src="/logo-invertiert.svg"
+            alt=""
+            width="94"
+            height="34"
+            loading="lazy"
+            decoding="async"
+          />
         </a>
         <address class="vzp-footer__address">
           <span class="vzp-footer__name">
@@ -71,9 +78,16 @@ import ResponsiveText from './ui/ResponsiveText.astro';
           Recht
         </h2>
         <ul role="list">
-          {LEGAL_PAGES.map((page) => (
+          {LEGAL_LINKS.map((link) => (
             <li>
-              <a href={`/${page.slug}`}>{page.label}</a>
+              <a
+                href={link.href}
+                target={link.external ? '_blank' : undefined}
+                rel={link.external ? 'noopener' : undefined}
+              >
+                {link.label}
+                {link.external && <span class="sr-only"> (neues Fenster)</span>}
+              </a>
             </li>
           ))}
         </ul>
@@ -101,12 +115,13 @@ import ResponsiveText from './ui/ResponsiveText.astro';
     padding-block-end: var(--vzp-space-5);
   }
 
-  /* Die blaue Wortmarke steht auf einer Papierflaeche - direkt auf
-     Dunkelgrau reicht ihr Kontrast nicht. */
+  /* Invertierte Wortmarke (weiss) direkt auf Dunkelgrau - die blaue Fassung
+     braeuchte hier eine Papierflaeche als Traeger.
+     Das Padding bleibt: der Link fuehrt zum Seitenanfang und erreicht mit
+     28 px Logohoehe + 2 x 8 px die Touch-Mindestgroesse von 44 px. */
   .vzp-footer__logo {
     display: inline-flex;
-    padding: var(--vzp-space-3) var(--vzp-space-4);
-    background-color: var(--vzp-color-background-default);
+    padding-block: var(--vzp-space-2);
   }
 
   .vzp-footer__logo img {
@@ -198,7 +213,7 @@ import ResponsiveText from './ui/ResponsiveText.astro';
     }
 
     .vzp-footer__logo {
-      padding: var(--vzp-space-4) var(--vzp-space-6);
+      padding-block: var(--vzp-space-3);
     }
 
     .vzp-footer__address {

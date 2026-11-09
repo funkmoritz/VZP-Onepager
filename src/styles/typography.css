@@ -47,13 +47,18 @@
     text-wrap: balance;
   }
 
-  /* 04 Heading/H3 Serif: 22 / 24 / 28 px, LH 1.25 (Kartentitel Serif) */
+  /* 04 Heading/H3 Serif: 22 / 24 / 28 px, LH 1.25 (Kartentitel Serif)
+     Als einziger Serif-Titel startet dieser mobil unter 24 px und zaehlt damit
+     nicht als "grosser Text" (WCAG 1.4.3) - statt 3:1 gelten 4,5:1. Blue 500
+     erreicht auf Weiss nur 4,48:1 und auf dem Rose-Band 3,77:1, deshalb hier
+     Blue 600 (6,00:1 bzw. 5,05:1) statt --vzp-color-text-brand. Alle groesseren
+     Serif-Stile bleiben bei Blue 500. */
   .vzp-card-title-serif {
     font-family: var(--vzp-typography-heading-family);
     font-size: var(--vzp-font-size-600);
     font-weight: var(--vzp-font-weight-regular);
     line-height: var(--vzp-line-height-300);
-    color: var(--vzp-color-text-brand);
+    color: var(--vzp-color-action-primary);
   }
 
   /* 05 Heading/H4: 20 / 22 px, Noto Sans SemiBold, LH 1.30 */

@@ -1,6 +1,7 @@
 ---
+import { Picture } from 'astro:assets';
+import webinarImage from '../../assets/images/webinar-versicherungskosten.jpg';
 import { EVENTS } from '../../data/content';
-import Button from '../Button.astro';
 import Overline from '../ui/Overline.astro';
 import PlusIcon from '../ui/PlusIcon.astro';
 import ResponsiveText from '../ui/ResponsiveText.astro';
@@ -12,6 +13,9 @@ import SectionHeader from '../ui/SectionHeader.astro';
  * Rosé-Band als Zaesur. Kerninfos (Format, Titel, Termin) bleiben immer
  * sichtbar; mobil sind die Detailtexte einklappbar, der Webinar-Eintrag ist
  * standardmaessig geoeffnet. Ab 48em ist alles offen und ohne Umschalter.
+ *
+ * Anmeldung: jeder Termin fuehrt auf sein eigenes Microsoft-Teams-Event -
+ * deshalb ist die Terminliste selbst der CTA und nicht ein Sammel-Button.
  */
 const event = EVENTS.featured;
 const panelId = `${event.id}-details`;
@@ -19,7 +23,7 @@ const panelId = `${event.id}-details`;
 
 <Section id="events" labelledby="events-titel" tone="accent">
   <SectionHeader id="events-titel" overline={EVENTS.overline} title={EVENTS.title} size="sm">
-    <p class="vzp-desktop-only">{EVENTS.lead}</p>
+    <p>{EVENTS.lead}</p>
   </SectionHeader>
 
   <div class="vzp-events__list">
@@ -57,18 +61,37 @@ const panelId = `${event.id}-details`;
         data-open
       >
         <div class="vzp-event__body">
+          {/* Motiv der Bestandsseite, rein illustrativ: leerer Alternativtext. */}
+          <Picture
+            src={webinarImage}
+            alt=""
+            formats={['avif', 'webp']}
+            widths={[360, 718]}
+            sizes="(min-width: 48em) 36rem, 100vw"
+            loading="lazy"
+            class="vzp-event__image"
+          />
+
           {event.body.map((paragraph) => (
-            <p class:list={{ 'vzp-desktop-only': paragraph.mobile === '' }}>
+            <p>
               <ResponsiveText text={paragraph} />
             </p>
           ))}
+
+          <ul class="vzp-event__levers" role="list">
+            {event.levers.map((lever) => (
+              <li>{lever}</li>
+            ))}
+          </ul>
+
+          <p>{event.closing.desktop}</p>
 
           <h4 class="vzp-overline vzp-overline--muted vzp-event__benefits-title">
             {event.benefitsLabel}
           </h4>
           <ul class="vzp-event__benefits" role="list">
             {event.benefits.map((benefit) => (
-              <li class:list={{ 'vzp-desktop-only': benefit.mobile === '' }}>
+              <li>
                 <ResponsiveText text={benefit} />
               </li>
             ))}
@@ -76,65 +99,77 @@ const panelId = `${event.id}-details`;
         </div>
 
         <aside class="vzp-event__aside" aria-label="Termine und Anmeldung">
-          <Overline as="h4" class="vzp-desktop-only">
+          {/* Mobil nur fuer Screenreader: die Terminliste steht dort direkt
+              unter dem Fliesstext und braucht optisch keine Zwischenzeile -
+              aus der Ueberschriftengliederung darf sie trotzdem nicht fallen. */}
+          <Overline as="h4" class="max-tablet:sr-only">
             {event.datesLabel}
           </Overline>
           <ul class="vzp-event__dates" role="list">
             {event.dates.map((slot) => (
               <li class="vzp-event__date">
-                <time datetime={slot.iso}>{slot.date}</time>
-                <span>{slot.time}</span>
+                <a class="vzp-event__date-link" href={slot.href} target="_blank" rel="noopener">
+                  <span>
+                    <time datetime={slot.iso}>{slot.date}</time>
+                    <span class="vzp-event__date-time">{slot.time}</span>
+                  </span>
+                  <span class="vzp-event__date-cta">
+                    {event.registerLabel}
+                    <span class="sr-only">
+                      : {slot.date}, {slot.time} (Microsoft Teams, neues Fenster)
+                    </span>
+                    <span aria-hidden="true"> →</span>
+                  </span>
+                </a>
               </li>
             ))}
           </ul>
-          <Button href={event.cta.href} size="lg" class="vzp-event__cta">
-            {event.cta.label}
-          </Button>
-          <p class="vzp-event__note vzp-desktop-only">{event.note}</p>
         </aside>
       </div>
     </article>
 
-    <section class="vzp-events__more" aria-labelledby="weitere-termine-titel">
-      {/* Mobil nur fuer Screenreader sichtbar - die Ueberschriftenhierarchie bleibt erhalten. */}
-      <h3 id="weitere-termine-titel" class="vzp-overline vzp-overline--muted max-tablet:sr-only">
-        {EVENTS.moreLabel}
-      </h3>
-      <ul class="vzp-events__more-list" role="list">
-        {EVENTS.more.map((item) => (
-          <li class="vzp-more-event">
-            <div class="vzp-more-event__head">
-              <div>
-                <p class="vzp-overline vzp-more-event__overline">{item.overline}</p>
-                <h4 class="vzp-more-event__title">
-                  {item.title}
-                  <span class="vzp-desktop-only">{item.titleSuffix}</span>
-                </h4>
+    {EVENTS.more.length > 0 && (
+      <section class="vzp-events__more" aria-labelledby="weitere-termine-titel">
+        {/* Mobil nur fuer Screenreader sichtbar - die Ueberschriftenhierarchie bleibt erhalten. */}
+        <h3 id="weitere-termine-titel" class="vzp-overline vzp-overline--muted max-tablet:sr-only">
+          {EVENTS.moreLabel}
+        </h3>
+        <ul class="vzp-events__more-list" role="list">
+          {EVENTS.more.map((item) => (
+            <li class="vzp-more-event">
+              <div class="vzp-more-event__head">
+                <div>
+                  <p class="vzp-overline vzp-more-event__overline">{item.overline}</p>
+                  <h4 class="vzp-more-event__title">
+                    {item.title}
+                    <span class="vzp-desktop-only">{item.titleSuffix}</span>
+                  </h4>
+                </div>
+                <button
+                  type="button"
+                  class="vzp-toggle-square"
+                  aria-expanded="false"
+                  aria-controls={item.id}
+                  data-disclosure-trigger
+                  data-disclosure-mobile
+                >
+                  <span class="sr-only">Details: {item.title}</span>
+                  <PlusIcon />
+                </button>
               </div>
-              <button
-                type="button"
-                class="vzp-toggle-square"
-                aria-expanded="false"
-                aria-controls={item.id}
-                data-disclosure-trigger
+              <div
+                id={item.id}
+                class="vzp-more-event__panel"
+                data-disclosure-panel
                 data-disclosure-mobile
               >
-                <span class="sr-only">Details: {item.title}</span>
-                <PlusIcon />
-              </button>
-            </div>
-            <div
-              id={item.id}
-              class="vzp-more-event__panel"
-              data-disclosure-panel
-              data-disclosure-mobile
-            >
-              <p>{item.text}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
+                <p>{item.text}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
   </div>
 </Section>
 
@@ -225,6 +260,40 @@ const panelId = `${event.id}-details`;
     color: var(--vzp-color-text-primary);
   }
 
+  .vzp-event__image {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin-block-end: var(--vzp-space-2);
+  }
+
+  /* Die zwei Hebel aus dem Webinartext. */
+  .vzp-event__levers {
+    display: grid;
+    gap: var(--vzp-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--vzp-font-size-400);
+    line-height: var(--vzp-line-height-500);
+  }
+
+  .vzp-event__levers > li {
+    position: relative;
+    padding-inline-start: var(--vzp-space-4);
+  }
+
+  .vzp-event__levers > li::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.55em;
+    inset-inline-start: 0;
+    inline-size: 0.375rem;
+    block-size: 0.375rem;
+    background-color: var(--vzp-color-border-brand);
+  }
+
   .vzp-event__benefits-title {
     margin-block-start: var(--vzp-space-2);
   }
@@ -271,27 +340,46 @@ const panelId = `${event.id}-details`;
   }
 
   .vzp-event__date {
-    display: flex;
-    flex-direction: column;
-    padding-inline-start: var(--vzp-space-3);
     border-inline-start: var(--vzp-border-width-200) solid var(--vzp-color-border-brand);
+  }
+
+  /* Jeder Termin ist zugleich der Anmeldelink auf das Teams-Event. */
+  .vzp-event__date-link {
+    display: flex;
+    gap: var(--vzp-space-3);
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: var(--vzp-size-touch-min);
+    padding-inline-start: var(--vzp-space-3);
     font-size: var(--vzp-font-size-300);
     line-height: var(--vzp-line-height-400);
     color: var(--vzp-color-text-secondary);
+    text-decoration: none;
+    transition: background-color var(--vzp-motion-state-change) var(--vzp-easing-standard);
   }
 
-  .vzp-event__date time {
+  .vzp-event__date-link:hover {
+    background-color: var(--vzp-button-secondary-background-hover);
+  }
+
+  .vzp-event__date-link time {
+    display: block;
     font-weight: var(--vzp-font-weight-semibold);
     color: var(--vzp-color-text-primary);
   }
 
-  .vzp-event__cta {
-    inline-size: 100%;
+  .vzp-event__date-time {
+    display: block;
   }
 
-  .vzp-event__note {
-    font-size: var(--vzp-font-size-200);
-    color: var(--vzp-color-text-secondary);
+  .vzp-event__date-cta {
+    flex-shrink: 0;
+    font-weight: var(--vzp-font-weight-semibold);
+    color: var(--vzp-color-link-default);
+  }
+
+  .vzp-event__date-link:hover .vzp-event__date-cta {
+    text-decoration: underline;
   }
 
   /* --- Weitere Termine ------------------------------------------------- */
@@ -409,7 +497,6 @@ const panelId = `${event.id}-details`;
     }
 
     .vzp-event__date {
-      padding: var(--vzp-space-5);
       border: 0;
     }
 
@@ -417,12 +504,12 @@ const panelId = `${event.id}-details`;
       border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
     }
 
-    .vzp-event__date time {
-      font-size: var(--vzp-font-size-450);
+    .vzp-event__date-link {
+      padding: var(--vzp-space-5);
     }
 
-    .vzp-event__note {
-      margin-block-start: calc(-1 * var(--vzp-space-2));
+    .vzp-event__date-link time {
+      font-size: var(--vzp-font-size-450);
     }
 
     /* Weitere Termine als zweispaltige Platzhalter-Karten. */

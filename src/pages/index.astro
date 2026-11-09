@@ -8,6 +8,7 @@ import Positioning from '../components/sections/Positioning.astro';
 import References from '../components/sections/References.astro';
 import Services from '../components/sections/Services.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { board, events, faq, persons, publications } from '../data/schema';
 import Layout from '../layouts/Layout.astro';
 
 /*
@@ -16,9 +17,19 @@ import Layout from '../layouts/Layout.astro';
  * Events & Webinare -> Aktuelles -> Kontakt -> Footer (im Layout).
  * Die Sektions-IDs entsprechen NAV_ITEMS in src/consts.ts.
  */
+
+// Strukturierte Daten nur fuer das, was auf dieser Seite auch sichtbar steht.
+const base = Astro.site ?? Astro.url;
+const schemas = [
+  ...events(base),
+  ...persons(base),
+  ...publications(base),
+  ...board(),
+  faq(),
+].filter((node) => node !== null);
 ---
 
-<Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<Layout title={SITE_TITLE} description={SITE_DESCRIPTION} schemas={schemas}>
   <Hero />
   <Positioning />
   <Services />

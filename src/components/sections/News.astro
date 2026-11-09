@@ -2,7 +2,7 @@
 import { Picture } from 'astro:assets';
 import forumJuli from '../../assets/images/forum-juli-2026.jpg';
 import forumMarkt from '../../assets/images/forum-markt-spezial-2026.jpg';
-import forumOktober from '../../assets/images/forum-oktober-2025.jpg';
+import forumOktober from '../../assets/images/forum-oktober-2026.jpg';
 import { NEWS } from '../../data/content';
 import Button from '../Button.astro';
 import Overline from '../ui/Overline.astro';
@@ -14,11 +14,15 @@ import Newsletter from './Newsletter.astro';
 /*
  * Aktuelles: VZP Forum (News Cards, klickbar) + Newsletter-Anmeldung.
  * Desktop 3 Ausgaben, mobil 2 + "Aeltere Ausgaben anzeigen".
+ *
+ * Die Titelbilder liegen auf der Bestandsseite nur als Teaser (290 x 198 bzw.
+ * 718 x 408) vor - deshalb die kleinen `widths`.
+ * TODO: hoeher aufgeloeste Cover bei der VZP anfordern.
  */
 const images: Record<(typeof NEWS.issues)[number]['image'], ImageMetadata> = {
   'forum-markt-spezial-2026': forumMarkt,
   'forum-juli-2026': forumJuli,
-  'forum-oktober-2025': forumOktober,
+  'forum-oktober-2026': forumOktober,
 };
 
 const hiddenIds = NEWS.issues
@@ -33,9 +37,6 @@ const hiddenIds = NEWS.issues
         <ResponsiveText text={NEWS.lead} />
       </p>
     </SectionHeader>
-    <a class="vzp-link vzp-news__archive vzp-desktop-only" href={NEWS.archive.href}>
-      {NEWS.archive.label}
-    </a>
   </div>
 
   <ul class="vzp-news__list" role="list">
@@ -48,11 +49,13 @@ const hiddenIds = NEWS.issues
           data-disclosure-panel={extra ? '' : undefined}
           data-disclosure-mobile={extra ? '' : undefined}
         >
+          {/* Der Ausgabentitel steht als Ueberschrift daneben - das Cover ist
+              damit dekorativ (WCAG 1.1.1, keine Dopplung im Screenreader). */}
           <Picture
             src={images[issue.image]}
             alt=""
             formats={['avif', 'webp']}
-            widths={[400, 600, 800]}
+            widths={[290, 718]}
             sizes="(min-width: 64em) 380px, (min-width: 48em) 33vw, 100vw"
             loading="lazy"
             class="vzp-news-card__image"
@@ -60,12 +63,22 @@ const hiddenIds = NEWS.issues
           <div class="vzp-news-card__body">
             <Overline class="vzp-desktop-only">{issue.category}</Overline>
             <h3 class="vzp-news-card__title">{issue.title}</h3>
+            <p class="vzp-news-card__text vzp-desktop-only">{issue.text}</p>
             <div class="vzp-news-card__meta">
               <time datetime={issue.iso}>{issue.date}</time>
               {/* Ein Link pro Karte; die ganze Karte ist ueber ::after
                     klickbar, ohne verschachtelte interaktive Elemente. */}
-              <a class="vzp-news-card__link" href={issue.href} target="_blank" rel="noopener">
-                PDF öffnen<span class="sr-only">: {issue.title} (PDF, neues Fenster)</span>
+              <a
+                class="vzp-news-card__link"
+                href={issue.href}
+                target={issue.external ? '_blank' : undefined}
+                rel={issue.external ? 'noopener' : undefined}
+              >
+                {issue.linkLabel}
+                <span class="sr-only">
+                  : {issue.title}
+                  {issue.external ? ' (PDF, neues Fenster)' : ' (E-Mail)'}
+                </span>
                 <span aria-hidden="true"> →</span>
               </a>
             </div>
@@ -103,10 +116,6 @@ const hiddenIds = NEWS.issues
 
   .vzp-news__header :global(.vzp-section-header__lead) {
     max-inline-size: 36rem;
-  }
-
-  .vzp-news__archive {
-    font-weight: var(--vzp-font-weight-semibold);
   }
 
   .vzp-news__list {
@@ -154,6 +163,13 @@ const hiddenIds = NEWS.issues
     font-weight: var(--vzp-font-weight-regular);
     line-height: var(--vzp-line-height-300);
     color: var(--vzp-color-text-primary);
+  }
+
+  .vzp-news-card__text {
+    margin-block-start: var(--vzp-space-2);
+    font-size: var(--vzp-font-size-300);
+    line-height: var(--vzp-line-height-500);
+    color: var(--vzp-color-text-secondary);
   }
 
   .vzp-news-card__meta {

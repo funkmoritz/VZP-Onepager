@@ -40,8 +40,14 @@ function resolveJson(value, depth = 0) {
 }
 
 // --- Gebautes CSS einlesen ---------------------------------------------
-const cssDir = 'dist/_astro';
-const cssFiles = readdirSync(cssDir).filter((f) => f.endsWith('.css'));
+// Ordnername kommt aus `build.assets` in der astro.config.
+const cssDir = 'dist/assets';
+let cssFiles = [];
+try {
+  cssFiles = readdirSync(cssDir).filter((f) => f.endsWith('.css'));
+} catch {
+  /* Ordner fehlt -> gleiche Meldung wie bei leerem Ordner */
+}
 if (!cssFiles.length) {
   console.error('Kein CSS in dist/ gefunden. Erst `npm run build` ausfuehren.');
   process.exit(1);

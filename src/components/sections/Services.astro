@@ -36,9 +36,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     ))}
   </ol>
 
-  <p class="vzp-body-lg vzp-services__portfolio-intro vzp-desktop-only">
-    {SERVICES.portfolioIntro}
-  </p>
+  <h3 class="vzp-h3-serif vzp-services__portfolio-title">{SERVICES.portfolioTitle}</h3>
+  <p class="vzp-body-lg vzp-services__portfolio-intro">{SERVICES.portfolioIntro}</p>
 
   <div class="vzp-portfolio">
     {SERVICES.groups.map((group) => (
@@ -46,9 +45,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
         class:list={['vzp-portfolio__group', `vzp-portfolio__group--${group.edge}`]}
         aria-labelledby={`portfolio-${group.id}`}
       >
-        <h3 id={`portfolio-${group.id}`} class="vzp-h4">
+        <h4 id={`portfolio-${group.id}`} class="vzp-h4">
           {group.title}
-        </h3>
+        </h4>
         <p class="vzp-portfolio__text vzp-desktop-only">{group.text}</p>
         <ol
           class:list={[
@@ -110,8 +109,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
     color: var(--vzp-color-text-secondary);
   }
 
-  .vzp-services__portfolio-intro {
+  .vzp-services__portfolio-title {
     margin-block-start: var(--vzp-space-20);
+  }
+
+  .vzp-services__portfolio-intro {
+    margin-block-start: var(--vzp-space-4);
     color: var(--vzp-color-text-primary);
   }
 
@@ -178,11 +181,25 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
 
   @media (min-width: 48em) {
+    /* Zwei Spalten: links die beiden kurzen Absaetze, rechts der lange
+       dritte - sonst bliebe unter dem zweiten Absatz ein Loch. */
     .vzp-services__intro {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--vzp-space-16);
+      gap: var(--vzp-spacing-stack-paragraph) var(--vzp-space-16);
       font-size: var(--vzp-font-size-400);
       line-height: var(--vzp-line-height-700);
+    }
+
+    .vzp-services__intro > p:nth-child(1) {
+      grid-area: 1 / 1;
+    }
+
+    .vzp-services__intro > p:nth-child(2) {
+      grid-area: 2 / 1;
+    }
+
+    .vzp-services__intro > p:nth-child(3) {
+      grid-area: 1 / 2 / span 2;
     }
 
     .vzp-steps {

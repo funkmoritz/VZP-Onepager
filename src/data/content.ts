@@ -1,15 +1,18 @@
 /**
  * Inhalte des Onepagers - eine Quelle fuer alle Sektionen.
  *
- * Texte 1:1 aus dem Hi-Fi-Screendesign (vzp_full_website_design.pdf).
- * `mobile`-Felder enthalten die im Mobile-Entwurf (1b) gekuerzten Fassungen;
- * fehlt das Feld, gilt der Desktop-Text auf allen Breiten.
+ * Alle Texte sind von vzp-online.de uebernommen (Stand: 09.11.2026) und dort
+ * woertlich belegt. Angepasst wurde ausschliesslich die Typografie
+ * (Anfuehrungszeichen, Gedankenstriche, doppelte Leerzeichen).
  *
- * TODO vor Livegang (Abschnitt 10 "Markierte Platzhalter" im Entwurf):
- *  - Referenzzitate sind sinngemaess formuliert -> Originaltext einsetzen
- *  - Telefondurchwahlen und E-Mail-Adressen verifizieren
- *  - Newsletter-Frequenz "etwa vier Mal im Jahr" bestaetigen
- *  - Kurzvitae der Geschaeftsfuehrung mit dem Volltext aus dem Bestand fuellen
+ * Wo das Hi-Fi-Screendesign Bausteine vorsieht, zu denen es auf der
+ * Bestandsseite keinen Text gibt, steht die Entwurfsfassung - jeweils mit
+ * `// Entwurfstext` markiert. Das betrifft: Hero-Overline, Positionierungs-
+ * Zielgruppen, das Drei-Schritte-Band in den Leistungen, die Gruppentexte im
+ * Portfolio, Titel/Lead der Events-Sektion sowie die Stats unter "Ueber uns".
+ *
+ * `mobile`-Felder enthalten gekuerzte Fassungen; fehlt das Feld, gilt der
+ * Desktop-Text auf allen Breiten. Zitate und Rechtstexte werden nicht gekuerzt.
  */
 
 /** Text mit optional abweichender Mobilfassung. */
@@ -27,17 +30,18 @@ const tel = (display: string) => `tel:${display.replace(/[^\d+]/g, '')}`;
 export const CONTACT = {
   name: 'Versicherungsstelle Zellstoff und Papier',
   nameLines: ['Versicherungsstelle', 'Zellstoff und Papier'],
+  legalForm: 'Gesellschaft mit beschränkter Haftung',
   street: 'Amsterdamer Straße 192',
   zip: '50735',
   city: 'Köln',
-  email: 'verbund@vzp-online.de',
-  phone: '+49 211 1714-534',
+  email: 'welcome@vzp-online.de',
+  phone: '+49 211 17148439',
   get phoneHref() {
     return tel(this.phone);
   },
   partner: {
-    label: 'VZP-Kooperationspartner Funk',
-    href: 'https://www.funk-gruppe.de/',
+    label: 'VZP–Kooperationspartner Funk',
+    href: 'https://www.funk-gruppe.com',
   },
 } as const;
 
@@ -46,40 +50,55 @@ export const CONTACT = {
 /* ------------------------------------------------------------------------ */
 
 export const HERO = {
-  overline: 'Risikopartner der Papierwirtschaft',
-  titleLines: ['Unsere Expertise:', 'Ihre Sicherheit.'],
+  overline: 'Risikopartner der Papierwirtschaft', // Entwurfstext
+  titleLines: ['Gemeinsam sicher sein.'],
   lead: {
     desktop:
-      'Wir versichern und beraten Unternehmen der Papierwirtschaft — mit Branchenkenntnis aus erster Hand und der Marktstärke unseres Partners Funk, dem größten unabhängigen Versicherungsmakler Deutschlands.',
+      'Als Partner dieser Branche ist es unsere Aufgabe, Unternehmern und Entscheidern die Sicherheit zu geben, die sie brauchen, um genauso zukunftsfähig zu bleiben wie der Wertstoff, mit dem sie arbeiten. Unsere Expertise umfasst dabei nicht nur alle relevanten Leistungen des Versicherungs- und Risikomanagements und der Vorsorge, sondern auch das Know-how der Papierwirtschaft und ihrer Partner.',
     mobile:
-      'Wir versichern und beraten Unternehmen der Papierwirtschaft — mit Branchenkenntnis aus erster Hand und der Marktstärke unseres Partners Funk.',
+      'Als Partner dieser Branche ist es unsere Aufgabe, Unternehmern und Entscheidern die Sicherheit zu geben, die sie brauchen, um genauso zukunftsfähig zu bleiben wie der Wertstoff, mit dem sie arbeiten.',
   } satisfies Responsive,
   primaryCta: { label: 'Gespräch vereinbaren', href: '#kontakt' },
   secondaryCta: { label: 'Leistungen ansehen', href: '#leistungen' },
+  /** Die vier Claims der Bestandsseite (dort als Hero-Karussell). */
   facts: [
     {
-      title: 'Nur Papierwirtschaft',
+      label: 'Unser Mehrwert:',
+      title: 'Partnerschaft.',
       text: {
         desktop:
-          'Spezialisiert auf Herstellung, Verarbeitung, Handel, Druck, Recycling und Energie.',
-        mobile: 'Herstellung, Verarbeitung, Handel, Druck, Recycling, Energie.',
+          'In unserer Branche geht es um Vertrauen. Deshalb arbeiten wir partnerschaftlich Hand in Hand mit unseren Kunden.',
       },
     },
     {
-      title: 'Kunden sind Gesellschafter',
+      label: 'Unser Anliegen:',
+      title: 'Wertschätzung.',
       text: {
-        desktop: 'Einblick in Arbeitsweise, Planung und Kennzahlen — und Mitbestimmung.',
-        mobile: 'Einblick in Arbeitsweise, Planung, Kennzahlen — und Mitbestimmung.',
+        desktop:
+          'Wir wissen um den Wert der Werkstoffe und Produkte in unserer Branche. Deshalb setzen wir uns aus Überzeugung für die Sicherheit unserer Branche ein.',
+        mobile: 'Wir wissen um den Wert der Werkstoffe und Produkte in unserer Branche.',
       },
     },
     {
-      title: 'Weltweite Lösungen',
+      label: 'Unsere Expertise:',
+      title: 'Ihre Sicherheit.',
       text: {
-        desktop: 'Über Funk und das Netzwerk der Funk Alliance Risk Consultants.',
-        mobile: 'Über Funk und die Funk Alliance Risk Consultants.',
+        desktop:
+          'Gemeinsam mit unserem Partner Funk, dem größten inhabergeführten Versicherungsmakler am deutschen Markt, besitzen wir die Expertise in Sachen Sicherheit.',
+        mobile:
+          'Gemeinsam mit unserem Partner Funk, dem größten inhabergeführten Versicherungsmakler am deutschen Markt.',
       },
     },
-  ] satisfies { title: string; text: Responsive }[],
+    {
+      label: 'Unser Fokus:',
+      title: 'Die Papierwirtschaft.',
+      text: {
+        desktop:
+          'Wir konzentrieren uns bewusst auf die Herausforderungen Ihrer Branche. Das macht uns zum besten Partner für die Sicherheit der Papierwirtschaft.',
+        mobile: 'Wir konzentrieren uns bewusst auf die Herausforderungen Ihrer Branche.',
+      },
+    },
+  ] satisfies { label: string; title: string; text: Responsive }[],
 };
 
 /* ------------------------------------------------------------------------ */
@@ -89,10 +108,10 @@ export const HERO = {
 export const POSITIONING = {
   statement: {
     desktop:
-      'Wir kennen die Anlagen, die Materialströme und die Menschen hinter der Produktion. Deshalb erkennen wir Risiken früher — und sichern sie präziser ab.',
-    mobile: 'Wir kennen die Anlagen, die Materialströme und die Menschen hinter der Produktion.',
+      'Versicherungslösungen, Vorsorge und Risikomanagement für die Papierwirtschaft und ihre Partner.',
   } satisfies Responsive,
-  audienceLabel: 'Für wen wir arbeiten',
+  audienceLabel: 'Für wen wir arbeiten', // Entwurfstext
+  /** Entwurfstext - auf der Bestandsseite gibt es keine Zielgruppenliste. */
   audiences: [
     { desktop: 'Papierhersteller' },
     { desktop: 'Papierverarbeiter' },
@@ -111,21 +130,24 @@ export const POSITIONING = {
 
 export const SERVICES = {
   overline: 'Leistungen',
-  title: 'Leistungen für Ihre Spitzenleistung',
+  title: 'für Ihre Spitzenleistung',
   intro: [
     {
       desktop:
-        'Weil es in der Papierwirtschaft auf reibungslose Abläufe ankommt, konzentrieren wir unsere Leistung vor allem auf die Risikominimierung und Absicherung Ihres Betriebes. Unsere Experten analysieren und bewerten die Risikopotenziale sowie die Auswirkungen möglicher Schadensereignisse in Ihrem Unternehmen.',
-      mobile:
-        'Weil es in der Papierwirtschaft auf reibungslose Abläufe ankommt, konzentrieren wir unsere Leistung auf die Risikominimierung und Absicherung Ihres Betriebes.',
+        'Weil es in der Papierwirtschaft auf reibungslose Abläufe ankommt, konzentrieren wir unsere Leistung vor allem auf die Risikominimierung und Absicherung Ihres Betriebes.',
     },
     {
       desktop:
-        'Auf Grundlage unserer Analysen entwickeln wir gemeinsam mit Ihnen maßgeschneiderte Maßnahmenkonzepte und erarbeiten passgenaue Versicherungs- und Risikomanagementlösungen für den optimalen und nachhaltigen Schutz Ihrer Werte.',
+        'Unsere Experten analysieren und bewerten die Risikopotenziale, sowie die Auswirkungen möglicher Schadensereignisse in Ihrem Unternehmen.',
+    },
+    {
+      desktop:
+        'Auf Grundlage unserer Analysen entwickeln wir gemeinsam mit Ihnen maßgeschneiderte Maßnahmenkonzepte, die Ihnen klar aufzeigen, worauf Sie in Sachen betrieblicher Sicherheit achten müssen. Wir erarbeiten dementsprechend passgenaue Versicherungs- und Risikomanagementlösungen für den optimalen und nachhaltigen Schutz Ihrer Werte.',
       mobile:
-        'Auf Grundlage unserer Analysen entwickeln wir gemeinsam mit Ihnen maßgeschneiderte Maßnahmenkonzepte für den nachhaltigen Schutz Ihrer Werte.',
+        'Auf Grundlage unserer Analysen entwickeln wir gemeinsam mit Ihnen maßgeschneiderte Maßnahmenkonzepte, die Ihnen klar aufzeigen, worauf Sie in Sachen betrieblicher Sicherheit achten müssen.',
     },
   ] satisfies Responsive[],
+  /** Entwurfstext - fasst das Vorgehen aus den Absaetzen oben zusammen. */
   steps: [
     {
       label: 'Schritt 01',
@@ -154,14 +176,15 @@ export const SERVICES = {
       },
     },
   ] satisfies { label: string; title: string; text: Responsive }[],
+  portfolioTitle: 'Leistungs- und Lösungsportfolio',
   portfolioIntro:
-    'Wir stehen für ein international bewährtes Leistungs- und Lösungsportfolio, das auf die individuellen Anforderungen Ihres Unternehmens zugeschnitten ist.',
+    'Wir stehen für ein international bewährtes Leistungs- und Lösungsportfolio, das perfekt auf die individuellen Anforderungen Ihres Unternehmens zugeschnitten ist.',
   groups: [
     {
       id: 'makler',
       edge: 'brand',
-      title: 'Maklerdienstleistungen',
-      text: 'Versicherungsschutz und Vorsorge für Betrieb, Gesellschafter und Familien.',
+      title: 'Unsere Maklerdienstleistungen',
+      text: 'Versicherungsschutz und Vorsorge für Betrieb, Gesellschafter und Familien.', // Entwurfstext
       columns: 1,
       items: [
         'Betriebliche Versicherung',
@@ -173,8 +196,8 @@ export const SERVICES = {
     {
       id: 'risiko',
       edge: 'accent',
-      title: 'Risikoberatung für einen sicheren Betrieb',
-      text: 'Technische Beratung an Anlagen, Prozessen und Infrastruktur.',
+      title: 'Unsere Risikoberatung für einen sicheren Betrieb',
+      text: 'Technische Beratung an Anlagen, Prozessen und Infrastruktur.', // Entwurfstext
       columns: 2,
       items: [
         'Risikomanagement',
@@ -195,36 +218,21 @@ export const SERVICES = {
 export const REFERENCES = {
   overline: 'Referenzen',
   title: 'Warum man uns gerne vertraut.',
-  lead: 'Stimmen von Gesellschaftern aus der Papier- und Kartonherstellung.',
-  /** Redaktioneller Hinweis aus dem Entwurf - wird nur im Dev-Modus angezeigt. */
-  placeholderNote: {
-    desktop:
-      'Platzhalter — Originalzitat aus dem Bestand einsetzen (Volltext liegt auf der aktuellen Seite vor).',
-    mobile: 'Platzhalter — Originalzitate einsetzen, mobil auf 2–3 Sätze kürzen.',
-  },
+  lead: 'Stimmen von Gesellschaftern aus der Papier- und Kartonherstellung.', // Entwurfstext
   items: [
     {
-      quote: {
-        desktop:
-          'Uns ist ein Ansprechpartner wichtig, der die Anlagen kennt und im Schadenfall sofort weiß, worum es geht. Genau das bekommen wir bei der VZP.',
-        mobile:
-          'Uns ist ein Ansprechpartner wichtig, der die Anlagen kennt und im Schadenfall sofort weiß, worum es geht.',
-      },
+      quote:
+        'Das Vertrauen in die Kompetenz der Ansprechpartner ist ebenso wichtig wie das Gefühl, gut und mit Blick auf die jeweils spezifischen Sicherungsnotwendigkeiten beraten zu werden. Aus eigener Erfahrung wissen wir, wie wichtig ein kompetenter und engagierter Partner an der Seite im Falle eines Schadens und bei der Schadenregulierung ist. Gut zu wissen, dass wir das auch immer wieder aus dem Kreis der übrigen VZP-Gesellschafter bestätigt bekommen. Als Gesellschafter der VZP nutzen wir seit vielen Jahren den Dialog mit den VZP-Mitarbeitern aber auch mit unseren VZP-Mitgesellschaftern und Kollegen zur Vertiefung und Aktualisierung unserer Einsichten in einen immer komplexer werdenden Versicherungsmarkt.',
       company: 'Gissler & Pass GmbH',
-      logoLabel: 'Logo Gissler & Pass',
-      role: { desktop: 'Wellpappenrohpapier · Gesellschafter', mobile: 'Gesellschafter' },
+      logo: 'logo-gissler-pass',
     },
     {
-      quote: {
-        desktop:
-          'Risiko- und Versicherungsmanagement braucht Menschen, die unsere Betriebsabläufe verstehen. Der Dialog mit der VZP ist offen, transparent und auf Augenhöhe.',
-        mobile: 'Der Dialog mit der VZP ist offen, transparent und auf Augenhöhe.',
-      },
+      quote:
+        'Risiko- und Versicherungsmanagement – gerade da geht es um die Existenz und um den Fortbestand unseres Unternehmens bei Schäden und besonders bei Betriebsunterbrechungen. Zu einem so wichtigen und kritischen Thema haben wir einen Spezialisten gesucht. Mit der VZP haben wir uns für DIE Experten in der Papierwirtschaft entschieden. In der persönlichen Betreuung durch die VZP haben wir über die Jahre bei allen versicherungstechnischen Angelegenheiten ein sehr gutes Gefühl, das sich auch immer wieder bestätigt. Die Experten der VZP kennen uns, unser Geschäft, unsere Technik und unsere Anforderungen. Neue Themen und Veränderungen am Markt werden proaktiv an uns herangetragen und in unserem Sinne für uns gelöst. Bei der Regulierung von Schäden können wir uns ganz auf unsere Betreuer der VZP verlassen und fühlen uns im Dialog mit den Versicherern optimal vertreten und unterstützt. Als Mitgesellschafter unseres „eigenen“ Versicherungsmaklers genießen wir gegenseitig ein sehr großes Vertrauen und unsere Entscheidung für die VZP beweist sich immer wieder als richtig.',
       company: 'WEIG Karton',
-      logoLabel: 'Logo WEIG Karton',
-      role: { desktop: 'Kartonherstellung · Gesellschafter', mobile: 'Gesellschafter' },
+      logo: 'logo-weig-karton',
     },
-  ] satisfies { quote: Responsive; company: string; logoLabel: string; role: Responsive }[],
+  ] satisfies { quote: string; company: string; logo: string }[],
 };
 
 /* ------------------------------------------------------------------------ */
@@ -236,30 +244,33 @@ export const ABOUT = {
   title: 'Wissen, worauf es ankommt.',
   philosophy: {
     desktop:
-      'Unser Anspruch, die Experten für Risikolösungen in der Papierwirtschaft zu sein, entsteht nicht nur aus Branchenkenntnis, sondern auch aus unserer Philosophie: Unsere Kunden sind unsere Partner.',
+      'Unseren Anspruch, der Experte für Risikolösungen in der Papierwirtschaft zu sein, unterstreichen wir nicht nur mit unserer Branchenherkunft, sondern auch mit unserer Philosophie: Unsere Kunden sind unsere Partner.',
     mobile:
-      'Unser Anspruch, die Experten für Risikolösungen in der Papierwirtschaft zu sein, entsteht aus Branchenkenntnis und aus unserer Philosophie: Unsere Kunden sind unsere Partner.',
+      'Unseren Anspruch, der Experte für Risikolösungen in der Papierwirtschaft zu sein, unterstreichen wir mit unserer Branchenherkunft und mit unserer Philosophie: Unsere Kunden sind unsere Partner.',
   } satisfies Responsive,
   body: [
     {
       desktop:
-        'Die Unternehmen, die wir betreuen, sind überwiegend auch Gesellschafter ihres eigenen Versicherungsmaklers. Sie haben Einblick in unsere Arbeitsweise, unsere Planung und unsere Kennzahlen — und bestimmen diese im Rahmen ihrer Gesellschaftertätigkeit maßgeblich mit.',
+        'Wir wurden von sieben Unternehmen der Papierwirtschaft gegründet und viele unserer Kunden sind Gesellschafter der VZP. Daher wissen wir besser als jeder andere, worauf es in unserer Branche ankommt und welche Werte es zu schützen gilt. Als Partner der Papierwirtschaft ist es unsere Aufgabe, Unternehmen und Entscheidern die Sicherheit zu geben, die sie brauchen, um genauso zukunftsfähig zu bleiben wie der Werkstoff, mit dem sie arbeiten.',
       mobile:
-        'Die Unternehmen, die wir betreuen, sind überwiegend auch Gesellschafter ihres eigenen Versicherungsmaklers — mit Einblick und Mitbestimmung.',
+        'Wir wurden von sieben Unternehmen der Papierwirtschaft gegründet und viele unserer Kunden sind Gesellschafter der VZP. Daher wissen wir besser als jeder andere, worauf es in unserer Branche ankommt und welche Werte es zu schützen gilt.',
     },
     {
+      // Kein `mobile`-Feld: der Absatz traegt eine eigene Aussage und darf
+      // deshalb auf keiner Breite entfallen (WCAG 1.4.4 - bei 200 % Zoom
+      // greift die Mobilfassung).
       desktop:
-        'Gemeinsam mit unserem Partner Funk und dessen internationalem Netzwerk der Funk Alliance Risk Consultants erarbeiten wir weltweit passende Lösungen — ganz gleich, ob es sich um Versicherung, Vorsorge oder Risikomanagement handelt.',
-      mobile: '',
+        'Gemeinsam mit unserem Partner Funk, Deutschlands größtem inhabergeführten Versicherungsmakler und [en]Risk Consultant[/en], können wir weltweit beste Lösungen erarbeiten und anbieten – ganz gleich, ob es sich um Versicherung, Vorsorge oder Risikomanagement handelt.',
     },
   ] satisfies Responsive[],
+  /** Entwurfstext - zaehlt die Personen weiter unten in der Sektion. */
   stats: [
+    { value: '7', label: 'Gründungsunternehmen' },
     { value: '6', label: 'Beiräte aus der Branche' },
-    { value: '2', label: 'Geschäftsführer' },
   ],
   board: {
     title: 'Unsere Beiräte',
-    text: 'Entscheider aus der Branche begleiten die Arbeit der VZP.',
+    text: 'Entscheider aus der Branche begleiten die Arbeit der VZP.', // Entwurfstext
     members: [
       {
         name: 'Dr. Christopher Grünewald',
@@ -282,24 +293,17 @@ export interface Manager {
   since: string;
   phone: string;
   phoneHref: string;
-  /** TODO: persoenliche Adresse verifizieren (im Entwurf aus Screenshot rekonstruiert). */
   emailHref: string;
-  /**
-   * Kurzvita. Im Entwurf eingeklappt und ohne Volltext - die Absaetze unten
-   * enthalten nur gesicherte Fakten aus dem Entwurf.
-   * TODO: Volltext der Kurzvita aus dem Bestand (bisheriges Overlay) uebernehmen.
-   */
+  /** Ueberschrift ueber der Werdegangs-Liste, falls vorhanden. */
+  vitaListTitle?: string;
+  /** Stationen als Liste (Kurzvita Horst Ullrich). */
+  vitaList?: string[];
+  /** Fliesstext der Kurzvita. */
   vita: string[];
-  /**
-   * Zitat in der Vita (Overlay-Mapping: "Werdegang + Zitat zweispaltig").
-   * TODO: Originalzitat aus dem Bestand - bewusst nicht erfunden. Ist es
-   * gesetzt, wird die Vita zweispaltig dargestellt.
-   */
+  /** Frage ueber dem Zitat; ist sie gesetzt, wird die Vita zweispaltig. */
+  vitaQuestion?: string;
   vitaQuote?: string;
 }
-
-const managerMail = (name: string) =>
-  `mailto:${CONTACT.email}?subject=${encodeURIComponent(`Anfrage an ${name}`)}`;
 
 export const MANAGEMENT: Manager[] = [
   {
@@ -307,13 +311,21 @@ export const MANAGEMENT: Manager[] = [
     name: 'Horst Ullrich',
     role: 'Geschäftsführer',
     since: 'seit 1. Januar 2015',
-    phone: '+49 211 1714-514',
-    phoneHref: tel('+49 211 1714-514'),
-    emailHref: managerMail('Horst Ullrich'),
-    vita: [
-      'Horst Ullrich ist seit dem 1. Januar 2015 Geschäftsführer der Versicherungsstelle Zellstoff und Papier.',
-      'Als Sachverständiger für Maschinen, Anlagen und technische Betriebsausstattung ist er die erste Anlaufstelle für Risikofragen im Betrieb.',
+    phone: '+49 211 17148439',
+    phoneHref: tel('+49 211 17148439'),
+    emailHref: 'mailto:h.ullrich@vzp-online.de',
+    vitaListTitle: 'Studium und beruflicher Werdegang:',
+    vitaList: [
+      'Studium Maschinenbau an der FH in Bochum',
+      'Leitung Anlagentechnik und Versicherungswesen in einem kommunalen Verkehrsunternehmen',
+      'Ausbildung, Prüfung und Bestellung durch die IHK-Nordwestfalen „Öffentlich bestellt und vereidigter Sachverständiger für Maschinen, Anlagen und technische Betriebsausstattung – Bewertung und Schadensfeststellung“',
+      'Seit 2001 in der Assekuranz',
+      'Seit dem 1. Januar 2015 Geschäftsführer der VZP – zuvor Kundenbetreuer bei Funk',
     ],
+    vita: [],
+    vitaQuestion: 'Was zeichnet die VZP für Sie besonders aus?',
+    vitaQuote:
+      'Die Unternehmen, die wir in der VZP betreuen, sind überwiegend auch Gesellschafter ihres eigenen Versicherungsmaklers. Unsere Gesellschafter haben nicht nur Einblick in unsere Arbeitsweise, die Planung und unsere Kennzahlen, sondern bestimmen diese maßgeblich im Rahmen ihrer Gesellschaftertätigkeit mit. Diese partnerschaftliche Zusammenarbeit ist durch maximale Transparenz, zielführenden Dialog, gegenseitige Wertschätzung und großes gegenseitiges Vertrauen geprägt. Das Ergebnis dieser Zusammenarbeit bedeutet für mich persönlich einfach ein „Sehr gutes Gefühl“.',
   },
   {
     id: 'bernhard-schwanke',
@@ -322,9 +334,10 @@ export const MANAGEMENT: Manager[] = [
     since: 'seit 2023',
     phone: '+49 40 359140',
     phoneHref: tel('+49 40 359140'),
-    emailHref: managerMail('Bernhard C. Schwanke'),
+    emailHref: `mailto:${CONTACT.email}?subject=${encodeURIComponent('Anfrage an Bernhard C. Schwanke')}`,
     vita: [
-      'Bernhard C. Schwanke ist seit 2023 Geschäftsführer der Versicherungsstelle Zellstoff und Papier.',
+      'Bernhard C. Schwanke ist geschäftsführender Gesellschafter der Funk Gruppe sowie Geschäftsführer der Funk Versicherungsmakler GmbH, der Funk Hospital-Versicherungsmakler GmbH und der VZP (Versicherungsstelle Zellstoff und Papier). Er ist verantwortlich für die Vertriebssteuerung und -planung des Industriekundengeschäfts, sowohl auf den Niederlassungen als auch in der [en]Key Account Division[/en]. Zudem ist er für das Segment Heilwesen und die Weiterentwicklung des Verbandsgeschäfts zuständig.',
+      'Bernhard C. Schwanke, 1977 in Freiburg im Breisgau geboren, ist Volljurist und begann 2005 als Assistent der Geschäftsführung. Bei Funk war er zunächst in unterschiedlichen Fachbereichen und später im Vertrieb sowie in der Kundenbetreuung tätig. Seit 2013 ist der Gesellschafter der 5. Generation Geschäftsführer der Funk Hospital-Versicherungsmakler GmbH, 2016 wurde er in die Geschäftsleitung der Funk Gruppe berufen. 2018 folgte die Ernennung in die Geschäftsführung der Funk Versicherungsmakler GmbH. 2021 wurde er Geschäftsführer der Funk Gruppe, 2023 der VZP.',
     ],
   },
 ];
@@ -335,74 +348,82 @@ export const MANAGEMENT: Manager[] = [
 
 export const EVENTS = {
   overline: 'Events & Webinare',
-  title: 'Wissen aus der Praxis, kompakt vermittelt.',
-  lead: 'Unsere Experten geben ihr Wissen in kurzen Online-Formaten weiter — konkret, ohne Verkaufsdruck, mit Raum für Ihre Fragen.',
+  title: 'Wissen aus der Praxis, kompakt vermittelt.', // Entwurfstext
+  lead: 'Unsere Experten geben ihr Wissen in kurzen Online-Formaten weiter — konkret, ohne Verkaufsdruck, mit Raum für Ihre Fragen.', // Entwurfstext
   featured: {
     id: 'webinar-tci',
     badge: 'Webinar',
-    meta: { desktop: 'Online · 60 Minuten', mobile: '23.09. & 28.09.2026' },
+    image: 'webinar-versicherungskosten',
+    meta: { desktop: 'Online · 23.09. & 28.09.2026', mobile: '23.09., 28.09.' },
     title: {
       desktop:
         'Versicherungskosten optimieren: Von der Schadentransparenz zur passenden Selbstbeteiligung',
-      mobile: 'Versicherungskosten optimieren: Von der Schadentransparenz zur Selbstbeteiligung',
     },
     body: [
       {
         desktop:
-          'Historisch gewachsene Versicherungsstrukturen sind häufig Kostentreiber. Total Cost of Insurance betrachtet Ihre Versicherungskosten ganzheitlich — nicht nur Prämien, sondern alle Kostenbestandteile rund um Risikotransfer und Eigentragung.',
-        mobile:
-          'Total Cost of Insurance betrachtet Ihre Versicherungskosten ganzheitlich — nicht nur Prämien, sondern alle Kosten rund um Risikotransfer und Eigentragung. Gemeinsam mit Funk optimieren Sie Policen und Selbstbeteiligungen.',
+          'In diesem Webinar erfahren Sie von unseren Experten, wie Sie maximale Kosteneffizienz und Risikokontrolle in Ihrem Unternehmen erreichen.',
       },
       {
         desktop:
-          'Gemeinsam mit Funk optimieren Sie Ihre Risikokosten über zwei Hebel: die Optimierung der Versicherungspolicen und die Einführung adäquater Selbstbeteiligungen.',
-        mobile: '',
+          'Historisch gewachsene Versicherungsstrukturen sind häufig Kostentreiber. [en]Total Cost of Insurance[/en] (TCI) betrachtet Ihre Versicherungskosten ganzheitlich – nicht nur Prämien, sondern alle relevanten Kostenbestandteile rund um Risikotransfer und Eigentragung.',
+        mobile:
+          'Historisch gewachsene Versicherungsstrukturen sind häufig Kostentreiber. [en]Total Cost of Insurance[/en] (TCI) betrachtet Ihre Versicherungskosten ganzheitlich – nicht nur Prämien, sondern alle relevanten Kostenbestandteile.',
+      },
+      {
+        desktop:
+          'Das Ziel der Analyse: Einspar- und Kapazitätspotenziale aufdecken und eine passende Strategie für eine höhere Eigentragung entwickeln.',
+      },
+      {
+        desktop: 'Gemeinsam mit Funk optimieren Sie Ihre Risikokosten über zwei Hebel:',
       },
     ] satisfies Responsive[],
+    levers: [
+      'Optimierung der Versicherungspolicen (Leistungen, Bedingungen, Struktur, Marktansprache)',
+      'Einführung adäquater Selbstbeteiligungen (wirtschaftlich sinnvoll, risikogerecht, finanzierbar)',
+    ],
+    // Ohne `mobile`: eigenstaendige Aussage, darf auf keiner Breite entfallen.
+    closing: {
+      desktop:
+        'Unsere Experten zeigen, wie sich die Versicherungsgesamtkosten auch in Ihrem Unternehmen spürbar reduzieren lassen bei gleichzeitig besserer Steuerbarkeit der Risiken.',
+    } satisfies Responsive,
     benefitsLabel: 'Ihre Mehrwerte',
     benefits: [
       {
-        desktop: 'Deutliche Risikokostenreduzierung, langfristig optimierte Risikoposition',
+        desktop:
+          'Deutliche Risikokostenreduzierung und langfristige Optimierung der eigenen Risikoposition',
         mobile: 'Deutliche Risikokostenreduzierung',
       },
       { desktop: 'Transparenz über bestehende Schadenverläufe' },
-      { desktop: 'Bessere Verhandlungsposition gegenüber Versicherern' },
-      { desktop: 'Identifikation aller relevanten Risikokostenpositionen', mobile: '' },
+      { desktop: 'Verbesserung der Verhandlungsposition gegenüber Versicherern' },
+      { desktop: 'Identifikation sämtlicher relevanter Risikokostenpositionen' },
       {
-        desktop: 'Objektive Analyse verschiedener Selbstbeteiligungsmodelle',
+        desktop:
+          'Objektive betriebswirtschaftliche Analyse unterschiedlicher Selbstbeteiligungsmodelle',
         mobile: 'Objektive Analyse der Selbstbeteiligungsmodelle',
       },
     ] satisfies Responsive[],
-    datesLabel: 'Termine',
+    datesLabel: 'Termine & Anmeldung',
+    /** Jeder Termin fuehrt auf sein eigenes Microsoft-Teams-Event. */
     dates: [
-      { date: 'Mi, 23.09.2026', iso: '2026-09-23T11:00', time: '11:00 – 12:00 Uhr' },
-      { date: 'Mo, 28.09.2026', iso: '2026-09-28T09:00', time: '09:00 – 10:00 Uhr' },
+      {
+        date: '23.09.2026',
+        iso: '2026-09-23T11:00',
+        time: '11:00 Uhr – 12:00 Uhr',
+        href: 'https://events.teams.microsoft.com/event/72435fa2-adec-42ac-9461-19c8b7588489@5790628f-15c0-4ec3-b86b-6a836fb961b4',
+      },
+      {
+        date: '28.09.2026',
+        iso: '2026-09-28T09:00',
+        time: '09:00 Uhr – 10:00 Uhr',
+        href: 'https://events.teams.microsoft.com/event/d542bcf3-e4cd-44a6-918a-3d5cfea372ce@5790628f-15c0-4ec3-b86b-6a836fb961b4',
+      },
     ],
-    cta: {
-      label: 'Zum Webinar anmelden',
-      // TODO: Anmeldeseite eintragen, sobald vorhanden. Bis dahin per E-Mail.
-      href: `mailto:${CONTACT.email}?subject=${encodeURIComponent('Anmeldung Webinar: Versicherungskosten optimieren')}`,
-    },
-    note: 'Teilnahme kostenfrei, Zugangslink nach Anmeldung.',
+    registerLabel: 'Anmelden',
   },
   moreLabel: 'Weitere Termine',
-  /** Platzhalter laut Entwurf - durch echte Termine ersetzen. */
-  more: [
-    {
-      id: 'termin-weiterer-webinartermin',
-      overline: 'Platzhalter · Termin folgt',
-      title: 'Weiterer Webinartermin',
-      titleSuffix: ' — Titel und Inhalt von der VZP zu ergänzen',
-      text: 'Struktur je Eintrag: Kurzbeschreibung, Mehrwerte, Termine, Anmelde-CTA.',
-    },
-    {
-      id: 'termin-weiteres-format',
-      overline: 'Platzhalter · Termin folgt',
-      title: 'Weiteres Format',
-      titleSuffix: ' — Titel und Inhalt von der VZP zu ergänzen',
-      text: 'Vergangene Termine werden aus der Liste entfernt oder unter „Archiv“ geführt.',
-    },
-  ],
+  /** Derzeit kuendigt die VZP nur das Webinar oben an. */
+  more: [] as { id: string; overline: string; title: string; titleSuffix: string; text: string }[],
 };
 
 /* ------------------------------------------------------------------------ */
@@ -413,58 +434,73 @@ export const NEWS = {
   overline: 'Aktuelles',
   title: 'VZP Forum',
   lead: {
-    desktop:
-      'Aktuelle Fachthemen und Informationen aus der Versicherungs- und Papierbranche — als PDF zum Lesen und Weitergeben.',
-    mobile: 'Fachthemen aus der Versicherungs- und Papierbranche als PDF.',
+    desktop: 'Interessante Fachthemen und Informationen aus der Versicherungs- und Papierbranche.',
   } satisfies Responsive,
-  /** TODO: Ziel fuer das Ausgaben-Archiv festlegen. */
-  archive: { label: 'Alle Ausgaben', href: 'https://www.vzp-online.de/' },
   moreLabel: 'Ältere Ausgaben anzeigen',
   /** Mobil sichtbare Anzahl, der Rest hinter "Aeltere Ausgaben anzeigen". */
   mobileVisible: 2,
-  /** TODO: PDFs unter public/downloads/ ablegen (Dateinamen wie unten). */
   issues: [
     {
       category: 'Markt Spezial',
       title: 'VZP Forum Markt Spezial 2026',
-      date: '23.07.2026',
-      iso: '2026-07-23',
-      href: '/downloads/vzp-forum-markt-spezial-2026.pdf',
+      date: '29.07.2026',
+      iso: '2026-07-29',
+      text: 'Hier können Sie die aktuelle Ausgabe unseres VZP Forum Markt Spezial lesen:',
+      linkLabel: 'Jetzt anfordern',
+      href: `mailto:a.wehmeyer@funk-gruppe.de?subject=${encodeURIComponent('VZP Forum Markt Spezial 2026 anfordern')}`,
+      external: false,
       image: 'forum-markt-spezial-2026',
+    },
+    {
+      category: 'Ausgabe',
+      title: 'VZP Forum Oktober 2026',
+      date: '29.10.2026',
+      iso: '2026-10-29',
+      text: 'Hier können Sie die Ausgabe unseres Magazins VZP Forum von Oktober 2026 lesen:',
+      linkLabel: 'Als PDF ansehen',
+      href: '/downloads/vzp-forum-oktober-2026.pdf',
+      external: true,
+      image: 'forum-oktober-2026',
     },
     {
       category: 'Ausgabe',
       title: 'VZP Forum Juli 2026',
       date: '22.07.2026',
       iso: '2026-07-22',
+      text: 'Hier können Sie die Ausgabe unseres Magazins VZP Forum von Juli 2026 lesen:',
+      linkLabel: 'Als PDF ansehen',
       href: '/downloads/vzp-forum-juli-2026.pdf',
+      external: true,
       image: 'forum-juli-2026',
-    },
-    {
-      category: 'Ausgabe',
-      title: 'VZP Forum Oktober 2025',
-      date: '05.11.2025',
-      iso: '2025-11-05',
-      href: '/downloads/vzp-forum-oktober-2025.pdf',
-      image: 'forum-oktober-2025',
     },
   ] as const,
 };
 
 export const NEWSLETTER = {
   id: 'newsletter',
-  title: 'Newsletter der VZP',
+  title: 'Wissen auf einen Klick!',
   text: {
     desktop:
-      'Neue Forum-Ausgaben, Webinartermine und Branchenhinweise — etwa vier Mal im Jahr, jederzeit kündbar.',
-    mobile: 'Forum-Ausgaben, Webinartermine, Branchenhinweise. Jederzeit kündbar.',
+      'Erfahren Sie zuerst von unseren Events, Online-Veranstaltungen und weiteren interessanten News rund um das Risiko- und Versicherungsmanagement.',
+    mobile:
+      'Erfahren Sie zuerst von unseren Events, Online-Veranstaltungen und News rund um das Risiko- und Versicherungsmanagement.',
   } satisfies Responsive,
-  emailLabel: 'E-Mail-Adresse',
-  emailPlaceholder: 'name@unternehmen.de',
-  helper: 'Wir nutzen Ihre Adresse ausschließlich für den Versand des VZP-Newsletters.',
-  submit: 'Newsletter abonnieren',
+  emailLabel: 'E-Mail',
+  salutationLabel: 'Anrede',
+  salutations: ['Divers', 'Frau', 'Herr'],
+  lastNameLabel: 'Nachname',
+  firstNameLabel: 'Vorname',
+  consent:
+    'Ja, ich bin einverstanden, dass mir die VZP GmbH per E-Mail Informationen zu Events, Online-Veranstaltungen, Produkten und Dienstleistungen zusendet. Ich kann diese Einwilligung jederzeit mit einem Klick auf den Link „Abmelden“ widerrufen, den ich in jeder E-Mail finde.',
+  note: 'Weitere Informationen befinden sich unter',
+  noteLinkLabel: 'Impressum/Datenschutz',
+  submit: 'Absenden',
+  /** Gilt, solange `action` auf ein mailto: zeigt - siehe TODO unten. */
+  interimHint:
+    'Hinweis: Das Absenden öffnet Ihr E-Mail-Programm mit einer vorbereiteten Nachricht an die VZP. Alternativ schreiben Sie direkt an welcome@vzp-online.de.',
   /**
-   * TODO: Endpunkt des Newsletter-Dienstes (Double-Opt-in) eintragen.
+   * TODO: Endpunkt des Newsletter-Dienstes (Double-Opt-in) eintragen - die
+   * Bestandsseite nutzt dafuer TYPO3 Forms mit Brevo-Anbindung.
    * Bis dahin geht die Anmeldung als E-Mail an die VZP.
    */
   action: `mailto:${CONTACT.email}?subject=${encodeURIComponent('Newsletter-Anmeldung')}`,
@@ -478,14 +514,13 @@ export const CONTACT_SECTION = {
   overline: 'Kontakt',
   title: 'Wenn Sie uns brauchen, sind wir da.',
   lead: {
-    desktop:
-      'Schreiben Sie uns oder rufen Sie an — Sie sprechen direkt mit jemandem, der Ihre Branche kennt. Wir melden uns innerhalb eines Arbeitstages zurück.',
-    mobile: 'Sie sprechen direkt mit jemandem, der Ihre Branche kennt.',
+    desktop: 'Wenn es um die Sicherheit Ihres Unternehmens geht, sind wir gerne für Sie da.',
   } satisfies Responsive,
-  emailCta: 'E-Mail an die VZP',
+  emailCta: 'E-Mail-Kontakt',
   person: {
     overline: { desktop: 'Ihr direkter Ansprechpartner', mobile: 'Ihr Ansprechpartner' },
-    text: 'Sachverständiger für Maschinen, Anlagen und technische Betriebsausstattung — erste Anlaufstelle für Risikofragen im Betrieb.',
+    /** Aus der Kurzvita von Horst Ullrich. */
+    text: 'Öffentlich bestellter und vereidigter Sachverständiger für Maschinen, Anlagen und technische Betriebsausstattung — erste Anlaufstelle für Risikofragen im Betrieb.',
   },
 };
 
@@ -493,12 +528,22 @@ export const CONTACT_SECTION = {
 /* Footer                                                                   */
 /* ------------------------------------------------------------------------ */
 
+/** Rechtliche Seiten, die dieser Onepager selbst ausliefert. */
 export const LEGAL_PAGES = [
   { slug: 'impressum', label: 'Impressum' },
   { slug: 'datenschutz', label: 'Datenschutz' },
-  { slug: 'pflichtinformation', label: 'Pflichtinformation' },
   { slug: 'barrierefreiheit', label: 'Barrierefreiheit' },
 ] as const;
+
+/** Links der Footer-Spalte "Recht" - inklusive externer Pflichtinformation. */
+export const LEGAL_LINKS = [
+  ...LEGAL_PAGES.map((page) => ({ label: page.label, href: `/${page.slug}`, external: false })),
+  {
+    label: 'Pflichtinformation',
+    href: 'https://www.funk-gruppe.de/de/pflichtinformationen/vzp-gmbh',
+    external: true,
+  },
+] satisfies { label: string; href: string; external: boolean }[];
 
 export const FOOTER = {
   copyright: {

@@ -1,12 +1,20 @@
 ---
+import { Picture } from 'astro:assets';
+import logoGisslerPass from '../../assets/images/logo-gissler-pass.png';
+import logoWeigKarton from '../../assets/images/logo-weig-karton.png';
 import { REFERENCES } from '../../data/content';
-import EditorialNote from '../ui/EditorialNote.astro';
-import LogoPlaceholder from '../ui/LogoPlaceholder.astro';
-import ResponsiveText from '../ui/ResponsiveText.astro';
 import Section from '../ui/Section.astro';
 import SectionHeader from '../ui/SectionHeader.astro';
 
-/* Referenzen: zwei Zitate von Gesellschaftern (Zitat/Callout mit blauer Kante). */
+/*
+ * Referenzen: zwei Zitate von Gesellschaftern (Zitat/Callout mit blauer Kante).
+ * Die Zitate stehen woertlich wie auf vzp-online.de und werden mobil nicht
+ * gekuerzt.
+ */
+const logos: Record<string, ImageMetadata> = {
+  'logo-gissler-pass': logoGisslerPass,
+  'logo-weig-karton': logoWeigKarton,
+};
 ---
 
 <Section id="referenzen" labelledby="referenzen-titel" tone="surface">
@@ -19,30 +27,26 @@ import SectionHeader from '../ui/SectionHeader.astro';
       <li class="vzp-reference">
         <figure class="vzp-reference__figure">
           <blockquote class="vzp-reference__quote">
-            <p>
-              „<ResponsiveText text={item.quote} />“
-            </p>
+            <p>„{item.quote}“</p>
           </blockquote>
-          <EditorialNote class="vzp-reference__note vzp-desktop-only">
-            {REFERENCES.placeholderNote.desktop}
-          </EditorialNote>
           <figcaption class="vzp-reference__source">
-            <LogoPlaceholder label={item.logoLabel} />
-            <span>
-              <span class="vzp-reference__company">{item.company}</span>
-              <span class="vzp-reference__role">
-                <ResponsiveText text={item.role} />
-              </span>
-            </span>
+            {/* Der Firmenname steht als Text daneben - das Logo ist deshalb
+                dekorativ und bekommt keinen Alternativtext (WCAG 1.1.1). */}
+            <Picture
+              src={logos[item.logo]!}
+              alt=""
+              formats={['avif', 'webp']}
+              widths={[160, 320]}
+              sizes="160px"
+              loading="lazy"
+              class="vzp-reference__logo"
+            />
+            <span class="vzp-reference__company">{item.company}</span>
           </figcaption>
         </figure>
       </li>
     ))}
   </ul>
-
-  <EditorialNote class="vzp-references__mobile-note vzp-mobile-only">
-    {REFERENCES.placeholderNote.mobile}
-  </EditorialNote>
 </Section>
 
 <style>
@@ -74,17 +78,15 @@ import SectionHeader from '../ui/SectionHeader.astro';
     background-color: var(--vzp-color-background-default);
   }
 
+  /* Die Originalzitate sind lang - eine Stufe kleiner als im Entwurf, damit
+     sie als Block lesbar bleiben. */
   .vzp-reference__quote {
-    margin: 0;
+    margin: 0 0 var(--vzp-space-5);
     font-family: var(--vzp-typography-heading-family);
-    font-size: var(--vzp-font-size-500);
-    line-height: var(--vzp-line-height-400);
+    font-size: var(--vzp-font-size-400);
+    line-height: var(--vzp-line-height-600);
     color: var(--vzp-color-text-primary);
     text-wrap: pretty;
-  }
-
-  .vzp-reference__note {
-    margin-block-start: var(--vzp-space-6);
   }
 
   .vzp-reference__source {
@@ -96,30 +98,21 @@ import SectionHeader from '../ui/SectionHeader.astro';
     border-block-start: var(--vzp-border-width-100) solid var(--vzp-color-border-default);
   }
 
-  /* Abstand zwischen Zitat und Quelle, unabhaengig davon, ob der
-     redaktionelle Hinweis (nur Dev) dazwischen steht. */
-  .vzp-reference__quote,
-  .vzp-reference__note {
-    margin-block-end: var(--vzp-space-5);
+  .vzp-reference__logo {
+    flex-shrink: 0;
+    display: block;
+    inline-size: auto;
+    block-size: 2.25rem;
+    max-inline-size: 10rem;
+    object-fit: contain;
+    object-position: left center;
   }
 
   .vzp-reference__company {
-    display: block;
     font-size: var(--vzp-font-size-300);
     font-weight: var(--vzp-font-weight-semibold);
     line-height: var(--vzp-line-height-400);
     color: var(--vzp-color-text-primary);
-  }
-
-  .vzp-reference__role {
-    display: block;
-    font-size: var(--vzp-font-size-200);
-    line-height: var(--vzp-line-height-400);
-    color: var(--vzp-color-text-secondary);
-  }
-
-  .vzp-references__mobile-note {
-    margin-block-start: var(--vzp-space-4);
   }
 
   @media (min-width: 48em) {
@@ -134,29 +127,21 @@ import SectionHeader from '../ui/SectionHeader.astro';
     }
 
     .vzp-reference__quote {
-      font-size: var(--vzp-font-size-600);
-      line-height: var(--vzp-line-height-500);
-    }
-
-    .vzp-reference__quote,
-    .vzp-reference__note {
       margin-block-end: var(--vzp-space-8);
-    }
-
-    .vzp-reference__note {
-      margin-block-start: 0;
+      font-size: var(--vzp-font-size-450);
+      line-height: var(--vzp-line-height-600);
     }
 
     .vzp-reference__source {
       padding-block-start: var(--vzp-space-6);
     }
 
-    .vzp-reference__company {
-      font-size: var(--vzp-font-size-450);
+    .vzp-reference__logo {
+      block-size: 2.625rem;
     }
 
-    .vzp-reference__role {
-      font-size: var(--vzp-font-size-300);
+    .vzp-reference__company {
+      font-size: var(--vzp-font-size-450);
     }
   }
 </style>
