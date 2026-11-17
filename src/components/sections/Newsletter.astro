@@ -28,22 +28,6 @@ const interimId = 'newsletter-hinweis';
   </div>
 
   <form class="vzp-newsletter__form" action={NEWSLETTER.action} method="post" enctype="text/plain">
-    <div class="vzp-field">
-      <label class="vzp-field__label" for={emailId}>
-        {NEWSLETTER.emailLabel} <span class="vzp-field__required">(erforderlich)</span>
-      </label>
-      <input
-        class="vzp-field__input"
-        id={emailId}
-        name="email"
-        type="email"
-        inputmode="email"
-        autocomplete="email"
-        spellcheck="false"
-        required
-      />
-    </div>
-
     <fieldset class="vzp-fieldset">
       <legend class="vzp-field__label">{NEWSLETTER.salutationLabel}</legend>
       <div class="vzp-radios">
@@ -89,6 +73,22 @@ const interimId = 'newsletter-hinweis';
           autocomplete="family-name"
         />
       </div>
+    </div>
+
+    <div class="vzp-field">
+      <label class="vzp-field__label" for={emailId}>
+        {NEWSLETTER.emailLabel} <span class="vzp-field__required">(erforderlich)</span>
+      </label>
+      <input
+        class="vzp-field__input"
+        id={emailId}
+        name="email"
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        spellcheck="false"
+        required
+      />
     </div>
 
     <div class="vzp-checkbox">
