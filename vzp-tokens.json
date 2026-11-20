@@ -1,5 +1,5 @@
 {
-  "$description": "VZP Design System · Design Tokens v1.0 — exportiert aus vzp-tokens.css. Markenfarben unveraendert: #333333 #686663 #007FB3 #BF3100 #F5E9E5",
+  "$description": "VZP Design System · Design Tokens v1.0 — abgeglichen mit Figma \"VZP Design System 1.0 – Website Relaunch\" (Akzent A). Markenfarben: #333333 #686663 #007FB3 #00AAAD #DAF2F7",
   "primitive": {
     "color": {
       "blue": {
@@ -105,105 +105,105 @@
           }
         }
       },
-      "orange": {
+      "accent": {
         "50": {
-          "$value": "#FCEDE8",
+          "$value": "#E6F6F7",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-50"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-50"
             }
           }
         },
         "100": {
-          "$value": "#F9D9CF",
+          "$value": "#CCEEEF",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-100"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-100"
             }
           }
         },
         "200": {
-          "$value": "#F0AE99",
+          "$value": "#99DDDE",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-200"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-200"
             }
           }
         },
         "300": {
-          "$value": "#E07E5C",
+          "$value": "#66CCCE",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-300"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-300"
             }
           }
         },
         "400": {
-          "$value": "#CF5227",
+          "$value": "#33BBBD",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-400"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-400"
             }
           }
         },
         "500": {
-          "$value": "#BF3100",
+          "$value": "#00AAAD",
           "$type": "color",
-          "$description": "BRAND · Orange",
+          "$description": "AKZENT A · Petrol",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-500"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-500"
             }
           }
         },
         "600": {
-          "$value": "#A62800",
+          "$value": "#008D90",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-600"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-600"
             }
           }
         },
         "700": {
-          "$value": "#8A2100",
+          "$value": "#007274",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-700"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-700"
             }
           }
         },
         "800": {
-          "$value": "#6B1900",
+          "$value": "#005253",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-800"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-800"
             }
           }
         },
         "900": {
-          "$value": "#4A1100",
+          "$value": "#003637",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
-              "gruppe": "Farbe · Orange (Accent)",
-              "cssVariable": "--vzp-color-orange-900"
+              "gruppe": "Farbe · Accent (Akzent A)",
+              "cssVariable": "--vzp-color-accent-900"
             }
           }
         }
@@ -314,7 +314,7 @@
       },
       "paper": {
         "50": {
-          "$value": "#FDF9F8",
+          "$value": "#F7FCFD",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
@@ -324,7 +324,7 @@
           }
         },
         "100": {
-          "$value": "#F5E9E5",
+          "$value": "#DAF2F7",
           "$type": "color",
           "$description": "BRAND · Papierweiss",
           "$extensions": {
@@ -335,7 +335,7 @@
           }
         },
         "200": {
-          "$value": "#EBDBD6",
+          "$value": "#B6E5EF",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
@@ -345,7 +345,7 @@
           }
         },
         "300": {
-          "$value": "#DCC8C1",
+          "$value": "#91D7E8",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
@@ -445,6 +445,48 @@
             "de.vzp": {
               "gruppe": "Farbe · Status",
               "cssVariable": "--vzp-color-amber-800"
+            }
+          }
+        }
+      },
+      "error": {
+        "50": {
+          "$value": "#EDF8FB",
+          "$type": "color",
+          "$extensions": {
+            "de.vzp": {
+              "gruppe": "Farbe · Error",
+              "cssVariable": "--vzp-color-error-50"
+            }
+          }
+        },
+        "500": {
+          "$value": "#48BDD8",
+          "$type": "color",
+          "$extensions": {
+            "de.vzp": {
+              "gruppe": "Farbe · Error",
+              "cssVariable": "--vzp-color-error-500"
+            }
+          }
+        },
+        "800": {
+          "$value": "#235B68",
+          "$type": "color",
+          "$extensions": {
+            "de.vzp": {
+              "gruppe": "Farbe · Error",
+              "cssVariable": "--vzp-color-error-800"
+            }
+          }
+        },
+        "900": {
+          "$value": "#173C45",
+          "$type": "color",
+          "$extensions": {
+            "de.vzp": {
+              "gruppe": "Farbe · Error",
+              "cssVariable": "--vzp-color-error-900"
             }
           }
         }
@@ -608,7 +650,7 @@
     "font": {
       "family": {
         "serif": {
-          "$value": "\"Noto Serif\", Georgia, \"Times New Roman\", serif",
+          "$value": "\"EB Garamond\", Georgia, \"Times New Roman\", serif",
           "$type": "fontFamily",
           "$extensions": {
             "de.vzp": {
@@ -618,7 +660,7 @@
           }
         },
         "sans": {
-          "$value": "\"Noto Sans\", system-ui, -apple-system, \"Segoe UI\", sans-serif",
+          "$value": "Roboto, system-ui, -apple-system, \"Segoe UI\", sans-serif",
           "$type": "fontFamily",
           "$extensions": {
             "de.vzp": {
@@ -1522,7 +1564,7 @@
           }
         },
         "accent": {
-          "$value": "{color.orange.500}",
+          "$value": "{color.accent.700}",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
@@ -1530,7 +1572,7 @@
             }
           },
           "hover": {
-            "$value": "{color.orange.600}",
+            "$value": "{color.accent.800}",
             "$type": "color",
             "$extensions": {
               "de.vzp": {
@@ -1698,7 +1740,7 @@
           }
         },
         "error": {
-          "$value": "{color.orange.600}",
+          "$value": "{color.error.800}",
           "$type": "color",
           "$extensions": {
             "de.vzp": {
@@ -1706,7 +1748,7 @@
             }
           },
           "surface": {
-            "$value": "{color.orange.50}",
+            "$value": "{color.error.50}",
             "$type": "color",
             "$extensions": {
               "de.vzp": {

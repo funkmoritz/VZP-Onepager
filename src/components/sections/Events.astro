@@ -10,7 +10,7 @@ import SectionHeader from '../ui/SectionHeader.astro';
 
 /*
  * Events & Webinare: ein Featured-Termin (ehemals Overlay 4) auf dem
- * Rosé-Band als Zaesur. Kerninfos (Format, Titel, Termin) bleiben immer
+ * Hellblaues Band als Zaesur. Kerninfos (Format, Titel, Termin) bleiben immer
  * sichtbar; mobil sind die Detailtexte einklappbar, der Webinar-Eintrag ist
  * standardmaessig geoeffnet. Ab 48em ist alles offen und ohne Umschalter.
  *
@@ -205,8 +205,8 @@ const panelId = `${event.id}-details`;
     font-weight: var(--vzp-font-weight-semibold);
   }
 
-  /* Badge (Kategorie): einzige Orange-Flaeche - weisse 11-px-Versalien auf
-     Orange 500 erreichen 4,9:1. */
+  /* Badge (Kategorie): einzige Akzentflaeche - weisse 11-px-Versalien auf
+     Accent 700 erreichen 5,7:1. */
   .vzp-badge {
     display: inline-flex;
     align-items: center;
@@ -431,7 +431,7 @@ const panelId = `${event.id}-details`;
       margin-block-start: var(--vzp-space-12);
     }
 
-    /* Zweispaltig: links Inhalt (Papierweiss, Orange-Kante), rechts Termine. */
+    /* Zweispaltig: links Inhalt (Papierweiss, Akzent-Kante), rechts Termine. */
     .vzp-event {
       display: grid;
       grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
@@ -535,7 +535,7 @@ const panelId = `${event.id}-details`;
 
     .vzp-more-event__overline {
       font-size: var(--vzp-font-size-100);
-      color: var(--vzp-color-orange-600);
+      color: var(--vzp-color-accent-800);
     }
 
     .vzp-more-event__title {

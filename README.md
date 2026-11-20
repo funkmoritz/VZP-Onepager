@@ -47,7 +47,7 @@ Node.js 20+ (entwickelt mit v22).
 └── src/
     ├── consts.ts           # Seitenname, Meta-Defaults, Navigation, CTA
     ├── assets/
-    │   ├── fonts/          # Noto Sans/Serif (woff2, latin + latin-ext, OFL)
+    │   ├── fonts/          # EB Garamond / Roboto (woff2, latin + latin-ext, OFL)
     │   └── images/         # Bildmaterial aus dem Entwurf (Astro optimiert → AVIF/WebP)
     ├── data/
     │   ├── content.ts      # ALLE Texte, Kontaktdaten, Termine, Ausgaben (inkl. Mobilfassungen)
@@ -98,7 +98,7 @@ Dafür sorgen zwei Dinge in `astro.config.mjs`:
   | `/#kontakt`          | `./#kontakt`      | `../#kontakt`               |
   | `/logo.svg`          | `./logo.svg`      | `../logo.svg`               |
 
-  Dasselbe im gebauten CSS: `url(/assets/noto….woff2)` → `url(./noto….woff2)`.
+  Dasselbe im gebauten CSS: `url(/assets/roboto….woff2)` → `url(./roboto….woff2)`.
   Genau das ist der Grund für die eigene Integration statt
   `astro-relative-links`: Die Library fasst nur HTML an, die `@font-face`-URLs
   stecken aber im CSS — damit hätte man im Unterordner zwar Styles, aber keine
@@ -219,7 +219,7 @@ und sollten dort korrigiert werden – bis dahin gilt die lokale Abweichung:
 | `.vzp-card-title-serif` (22 px mob.) | blue-500 `#007FB3`    | 4,48:1   | `blue-600` (6,00:1)       |
 
 WCAG 1.4.11 verlangt 3:1 für die Begrenzung von Bedienelementen; das weiße
-Eingabefeld hebt sich vom Rosé-Band nur mit 1,19:1 ab, der Rand ist also sein
+Eingabefeld hebt sich vom hellblauen Band nur mit 1,17:1 ab, der Rand ist also sein
 einziges Erkennungsmerkmal. `.vzp-card-title-serif` startet mobil bei 22 px und
 zählt damit nicht als „großer Text“ (4,5:1 statt 3:1). Derselbe Grund steht
 bereits beim Menü-Umschalter in `Header.astro`.
@@ -314,12 +314,12 @@ Aliase und fehlende Media-Query-Overrides.
 - [ ] `public/favicon.svg` ergänzen (derzeit Platzhalter)
 - [ ] `public/og-image.png` durch eine gestaltete Datei ersetzen – das generierte
       Bild setzt in Georgia/Arial, weil librsvg keine `@font-face` lädt und die
-      Noto-Schriften dort nicht verfügbar sind
+      Schriften EB Garamond/Roboto dort nicht verfügbar sind
 - [ ] Zwei Kontrast-Korrekturen in `vzp-tokens.json` nachziehen (Tabelle oben)
 - [x] Offizielle Wortmarke in Blau (`public/logo.svg`) und invertiert für den
       Footer (`public/logo-invertiert.svg`)
 - [x] `site` in `astro.config.mjs` auf `https://www.vzp-online.de` gesetzt
-- [x] Noto Serif / Noto Sans selbst gehostet (`src/styles/fonts.css`)
+- [x] EB Garamond / Roboto selbst gehostet (`src/styles/fonts.css`)
 
 ### Inhalte aus dem Bestand
 
