@@ -5,12 +5,12 @@
  * Nicht von Hand bearbeiten - Aenderungen gehen in die JSON und dann:
  *   npm run tokens
  *
- * VZP Design System · Design Tokens v1.0 — exportiert aus vzp-tokens.css. Markenfarben unveraendert: #333333 #686663 #007FB3 #BF3100 #F5E9E5
+ * VZP Design System · Design Tokens v1.0 — abgeglichen mit Figma "VZP Design System 1.0 – Website Relaunch" (Akzent A). Markenfarben: #333333 #686663 #007FB3 #00AAAD #DAF2F7
  */
 
 :root {
 
-  /* Primitives (128) */
+  /* Primitives (132) */
   --vzp-color-blue-50: #E6F3F9;
   --vzp-color-blue-100: #CCE7F3;
   --vzp-color-blue-200: #99CFE7;
@@ -21,16 +21,16 @@
   --vzp-color-blue-700: #005273;
   --vzp-color-blue-800: #003D56;
   --vzp-color-blue-900: #002938;
-  --vzp-color-orange-50: #FCEDE8;
-  --vzp-color-orange-100: #F9D9CF;
-  --vzp-color-orange-200: #F0AE99;
-  --vzp-color-orange-300: #E07E5C;
-  --vzp-color-orange-400: #CF5227;
-  --vzp-color-orange-500: #BF3100;
-  --vzp-color-orange-600: #A62800;
-  --vzp-color-orange-700: #8A2100;
-  --vzp-color-orange-800: #6B1900;
-  --vzp-color-orange-900: #4A1100;
+  --vzp-color-accent-50: #E6F6F7;
+  --vzp-color-accent-100: #CCEEEF;
+  --vzp-color-accent-200: #99DDDE;
+  --vzp-color-accent-300: #66CCCE;
+  --vzp-color-accent-400: #33BBBD;
+  --vzp-color-accent-500: #00AAAD;
+  --vzp-color-accent-600: #008D90;
+  --vzp-color-accent-700: #007274;
+  --vzp-color-accent-800: #005253;
+  --vzp-color-accent-900: #003637;
   --vzp-color-neutral-50: #F7F7F6;
   --vzp-color-neutral-100: #EDECEA;
   --vzp-color-neutral-200: #DAD8D5;
@@ -41,10 +41,10 @@
   --vzp-color-neutral-700: #454341;
   --vzp-color-neutral-800: #333333;
   --vzp-color-neutral-900: #1F1E1D;
-  --vzp-color-paper-50: #FDF9F8;
-  --vzp-color-paper-100: #F5E9E5;
-  --vzp-color-paper-200: #EBDBD6;
-  --vzp-color-paper-300: #DCC8C1;
+  --vzp-color-paper-50: #F7FCFD;
+  --vzp-color-paper-100: #DAF2F7;
+  --vzp-color-paper-200: #B6E5EF;
+  --vzp-color-paper-300: #91D7E8;
   --vzp-color-white: #FFFFFF;
   --vzp-color-green-50: #EDF6F1;
   --vzp-color-green-200: #A8CFBB;
@@ -54,6 +54,10 @@
   --vzp-color-amber-200: #E0C48A;
   --vzp-color-amber-700: #8A5200;
   --vzp-color-amber-800: #6E4200;
+  --vzp-color-error-50: #EDF8FB;
+  --vzp-color-error-500: #48BDD8;
+  --vzp-color-error-800: #235B68;
+  --vzp-color-error-900: #173C45;
   --vzp-space-0: 0;
   --vzp-space-1: 0.25rem;
   --vzp-space-2: 0.5rem;
@@ -68,8 +72,8 @@
   --vzp-space-20: 5rem;
   --vzp-space-24: 6rem;
   --vzp-space-32: 8rem;
-  --vzp-font-family-serif: "Noto Serif", Georgia, "Times New Roman", serif;
-  --vzp-font-family-sans: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --vzp-font-family-serif: "EB Garamond", Georgia, "Times New Roman", serif;
+  --vzp-font-family-sans: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
   --vzp-font-family-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --vzp-font-size-100: 0.75rem;
   --vzp-font-size-150: 0.8125rem;
@@ -155,8 +159,8 @@
   --vzp-color-action-primary: var(--vzp-color-blue-600);
   --vzp-color-action-primary-hover: var(--vzp-color-blue-700);
   --vzp-color-action-primary-active: var(--vzp-color-blue-800);
-  --vzp-color-action-accent: var(--vzp-color-orange-500);
-  --vzp-color-action-accent-hover: var(--vzp-color-orange-600);
+  --vzp-color-action-accent: var(--vzp-color-accent-700);
+  --vzp-color-action-accent-hover: var(--vzp-color-accent-800);
   --vzp-color-link-default: var(--vzp-color-blue-600);
   --vzp-color-link-hover: var(--vzp-color-neutral-800);
   --vzp-color-link-inverse: var(--vzp-color-blue-200);
@@ -173,8 +177,8 @@
   --vzp-color-feedback-success-surface: var(--vzp-color-green-50);
   --vzp-color-feedback-warning: var(--vzp-color-amber-700);
   --vzp-color-feedback-warning-surface: var(--vzp-color-amber-50);
-  --vzp-color-feedback-error: var(--vzp-color-orange-600);
-  --vzp-color-feedback-error-surface: var(--vzp-color-orange-50);
+  --vzp-color-feedback-error: var(--vzp-color-error-800);
+  --vzp-color-feedback-error-surface: var(--vzp-color-error-50);
   --vzp-color-feedback-info: var(--vzp-color-blue-600);
   --vzp-color-feedback-info-surface: var(--vzp-color-blue-50);
   --vzp-spacing-component-xs: var(--vzp-space-1);
@@ -310,16 +314,16 @@
   --color-blue-700: var(--vzp-color-blue-700);
   --color-blue-800: var(--vzp-color-blue-800);
   --color-blue-900: var(--vzp-color-blue-900);
-  --color-orange-50: var(--vzp-color-orange-50);
-  --color-orange-100: var(--vzp-color-orange-100);
-  --color-orange-200: var(--vzp-color-orange-200);
-  --color-orange-300: var(--vzp-color-orange-300);
-  --color-orange-400: var(--vzp-color-orange-400);
-  --color-orange-500: var(--vzp-color-orange-500);
-  --color-orange-600: var(--vzp-color-orange-600);
-  --color-orange-700: var(--vzp-color-orange-700);
-  --color-orange-800: var(--vzp-color-orange-800);
-  --color-orange-900: var(--vzp-color-orange-900);
+  --color-accent-50: var(--vzp-color-accent-50);
+  --color-accent-100: var(--vzp-color-accent-100);
+  --color-accent-200: var(--vzp-color-accent-200);
+  --color-accent-300: var(--vzp-color-accent-300);
+  --color-accent-400: var(--vzp-color-accent-400);
+  --color-accent-500: var(--vzp-color-accent-500);
+  --color-accent-600: var(--vzp-color-accent-600);
+  --color-accent-700: var(--vzp-color-accent-700);
+  --color-accent-800: var(--vzp-color-accent-800);
+  --color-accent-900: var(--vzp-color-accent-900);
   --color-neutral-50: var(--vzp-color-neutral-50);
   --color-neutral-100: var(--vzp-color-neutral-100);
   --color-neutral-200: var(--vzp-color-neutral-200);
@@ -343,6 +347,10 @@
   --color-amber-200: var(--vzp-color-amber-200);
   --color-amber-700: var(--vzp-color-amber-700);
   --color-amber-800: var(--vzp-color-amber-800);
+  --color-error-50: var(--vzp-color-error-50);
+  --color-error-500: var(--vzp-color-error-500);
+  --color-error-800: var(--vzp-color-error-800);
+  --color-error-900: var(--vzp-color-error-900);
   --spacing-0: var(--vzp-space-0);
   --spacing-1: var(--vzp-space-1);
   --spacing-2: var(--vzp-space-2);

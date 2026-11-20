@@ -50,8 +50,8 @@
   /* 04 Heading/H3 Serif: 22 / 24 / 28 px, LH 1.25 (Kartentitel Serif)
      Als einziger Serif-Titel startet dieser mobil unter 24 px und zaehlt damit
      nicht als "grosser Text" (WCAG 1.4.3) - statt 3:1 gelten 4,5:1. Blue 500
-     erreicht auf Weiss nur 4,48:1 und auf dem Rose-Band 3,77:1, deshalb hier
-     Blue 600 (6,00:1 bzw. 5,05:1) statt --vzp-color-text-brand. Alle groesseren
+     erreicht auf Weiss nur 4,48:1 und auf dem hellblauen Band 3,85:1, deshalb hier
+     Blue 600 (6,00:1 bzw. 5,15:1) statt --vzp-color-text-brand. Alle groesseren
      Serif-Stile bleiben bei Blue 500. */
   .vzp-card-title-serif {
     font-family: var(--vzp-typography-heading-family);
@@ -61,7 +61,7 @@
     color: var(--vzp-color-action-primary);
   }
 
-  /* 05 Heading/H4: 20 / 22 px, Noto Sans SemiBold, LH 1.30 */
+  /* 05 Heading/H4: 20 / 22 px, Roboto SemiBold, LH 1.30 */
   .vzp-h4 {
     font-family: var(--vzp-typography-ui-family);
     font-size: 1.25rem;
@@ -99,8 +99,9 @@
   }
 
   /* 18 Overline (Kicker): 12 px, Bold, LS 0.12em, Versalien.
-     Kicker-Text auf Papier in Orange 600 (#A62800, 5,6:1) - Orange 500 waere
-     als Textfarbe auf Papierweiss zu schwach. */
+     Kicker-Text in Accent 800 (#005253, 8,7:1 auf Papierweiss, 7,7:1 auf dem
+     hellblauen Band) wie im Figma-Entwurf - Accent 500 waere als Textfarbe zu
+     schwach (2,9:1). */
   .vzp-overline {
     font-family: var(--vzp-typography-ui-family);
     font-size: var(--vzp-font-size-100);
@@ -108,7 +109,7 @@
     line-height: var(--vzp-line-height-300);
     letter-spacing: var(--vzp-letter-spacing-overline);
     text-transform: uppercase;
-    color: var(--vzp-color-orange-600);
+    color: var(--vzp-color-accent-800);
   }
 
   /* Neutrale Variante (Metadaten-Kicker wie "Ihre Mehrwerte"). */

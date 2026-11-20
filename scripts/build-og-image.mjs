@@ -7,9 +7,9 @@
  * Claim oder Marke sich aendern.
  *
  * ZWISCHENSTAND: Das von sharp genutzte librsvg laedt keine @font-face-Regeln
- * (auch nicht als Data-URI), die Noto-Dateien aus src/assets/fonts sind hier
+ * (auch nicht als Data-URI), die EB-Garamond-/Roboto-Dateien aus src/assets/fonts sind hier
  * also nicht verwendbar. Gesetzt wird deshalb in Georgia bzw. Arial - beide
- * sind auf Windows und macOS vorhanden und kommen Noto Serif/Sans optisch
+ * sind auf Windows und macOS vorhanden und kommen EB Garamond/Roboto optisch
  * nahe. Fuer ein markengenaues Vorschaubild ersetzt die VZP public/og-image.png
  * durch eine gestaltete Datei (1200 x 630, < 300 KB); am Code aendert das
  * nichts.
@@ -22,7 +22,7 @@ import sharp from 'sharp';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 // Farben aus vzp-tokens.json (Primitives, siehe src/styles/tokens.css).
-const PAPER = '#FDF9F8';
+const PAPER = '#F7FCFD';
 const BLUE = '#007FB3';
 const TEXT = '#333333';
 const MUTED = '#686663';

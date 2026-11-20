@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
-import notoSansLatin from '../assets/fonts/noto-sans-latin-wght-normal.woff2?url';
-import notoSerifLatin from '../assets/fonts/noto-serif-latin-wght-normal.woff2?url';
+import robotoLatin from '../assets/fonts/roboto-latin-wght-normal.woff2?url';
+import ebGaramondLatin from '../assets/fonts/eb-garamond-latin-wght-normal.woff2?url';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { CONTENT_ID, SITE_LANG, SITE_LOCALE, SITE_NAME, SITE_OG_IMAGE } from '../consts';
@@ -62,12 +62,12 @@ const jsonLd = {
     {noindex && <meta name="robots" content="noindex, follow" />}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#FDF9F8" />
+    <meta name="theme-color" content="#F7FCFD" />
 
     {/* Selbst gehostete Schriften (fonts.css). Nur die latin-Teilmengen
          vorladen: sie decken den deutschen Text vollstaendig ab. */}
-    <link rel="preload" href={notoSansLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={notoSerifLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={robotoLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={ebGaramondLatin} as="font" type="font/woff2" crossorigin />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
