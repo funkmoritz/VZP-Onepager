@@ -258,6 +258,11 @@ Direktive aus einem fehlenden Modul legt sonst die ganze Seite mit einem 500er
 lahm. Auf nginx/IIS ist die Datei wirkungslos; dort gehört das in die
 Server-Konfiguration.
 
+## Betrieb & Datenschutz
+
+Ist-Stand und Empfehlung für einen EU-datenschutzkonformen Betrieb (Hosting,
+Newsletter, Webinare, Statistik): siehe [`docs/STACK.md`](docs/STACK.md).
+
 ## Design-Tokens
 
 `vzp-tokens.json` (DTCG-Format) ist die Quelle der Wahrheit. Daraus generiert
